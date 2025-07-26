@@ -2,9 +2,9 @@
 
 ### This reposoitory contains code for team 42824A Eternity's Great Planes Robot, below are instructions to get this code onto your computer:
 
-## **VEX PROS Project Setup Guide**
+## **Project Setup Guide**
 
-This guide walks you through cloning and running the VEX PROS code on your local machine.
+This guide walks you through getting this code on your local machine.
 
 ### **Requirements:**
 
