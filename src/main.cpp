@@ -1,7 +1,4 @@
 #include "main.h"
-#include "autons.hpp"
-#include "op_control.hpp"
-#include "pros/rtos.hpp"
 #include "robodash/api.h" 
 #include "setup.hpp"
 
@@ -11,8 +8,6 @@ void positionTracker() {
 		std::uint32_t now = pros::millis();
 		std::int32_t intakePosition = intake.get_raw_position(&now);
 
-		pros::lcd::print(2, "Hue: %.2f, Prox: %d", intakeOptical.get_hue(), intakeOptical.get_proximity());
-		pros::lcd::print(3, "Pos: %d", intakePosition);
         pros::delay(10); // Delay to avoid overloading the system
     }
 }
@@ -39,11 +34,11 @@ void initialize() {
   selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
 		if (routine == std::nullopt) {
 			std::cout << "No routine selected" << std::endl;
-      master.print(2, 0, "No routine selected!!");
+      controller.print(2, 0, "No routine selected!!");
 
 		} else {
 			std::cout << "Selected Routine: " << routine.value().name << std::endl;
-      master.print(2, 0, "Selected: %s", routine.value().name.c_str());
+      controller.print(2, 0, "Selected: %s", routine.value().name.c_str());
 
 		}
 	});
@@ -66,6 +61,7 @@ void autonomous() {
 void opcontrol() {
   while (true) {
     // drive functions should be called in here
+    handleDriveMode(true);
 
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
