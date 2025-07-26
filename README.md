@@ -28,7 +28,7 @@ cd ***-insert your copied path here-***
 ### Clone the repo
 Enter the following commands into your terminal:
 
-git clone git clone https://github.com/iagrwl/pushbackGreatPlanes.git
+git clone https://github.com/iagrwl/pushbackGreatPlanes.git
 cd pushbackGreatPlanes
 
 ## 2. Open in VS Code
