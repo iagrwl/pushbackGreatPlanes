@@ -40,14 +40,21 @@ cd pushbackGreatPlanes
 ### Note: Next two steps are optional, they help things run more smoothly
 
 ## 3. (OPTIONAL) Rebuild IntelliSense Index
-  1. Open the Command Palette (Ctrl+Shift+P).
-  2. Type and select PROS: Rebuild IntelliSense Index.
-  3. Wait for it to finish.
-  4. Restart VSC
+  1. Make sure you’ve opened the entire project folder in VS Code (File > Open Folder, not just individual files).
+  2. Open the Command Palette (Ctrl+Shift+P).
+  3. Type in PROS: Rebuild IntelliSense Index.
+  4. If you see PROS: Rebuild IntelliSense Index, select it and wait for it to finish.
+  5. If you ***don’t see*** that option:
+     - Make sure the PROS VS Code extension is installed.
+     - Alternatively, close and reopen VS Code.
+  6. You can also run this from the terminal:
+     - pros conduct intellisense
+
+Restart VS Code once you've completed these steps.
 
 ## 4. (OPTIONAL) Clean the Project
-Type this command in your terminal:
-make clean
+Type this command in your PROS terminal (within VSC):
+pros make clean
 
 This removes any old compiled files and ensures a clean build.
 
