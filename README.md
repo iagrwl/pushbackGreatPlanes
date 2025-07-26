@@ -43,6 +43,7 @@ cd pushbackGreatPlanes
   1. Open the Command Palette (Ctrl+Shift+P).
   2. Type and select PROS: Rebuild IntelliSense Index.
   3. Wait for it to finish.
+  4. Restart VSC
 
 ## 4. (OPTIONAL) Clean the Project
 Type this command in your terminal:
