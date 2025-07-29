@@ -63,9 +63,11 @@ void opcontrol() {
   while (true) {
     // drive functions should be called in here
     handleDriveMode(true);
-    handleIndexerCommands();
+    
     handleIntakeCommands();
     handleOuttakeCommands();
+
+    handleLoaderMechCommands();
 
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);

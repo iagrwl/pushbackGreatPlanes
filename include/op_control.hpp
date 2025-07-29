@@ -9,8 +9,8 @@ void handleTank();
 void handleDriveMode(bool isArcade);
 
 void handleIntakeCommands();
-void handleIndexerCommands();
 void handleOuttakeCommands();
 
+void handleLoaderMechCommands();
 
 void rumble();

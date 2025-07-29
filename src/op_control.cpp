@@ -30,7 +30,6 @@ void handleIntakeCommands() {
     } else {
       intake.move(0);
     }
-    
   } 
 }
 
@@ -72,21 +71,12 @@ void handleOuttakeCommands() {
     }
 }
 
+bool isLoaderExtended = false;
+void handleLoaderMechCommands() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    !isLoaderExtended ? isLoaderExtended = true : isLoaderExtended = false;
 
-void handleIndexerCommands() {
-  if (!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) || 
-        controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))) {
-
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-      if (indexer.get_actual_velocity() <=  0) {
-      indexer.move(127);
-      isIndexerOn = true;
-      } else {
-      indexer.move(0);
-      isIndexerOn = false;
-      }
-    }
-
+    loaderMech.set_value(isLoaderExtended);
   }
 }
 

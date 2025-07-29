@@ -99,6 +99,6 @@ inline pros::Motor outtake(20);
 
 inline pros::Motor intake(-12, pros::MotorGearset::blue);
 
-inline pros::adi::DigitalOut pnuematic('E');
+inline pros::adi::DigitalOut loaderMech('A');
 
 inline pros::Optical opticalSensor(1);
