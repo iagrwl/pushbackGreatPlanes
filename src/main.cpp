@@ -1,4 +1,5 @@
 #include "main.h"
+#include "op_control.hpp"
 #include "robodash/api.h" 
 #include "setup.hpp"
 
@@ -62,6 +63,9 @@ void opcontrol() {
   while (true) {
     // drive functions should be called in here
     handleDriveMode(true);
+    handleIndexerCommands();
+    handleIntakeCommands();
+    handleOuttakeCommands();
 
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);

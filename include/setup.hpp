@@ -12,7 +12,7 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
 inline pros::MotorGroup left_dt({-1, -2, 3}, pros::MotorGearset::blue);    // left side
-inline pros::MotorGroup right_dt({8, 9, -10}, pros::MotorGearset::blue);  // right side
+inline pros::MotorGroup right_dt({10, 9, -8}, pros::MotorGearset::blue);  // right side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -93,7 +93,7 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 );
 
 // declare additional motors, sensors, and pnuematics here
-inline pros::Motor indexer(-11);
+inline pros::Motor indexer(11);
 
 inline pros::Motor outtake(20);
 
