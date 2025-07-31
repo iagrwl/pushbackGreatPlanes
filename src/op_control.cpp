@@ -2,7 +2,7 @@
 #include "pros/misc.h"
 #include "setup.hpp"
 
-// write every op control task as its own function here.
+// write every driver control task as its own function here.
 
 void handleArcade() {
 	int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -79,6 +79,7 @@ void handleLoaderMechCommands() {
     loaderMech.set_value(isLoaderExtended);
   }
 }
+
 
 void rumble() {
   for (int i = 60; i > 0; i--) {

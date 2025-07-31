@@ -2,12 +2,14 @@
 #include "main.h"
 #include "setup.hpp"
 
+// to manipulate intake, intake.move(127 or 0);
+// to give delay pros::delay(delay in ms);
+
+/*
 // make each auton route it's own function and write them here
-
-
 void one_goal() {
     chassis.turnToPoint(); //point towards 3 stack 
-    //start intake
+    //start intake 
     chassis.moveToPoint();  //move towards 3 stack and collect
     //collection delay
     chassis.moveToPose(); //move in front of match loader 
@@ -76,6 +78,7 @@ void solo_awp(){
     //stop intake to allocate more current to outtake
     //start outtake
     //dump delay
-    
+
     //biggtly baaaaam
 }
+    */
