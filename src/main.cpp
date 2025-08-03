@@ -1,5 +1,8 @@
 #include "main.h"
+#include "autons.hpp"
 #include "op_control.hpp"
+#include "pros/abstract_motor.hpp"
+#include "pros/motors.h"
 #include "robodash/api.h" 
 #include "setup.hpp"
 
@@ -15,7 +18,7 @@ void positionTracker() {
 
 
 rd::Selector selector({
-  // format is {"name of route", &routFunction}
+  // format is {"name of route", &routeFunction}
   // it's a 2D array, the string inputted will be
   // displayed on the screen and the referenced 
   // function is what will be run
@@ -26,11 +29,14 @@ rd::Selector selector({
 rd::Console console;
 
 void initialize() {
-	//pros::lcd::initialize(); // initialize if you want posTracker
+	pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
   chassis.calibrate();
+
+  left_dt.set_brake_mode(pros::MotorBrake::coast);
+  right_dt.set_brake_mode(pros::MotorBrake::coast);
 
   selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
 		if (routine == std::nullopt) {
@@ -56,8 +62,10 @@ void competition_initialize() {
 
 void autonomous() {
   // runs selected auton
-  selector.run_auton();
-}
+  //selector.run_auton();
+  driveTesting(true);
+  //turnTesting(true);
+ }
 
 void opcontrol() {
   while (true) {

@@ -5,7 +5,7 @@
 // write every op control task as its own function here.
 
 void handleArcade() {
-	int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+	  int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
     // move the robot
     chassis.arcade(leftY, rightX);
