@@ -22,7 +22,7 @@ rd::Selector selector({
   // it's a 2D array, the string inputted will be
   // displayed on the screen and the referenced 
   // function is what will be run
-  {"", },
+  {"two goal",&two_goal },
   {"", }
 });
 
@@ -63,8 +63,9 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  driveTesting(true);
+  //driveTesting(true);
   //turnTesting(true);
+  two_goal();
  }
 
 void opcontrol() {
