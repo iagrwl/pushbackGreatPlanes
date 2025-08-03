@@ -4,8 +4,8 @@
 
 bool isIndexerOn = false;
 bool isFirstTimePressed = true;
-bool outtakespin = false;
-bool isOuttakeToggled = false; // toggle variable for L1
+bool isOuttakeToggled = false;
+
 
 // write every driver control task as its own function here.
 
@@ -42,23 +42,20 @@ void handleIntakeCommands() {
 }
 
 void handleOuttakeCommands() {
-  bool r1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
-  bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-
-  if (!r1 && !r2 && !isOuttakeToggled) {
-    outtake.move(0);
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+    indexer.move(127);
+    isIndexerOn = true;
+    outtake.move(127);
+  } 
+  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    indexer.move(127);
+    isIndexerOn = true;
+    outtake.move(-127);
+  } 
+  else {
     indexer.move(0);
     isIndexerOn = false;
-  } 
-  else if (r1) {
-    outtake.move(127);
-    indexer.move(127);
-    isIndexerOn = true;
-  } 
-  else if (r2) {
-    outtake.move(-127);
-    indexer.move(127);
-    isIndexerOn = true;
+    outtake.move(0);
   }
 }
 
