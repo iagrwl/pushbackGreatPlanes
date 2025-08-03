@@ -5,6 +5,7 @@
 bool isIndexerOn = false;
 bool isFirstTimePressed = true;
 bool isOuttakeToggled = false;
+bool OuttakeOverride = false;
 
 
 // write every driver control task as its own function here.
@@ -27,16 +28,16 @@ void handleDriveMode(bool isArcade) {
   isArcade ? handleArcade() : handleTank();
 }
 
-void handleIntakeCommands() {
+void handleIntakeCommands () {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
     isOuttakeToggled = !isOuttakeToggled;
 
     if (isOuttakeToggled) {
       intake.move(127);
-      outtake.move(127);
+      if (!OuttakeOverride) outtake.move(127);
     } else {
       intake.move(0);
-      outtake.move(0);
+      if (!OuttakeOverride) outtake.move(0);
     }
   }
 }
@@ -46,16 +47,25 @@ void handleOuttakeCommands() {
     indexer.move(127);
     isIndexerOn = true;
     outtake.move(127);
+    OuttakeOverride = true;
   } 
   else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
     indexer.move(127);
     isIndexerOn = true;
     outtake.move(-127);
+    OuttakeOverride = true;
   } 
   else {
     indexer.move(0);
     isIndexerOn = false;
-    outtake.move(0);
+
+    if (isOuttakeToggled) {
+      outtake.move(127);
+    } else {
+      outtake.move(0);
+    }
+
+    OuttakeOverride = false;
   }
 }
 
