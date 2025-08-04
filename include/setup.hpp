@@ -44,7 +44,7 @@ inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
 // lateral pid
 inline lemlib::ControllerSettings lateral_controller(6, //proportional gain (kP)
                                             0, // integral gain (kI)
-                                        17, // derivative gain (kD)
+                                        18, // derivative gain (kD)
                                          0,//windup
                                            0, // small error range, in inches
                                           0, // small error range timeout, in milliseconds
@@ -54,12 +54,12 @@ inline lemlib::ControllerSettings lateral_controller(6, //proportional gain (kP)
 );
 
 // angular pid
-inline lemlib::ControllerSettings angular_controller(3.4, // proportional gain (kP) was 3.5
-                                              0.8, // integral gain (kI)
-                                              21, // derivative gain (kD)
-                                              3, // anti windup
+inline lemlib::ControllerSettings angular_controller(3.3, // proportional gain (kP) was 3.5
+                                              0.4, // integral gain (kI)
+                                              20, // derivative gain (kD)
+                                              3.5, // anti windup
                                               0.5, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
+                                              75, // small error range timeout, in milliseconds
                                               2, // large error range, in degrees
                                               750, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
