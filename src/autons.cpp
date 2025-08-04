@@ -2,6 +2,29 @@
 #include "main.h"
 #include "setup.hpp"
 
+
+void two_goal(){
+    chassis.moveToPose(0,50,0,2000);
+    chassis.turnToPoint(-17,50,500);
+    chassis.moveToPose(-11,48,-90,1500);
+    
+    //pros::delay(4000);
+    
+    chassis.moveToPose(17.5, 47,-90, 2000, {.forwards = false});
+    //if (backDistance.get_distance()>)
+
+    /*
+    pros::delay(1400);
+    outtake.move(127);
+    indexer.move(127);
+    intake.move(127);
+    pros::delay(2700);
+    outtake.move(0);
+    indexer.move(0);
+    chassis.swingToHeading(-220,lemlib::DriveSide::LEFT,1000);
+    */
+
+}
 // to manipulate intake, intake.move(127 or 0);
 // to give delay pros::delay(delay in ms);
 

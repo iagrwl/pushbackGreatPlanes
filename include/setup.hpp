@@ -106,3 +106,5 @@ inline pros::Optical opticalSensor(1);
 inline pros::Distance leftDistance(16);
 
 inline pros::Distance rightDistance(15);
+
+inline pros::Distance backDistance(17);
