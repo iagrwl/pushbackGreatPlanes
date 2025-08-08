@@ -35,6 +35,8 @@ void initialize() {
 	pros::Task pos(&positionTracker);
   chassis.calibrate();
 
+  loaderMech.set_value(false);
+
   left_dt.set_brake_mode(pros::MotorBrake::coast);
   right_dt.set_brake_mode(pros::MotorBrake::coast);
 
@@ -65,7 +67,8 @@ void autonomous() {
   //selector.run_auton();
   //driveTesting(true);
   //turnTesting(true);
-  two_goal();
+  //two_goal();
+  one_goal();
  }
 
 void opcontrol() {

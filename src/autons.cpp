@@ -4,13 +4,26 @@
 
 
 void two_goal(){
-    chassis.moveToPose(0,50,0,2000);
+    /*chassis.moveToPose(0,50,0,2000);
     chassis.turnToPoint(-17,50,500);
     chassis.moveToPose(-11,48,-90,1500);
     
     //pros::delay(4000);
     
-    chassis.moveToPose(17.5, 47,-90, 2000, {.forwards = false});
+    chassis.moveToPose(17.5, 47,-90, 2000, {.forwards = false});*/
+   
+    chassis.moveToPoint(0, 40, 1500);
+    chassis.turnToPoint(-15, 40, 800);
+    intake.move(127);
+    chassis.moveToPoint(-15, 40, 1000, {}, false);
+    pros::delay(3000);
+    chassis.moveToPoint(15, 49, 2000, {.forwards = false}, false);
+    outtake.move(127);
+    indexer.move(127);   
+
+   
+   
+   
     //if (backDistance.get_distance()>)
 
     /*
@@ -106,6 +119,48 @@ void solo_awp(){
 }
     */
 
+
+void one_goal() {
+    intake.move(127);
+    outtake.move(127);
+
+    chassis.moveToPoint(0, 15, 1000);
+    chassis.swingToHeading(-50, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
+    chassis.moveToPoint(-17, 38, 1000);
+    loaderMech.set_value(true);
+    pros::delay(250);
+    loaderMech.set_value(false);
+    pros::delay(200);
+    chassis.moveToPoint(-30.35, 38.82, 1000, {.minSpeed = 60});
+    intake.move(0);
+    pros::delay(250);
+    loaderMech.set_value(true);
+    pros::delay(300);
+    chassis.moveToPoint(-10.95, 28.24, 1000, {.forwards = false});
+    pros::delay(100);
+    intake.move(127);
+    chassis.moveToPoint(-10.95, 28.24, 1000, {.forwards = false});
+    pros::delay(100);
+    loaderMech.set_value(false);
+    chassis.turnToPoint(-30.73, -1.12, 800);
+    chassis.moveToPoint(-32.73, -1.12, 1000);
+    chassis.turnToPoint(-32.5, 18, 800, {.forwards = false});
+    chassis.moveToPoint(-32.5, 25, 2000, {.forwards = false});
+    pros::delay(50);
+    while (left_dt.get_actual_velocity() < -5 && right_dt.get_actual_velocity() < -5) {
+    }
+    indexer.move(127);
+    
+    /*chassis.swingToHeading(-90, lemlib::DriveSide::LEFT, 800);
+    pros::delay(300);
+    
+    loaderMech.set_value(true);
+    intake.move(-127);
+    //chassis.swingToHeading(-20, lemlib::DriveSide::LEFT, 800);
+    chassis.swingToPoint(-10.95, 28.24, lemlib::DriveSide::LEFT, 800, {.forwards = false});
+    intake.move(127);
+    */
+}
 
 void turnTesting(bool isCW) {
 
