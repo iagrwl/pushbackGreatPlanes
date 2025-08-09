@@ -80,6 +80,8 @@ void opcontrol() {
     handleOuttakeCommands();
 
     handleLoaderMechCommands();
+    handleDescoreMechCommands();
+    handleWingMechCommands();    
 
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);

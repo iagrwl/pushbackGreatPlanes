@@ -44,21 +44,29 @@ void handleIntakeCommands () {
       isIntakeForward = false;
     }
   }
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-    isOuttakeToggled = !isOuttakeToggled;
+ if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    
+    isOuttakeToggled = false; 
+    
     isIndexerOn = false;
-    indexer.move(-127);
-    outtake.move(-80);
     intake.move(-80);
+    indexer.move(-127);
+    outtake.move(-127);
+    OuttakeOverride = true;//blocks override
+    
     isIntakeForward = false;
-  } else if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !isIntakeForward) {
+} else if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !isIntakeForward) {
     isIndexerOn = true;
     intake.move(0);
-  }
+    OuttakeOverride = false;
+}
 
 }
 
 void handleOuttakeCommands() {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    return;//skip logic coolio
+  }
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
     indexer.move(127);
     isIndexerOn = true;
@@ -86,13 +94,52 @@ void handleOuttakeCommands() {
   }
 }
 
+bool isDescoreExtended = false;
 bool isLoaderExtended = false;
+bool isWingExtended = false;
 void handleLoaderMechCommands() {
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-    !isLoaderExtended ? isLoaderExtended = true : isLoaderExtended = false;
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+    if (!isLoaderExtended && !isDescoreExtended) {
+      
+      isLoaderExtended = true;
+      
+      if (isDescoreExtended) {
+        isDescoreExtended = false;
+        descoreMech.set_value(false);
+      }
+    } else if (isLoaderExtended) {
+      
+      isLoaderExtended = false;
+    }
     loaderMech.set_value(isLoaderExtended);
   }
 }
+
+void handleDescoreMechCommands() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    if (!isDescoreExtended && !isLoaderExtended) {
+      
+      isDescoreExtended = true;
+      
+      if (isLoaderExtended) {
+        isLoaderExtended = false;
+        loaderMech.set_value(false);
+      }
+    } else if (isDescoreExtended) {
+      
+      isDescoreExtended = false;
+    }
+    descoreMech.set_value(isDescoreExtended);
+  }
+}
+
+void handleWingMechCommands() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+    !isWingExtended ? isWingExtended = true : isWingExtended = false;
+    wingMech.set_value(isWingExtended);
+  }
+}
+
 
 void rumble() {
   for (int i = 60; i > 0; i--) {

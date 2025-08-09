@@ -12,5 +12,7 @@ void handleIntakeCommands();
 void handleOuttakeCommands();
 
 void handleLoaderMechCommands();
+void handleDescoreMechCommands();
+void handleWingMechCommands();
 
 void rumble();

@@ -101,6 +101,10 @@ inline pros::Motor intake(-12, pros::MotorGearset::blue);
 
 inline pros::adi::DigitalOut loaderMech('A');
 
+inline pros::adi::DigitalOut descoreMech('C');
+
+inline pros::adi::DigitalOut wingMech('D');
+
 inline pros::Optical opticalSensor(1);
 
 inline pros::Distance leftDistance(16);
