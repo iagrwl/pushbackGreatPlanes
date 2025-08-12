@@ -67,8 +67,8 @@ void autonomous() {
   //selector.run_auton();
   //driveTesting(true);
   //turnTesting(true);
-  //two_goal();
-  one_goal();
+  two_goal();
+  //one_goal();
  }
 
 void opcontrol() {

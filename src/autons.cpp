@@ -4,39 +4,43 @@
 
 
 void two_goal(){
-    /*chassis.moveToPose(0,50,0,2000);
-    chassis.turnToPoint(-17,50,500);
-    chassis.moveToPose(-11,48,-90,1500);
-    
-    //pros::delay(4000);
-    
-    chassis.moveToPose(17.5, 47,-90, 2000, {.forwards = false});*/
-   
-    chassis.moveToPoint(0, 40, 1500);
-    chassis.turnToPoint(-15, 40, 800);
     intake.move(127);
-    chassis.moveToPoint(-15, 40, 1000, {}, false);
-    pros::delay(3000);
-    chassis.moveToPoint(15, 49, 2000, {.forwards = false}, false);
     outtake.move(127);
-    indexer.move(127);   
 
-   
-   
-   
-    //if (backDistance.get_distance()>)
-
-    /*
-    pros::delay(1400);
+    chassis.moveToPoint(0,30,1000);
+    chassis.turnToHeading(90,750);
+    pros::delay(100);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(14,30,1000, {}, false);
+    pros::delay(100);
+    //loaderMech.set_value(false);
+    chassis.moveToPoint(-2,30,1000,{.forwards=false});
+    loaderMech.set_value(false);
+    chassis.moveToPoint(-23,31,1000,{.forwards=false, .maxSpeed = 70}, false);
+    indexer.move(65);
+    outtake.move(65);
+    pros::delay(1800);
+    chassis.moveToPoint(-8,31,800);
+    descoreMech.set_value(true);
+    chassis.moveToPoint(-24,31,1000,{.forwards=false,.minSpeed=60}, false);
+    pros::delay(300);
+    chassis.moveToPoint(-2,30,1000);
+    loaderMech.set_value(false);
     outtake.move(127);
-    indexer.move(127);
-    intake.move(127);
-    pros::delay(2700);
-    outtake.move(0);
     indexer.move(0);
-    chassis.swingToHeading(-220,lemlib::DriveSide::LEFT,1000);
-    */
-
+    chassis.turnToPoint(-30.27,2.3,750, {.maxSpeed = 65,.minSpeed = 30, .earlyExitRange = 10});
+    pros::delay(200);
+    chassis.moveToPoint(-30.27,2.3,1000, {.maxSpeed = 80,.minSpeed = 40}, false);
+    
+    //chassis.turnToHeading(47,1000);
+    //pros::delay(400);
+    
+    //chassis.moveToPose(-34,-6,50,2500,{.forwards=false}, false);
+    chassis.turnToPoint(-34, -6, 800, {.forwards = false});
+    chassis.moveToPoint(-34,-6,2500,{.forwards=false}, false);
+    //pros::delay(1000);
+    outtake.move(-65);
+    indexer.move(65);
 }
 // to manipulate intake, intake.move(127 or 0);
 // to give delay pros::delay(delay in ms);
