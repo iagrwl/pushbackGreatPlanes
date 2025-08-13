@@ -1,7 +1,33 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include "pros/distance.hpp"
+#include "pros/llemu.hpp"
 #include "setup.hpp"
 
+
+pros::Distance* currSensor;
+
+int currCount = 0;
+int direction = 1;
+void scoreBlocks(int count, bool isTop, int speed) {
+    isTop ? currSensor = &topCounterDistance : currSensor = &topCounterDistance; // change else to midCounterDistance
+    isTop ? direction = 1 : direction = -1;
+
+    indexer.move(80);
+    outtake.move(direction * speed);
+    while (currCount <= count) {
+        if (topCounterDistance.get_distance() < 80) {
+            while (topCounterDistance.get_distance() < 80) {
+            }
+            currCount++;
+            pros::lcd::print(4, "Count: %d", currCount);
+        }
+    }
+    pros::delay(500);
+
+    indexer.move(0);
+    outtake.move(127);
+}
 
 void two_goal(){
     intake.move(127);

@@ -2,6 +2,7 @@
 #include "autons.hpp"
 #include "op_control.hpp"
 #include "pros/abstract_motor.hpp"
+#include "pros/llemu.hpp"
 #include "pros/motors.h"
 #include "robodash/api.h" 
 #include "setup.hpp"
@@ -9,6 +10,7 @@
 void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
+    pros::lcd::print(2, "dist: %d", topCounterDistance.get_distance());
 		std::uint32_t now = pros::millis();
 		std::int32_t intakePosition = intake.get_raw_position(&now);
 
@@ -67,7 +69,10 @@ void autonomous() {
   //selector.run_auton();
   //driveTesting(true);
   //turnTesting(true);
-  two_goal();
+  //two_goal();
+  
+  intake.move(127);
+  scoreBlocks(5, true);
   //one_goal();
  }
 

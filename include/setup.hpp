@@ -112,3 +112,5 @@ inline pros::Distance leftDistance(16);
 inline pros::Distance rightDistance(15);
 
 inline pros::Distance backDistance(17);
+
+inline pros::Distance topCounterDistance(5);
