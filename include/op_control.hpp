@@ -6,7 +6,7 @@
 
 void handleArcade();
 void handleTank();
-void handleDriveMode(bool isArcade);
+void handleDynamicDriveMode();
 
 void handleIntakeCommands();
 void handleOuttakeCommands();
@@ -14,5 +14,5 @@ void handleOuttakeCommands();
 void handleLoaderMechCommands();
 void handleDescoreMechCommands();
 void handleWingMechCommands();
-
+void toggleHighSpeed();
 void rumble();
