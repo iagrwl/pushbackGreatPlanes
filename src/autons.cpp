@@ -30,25 +30,28 @@ void scoreBlocks(int count, bool isTop, int speed) {
 }
 
 void two_goal(){
-    intake.move(127);
-    outtake.move(127);
-
-    chassis.moveToPoint(0,30,1000);
-    chassis.turnToHeading(90,750);
-    pros::delay(100);
-    loaderMech.set_value(true);
-    chassis.moveToPoint(14,30,1000, {}, false);
-    pros::delay(100);
-    //loaderMech.set_value(false);
-    chassis.moveToPoint(-2,30,1000,{.forwards=false});
-    loaderMech.set_value(false);
-    chassis.moveToPoint(-23,31,1000,{.forwards=false, .maxSpeed = 70}, false);
-    indexer.move(65);
-    outtake.move(65);
-    pros::delay(1800);
-    chassis.moveToPoint(-8,31,800);
-    descoreMech.set_value(true);
-    chassis.moveToPoint(-24,31,1000,{.forwards=false,.minSpeed=60}, false);
+    // setup
+    intake.move(127); // switches intake on max speed
+    outtake.move(127); // switches outtake on max speed to assist intaking bhna
+    // move to loader
+    chassis.moveToPoint(0,30,1000); // moves laterally in front of loader
+    chassis.turnToHeading(90,750); // turns right into loader
+    pros::delay(100); // waits for turn to completely finish
+    // loader pick up
+    loaderMech.set_value(true); // extends the loader mech
+    chassis.moveToPoint(14,31,1000, {.maxSpeed=55}, false); // ramming into the loader
+    pros::delay(300); // waits for blocks to come down into intake
+    chassis.moveToPoint(-2,30,1000,{.forwards=false}); // moves back to mid position between goal and loader
+    loaderMech.set_value(false); // retracts loader mech
+    // scoring into long goal
+    chassis.moveToPoint(-23,30.5,1000,{.forwards=false, .maxSpeed = 60}, false); // drives reverse into long goal
+    indexer.move(65); // switches indexer on optimal scoring speed
+    outtake.move(65); // switches outtake on optimal scoring speed
+    pros::delay(1800); // waits for blocks to go into long goal
+    // push blocks into control zone
+    chassis.moveToPoint(-8,31,800); // moves a bit forward 
+    descoreMech.set_value(true); // flips up descore mech
+    chassis.moveToPoint(-24,31,1000,{.forwards=false,.minSpeed=60}, false); // rams into goal to push into control zone
     pros::delay(300);
     chassis.moveToPoint(-2,30,1000);
     loaderMech.set_value(false);
@@ -63,7 +66,7 @@ void two_goal(){
     
     //chassis.moveToPose(-34,-6,50,2500,{.forwards=false}, false);
     chassis.turnToPoint(-34, -6, 800, {.forwards = false});
-    chassis.moveToPoint(-34,-6,2500,{.forwards=false}, false);
+    chassis.moveToPose(-35.7,-7,406.5,1500,{.forwards=false}, false);
     //pros::delay(1000);
     outtake.move(-65);
     indexer.move(65);
