@@ -115,42 +115,53 @@ void two_goal(){
     //dump delay
     //baaamamamammmm
 }
-
+*/
 void solo_awp(){
-    chassis.turnToPoint(); //face in direction of line-up point
-    chassis.moveToPoint(); //move downwards into line-up point
-    chassis.turnToPoint(); //line-up with match loader
-    //start intake
-    chassis.moveToPoint(); //move into match loader
-    //collection delay
-    chassis.moveToPose();  //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
-    //stop outtake 
-    //start intake
-    chassis.swingToPoint(); //lock right dt to swing pointing towards 3 stack
-    chassis.moveToPoint(); //move upwards into 3 stack and collect
-    //collection delay
-    chassis.turnToPoint(); //point robot inverse to low goal
-    chassis.moveToPoint(); //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
-    //stop outtake 
-    //start intake
-    chassis.swingToPoint(); //lock right dt and face second 3 stack
-    chassis.moveToPoint(); //move forwards towards 3 stack and collect
-    //collection delay
-    chassis.turnToPoint(); //face inverse of high-goal
-    chassis.moveToPoint(); //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
+    intake.move(100);
+    outtake.move(100);
 
-    //biggtly baaaaam
+    chassis.moveToPoint(0, 15, 1000, {.minSpeed = 40, .earlyExitRange = 2});
+    chassis.swingToHeading(-50, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
+    pros::delay(100);
+    outtake.move(50);
+    chassis.moveToPoint(-9.11, 28.21, 1000);
+    intake.move(50);
+    //pros::delay(250);
+    //loaderMech.set_value(true);
+
+    chassis.turnToPoint(3.26, 38.26, 750);
+    intake.move(0);
+    outtake.move(0);
+    loaderMech.set_value(false);
+    chassis.moveToPose(3.26, 38.26, 45.07, 1500, {.minSpeed = 50});
+    pros::delay(100);
+    intake.move(-85);
+    outtake.move(-85);
+    pros::delay(1000);
+    intake.move(127);
+    outtake.move(127);
+    chassis.moveToPoint(-5.04, 28.77, 1000, {.forwards = false});
+    chassis.turnToPoint(40, 28.58, 800, {.minSpeed = 30, .earlyExitRange = 20});
+    chassis.moveToPoint(40, 28.58, 3000);
+    chassis.turnToPoint(28.66, 38.5, 800, {.forwards = false});
+    chassis.moveToPoint(28.66, 38.5, 1500, {.forwards = false}, false);
+    left_dt.move(-127);
+    right_dt.move(-127);
+    indexer.move(127);
+    outtake.move(-127);
+    pros::delay(700);
+    indexer.move(-127);
+    outtake.move(127);
+    left_dt.move(0);
+    right_dt.move(0);
+
+    //intake.move(0);
+    //outtake.move(0);
+
+
+    
 }
-    */
+
 
 
 void one_goal() {
@@ -163,27 +174,11 @@ void one_goal() {
     chassis.moveToPoint(-9.11, 28.21, 1000);
     pros::delay(250);
     loaderMech.set_value(true);
-    //pros::delay(200);
-    //loaderMech.set_value(false);
        
     chassis.turnToPoint(-30.73, -1.12, 800);
     chassis.moveToPoint(-30.73, -1.12, 1000);
     chassis.turnToPoint(-30.5, -10, 800, {});
-    /*chassis.moveToPoint(-32, 25, 2000, {.forwards = false, .maxSpeed = 60});
-    pros::delay(100);
-    while (left_dt.get_actual_velocity() < -5 || right_dt.get_actual_velocity() < -5) {
-    }
-    left_dt.move(-127);
-    right_dt.move(-127);
-    indexer.move(127);
-    pros::delay(2000);
-    indexer.move(0);
-    left_dt.move(0);
-    right_dt.move(0);
-    //chassis.moveToPoint(-32, -11.5, 1500, {.maxSpeed = 80}, false);
-    //pros::delay(200);
-    loaderMech.set_value(true);*/
-    //intake.move(0);
+    
     chassis.moveToPoint(-30.5, -15, 1000, {/*.forwards = false*/});
     pros::delay(100);
     intake.move(127);
@@ -192,35 +187,17 @@ void one_goal() {
     pros::delay(100);
     while (left_dt.get_actual_velocity() < -5 || right_dt.get_actual_velocity() < -5) {
     }
+
     left_dt.move(-127);
     right_dt.move(-127);
     indexer.move(127);
     pros::delay(2000);
     chassis.moveToPoint(-32, 6, 1000);
     chassis.turnToHeading(-90, 800, {.minSpeed = 30, .earlyExitRange = 15});
-    chassis.moveToPoint(-22, 6, 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 2});
+    chassis.moveToPoint(-22, 6, 1000, {.forwards = false, .minSpeed = 50, .earlyExitRange = 2});
     wingMech.set_value(true);
     chassis.turnToHeading(-180, 800, {.minSpeed = 30, .earlyExitRange = 15});
-    chassis.moveToPoint(-22, 35, 2000, {.forwards = false, .maxSpeed = 70});
-
-    /*chassis.swingToPoint(-20, 18.73, lemlib::DriveSide::LEFT, 800, {.forwards = false});
-    wingMech.set_value(true);
-    chassis.moveToPoint(-20, 18.73, 2000, {.forwards = false});
-    chassis.turnToHeading(-180, 800);
-    chassis.moveToPoint(-20, 35, 1000, {.forwards = false});*/
-
-    
-
-
-    /*chassis.swingToHeading(-90, lemlib::DriveSide::LEFT, 800);
-    pros::delay(300);
-    
-    loaderMech.set_value(true);
-    intake.move(-127);
-    //chassis.swingToHeading(-20, lemlib::DriveSide::LEFT, 800);
-    chassis.swingToPoint(-10.95, 28.24, lemlib::DriveSide::LEFT, 800, {.forwards = false});
-    intake.move(127);
-    */
+    chassis.moveToPoint(-22, 35, 2000, {.forwards = false, .maxSpeed = 80, .minSpeed = 30});
 }
 
 void turnTesting(bool isCW) {

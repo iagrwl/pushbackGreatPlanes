@@ -71,9 +71,10 @@ void autonomous() {
   //turnTesting(true);
   //two_goal();
   
-  intake.move(127);
-  scoreBlocks(5, true);
+  //intake.move(127);
+  //scoreBlocks(5, true);
   //one_goal();
+  solo_awp();
  }
 
 void opcontrol() {
