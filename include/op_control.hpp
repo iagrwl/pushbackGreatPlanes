@@ -6,7 +6,7 @@
 
 void handleArcade();
 void handleTank();
-void handleDynamicDriveMode();
+void handleDriveMode(bool isArcade);
 
 void handleIntakeCommands();
 void handleOuttakeCommands();

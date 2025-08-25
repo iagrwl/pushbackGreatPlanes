@@ -24,7 +24,7 @@ rd::Selector selector({
   // it's a 2D array, the string inputted will be
   // displayed on the screen and the referenced 
   // function is what will be run
-  {"two goal",&two_goal },
+  {"two goal LEFT",&two_goal_LEFT },
   {"", }
 });
 
@@ -69,17 +69,16 @@ void autonomous() {
   //selector.run_auton();
   //driveTesting(true);
   //turnTesting(true);
-  //two_goal();
+  two_goal_LEFT();
   
-  intake.move(127);
-  scoreBlocks(5, true);
+ 
   //one_goal();
  }
 
 void opcontrol() {
   while (true) {
     // drive functions should be called in here
-    handleDynamicDriveMode(); // testing feature
+    handleDriveMode(true); // testing feature
     
     handleIntakeCommands();
     handleOuttakeCommands();

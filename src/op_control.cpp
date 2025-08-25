@@ -33,8 +33,10 @@ void handleTank() {
   chassis.tank(leftY, rightY);
 }
 
-
-
+void handleDriveMode(bool isArcade) {
+  isArcade ? handleArcade() : handleTank();
+}
+/*
 void handleDynamicDriveMode() { // function that allows driver to switch drive modes by clicking x and right arrow button on the controller 3 times in a row to switch
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) && controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
         uint32_t now = pros::millis(); // simply gets the current time in relation to when prog started
@@ -51,10 +53,18 @@ void handleDynamicDriveMode() { // function that allows driver to switch drive m
             DriveMode = !DriveMode; // flips the drive mode statement to toggle the drive mode
             DynamicDriveSwitchClickCount = 0; // sets the click count all the way to zero to prevent early engagement of dynamic drive switching
             controller.rumble("."); // rumbles to notify driver
+            if (DriveMode == true){
+              handleArcade();
+            }
+            else if (DriveMode == false)
+            {
+              handleTank();
+            }
+            
         }
     }
 }
-
+*/
 void toggleHighSpeed() { // function that uses the up arrow to toggle between high speed and low speed for scoring. starts in low speed mode as default
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {  // if the controller gets a new press from the up arrow then this passes
         isHighSpeed = !isHighSpeed; // flips the highspeed boolean to allow for differentiation in speed
@@ -112,6 +122,8 @@ void handleOuttakeCommands() { // function to control the scoring of game elemen
     isIndexerOn = true; // sets the boolean to true
     outtake.move(toggle_power); // sets the outtake to the selected power mode
     OuttakeOverride = true; // turns on override to force engagement of above code
+    descoreMech.set_value(false);
+    isDescoreExtended = false;
   } 
   else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // if the right bottom trigger button is held then this passes
     indexer.move(toggle_power); // sets the indexer to selected power mode
@@ -138,41 +150,44 @@ void handleOuttakeCommands() { // function to control the scoring of game elemen
 }
 
 
-void handleLoaderMechCommands() { // handles loader mech controls and prevents from activation if descore mech is in use
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { // passes if the left button is clicked
-    if (!isLoaderExtended && !isDescoreExtended) { // check if loader is not already extended and descore mech is not extended
-      
-      isLoaderExtended = true; // extend the loader mech
-      
-      if (isDescoreExtended) { // if descore mech was extended, retract it to stay in limit
-        isDescoreExtended = false; // update descore state
-        descoreMech.set_value(false); // retract the descore mech
+void handleLoaderMechCommands() { 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { 
+    if (!isLoaderExtended) { 
+      // if loader is not extended, extend it
+      isLoaderExtended = true; 
+
+      // but make sure descore retracts
+      if (isDescoreExtended) { 
+        isDescoreExtended = false; 
+        descoreMech.set_value(false); 
       }
-    } else if (isLoaderExtended) { // if loader is already extended
-      
-      isLoaderExtended = false; // retract the loader mech
+    } else { 
+      // if loader already extended, retract it
+      isLoaderExtended = false; 
     }
-    loaderMech.set_value(isLoaderExtended); // physically alter the state of the piston
+    loaderMech.set_value(isLoaderExtended); 
   }
 }
 
-void handleDescoreMechCommands() { // handles descore mech controls and prevents from activiation if loader mech in use
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { // passes if A button is clicked
-    if (!isDescoreExtended && !isLoaderExtended) { // check if descore is not extended and loader is not extended
-      
-      isDescoreExtended = true; // extend the descore mech
-      
-      if (isLoaderExtended) { // if loader was extended, retract it to stay in limit
-        isLoaderExtended = false; // update loader state
-        loaderMech.set_value(false); // retract the loader mech
+void handleDescoreMechCommands() { 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { 
+    if (!isDescoreExtended) { 
+      // if descore is not extended extend it
+      isDescoreExtended = true; 
+
+      // but make sure loader retracts
+      if (isLoaderExtended) { 
+        isLoaderExtended = false; 
+        loaderMech.set_value(false); 
       }
-    } else if (isDescoreExtended) { // if descore mech is already extended
-      
-      isDescoreExtended = false; // retract the descore mech
+    } else { 
+      // if descore already extended, retract it
+      isDescoreExtended = false; 
     }
-    descoreMech.set_value(isDescoreExtended); // set the descore mech according to its current state
+    descoreMech.set_value(isDescoreExtended); 
   }
 }
+
 
 void handleWingMechCommands() { // handles wing mech controls
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { // passes if B button is clicked

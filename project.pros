@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "parths two goal",
+    "project_name": "parths ",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,7 +323,9 @@
       }
     },
     "upload_options": {
-      "slot": 1
+      "slot": 1,
+      "description": "br",
+      "icon": "pizza"
     },
     "use_early_access": false
   }
