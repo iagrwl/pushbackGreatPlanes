@@ -80,7 +80,7 @@ void autonomous() {
 void opcontrol() {
   while (true) {
     // drive functions should be called in here
-    handleDriveMode(true);
+    handleDynamicDriveMode(); // testing feature
     
     handleIntakeCommands();
     handleOuttakeCommands();
@@ -88,7 +88,7 @@ void opcontrol() {
     handleLoaderMechCommands();
     handleDescoreMechCommands();
     handleWingMechCommands();    
-
+    toggleHighSpeed();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}

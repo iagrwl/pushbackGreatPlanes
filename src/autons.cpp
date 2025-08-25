@@ -39,37 +39,33 @@ void two_goal(){
     pros::delay(100); // waits for turn to completely finish
     // loader pick up
     loaderMech.set_value(true); // extends the loader mech
-    chassis.moveToPoint(14,31,1000, {.maxSpeed=55}, false); // ramming into the loader
-    pros::delay(300); // waits for blocks to come down into intake
-    chassis.moveToPoint(-2,30,1000,{.forwards=false}); // moves back to mid position between goal and loader
+    chassis.moveToPoint(12,30.5,1100, {.maxSpeed=50}, false); // ramming into the loader
+    pros::delay(115); // waits for blocks to come down into intake
+    chassis.moveToPoint(-2,31.5,1100,{.forwards=false}); // moves back to mid position between goal and loader
     loaderMech.set_value(false); // retracts loader mech
     // scoring into long goal
-    chassis.moveToPoint(-23,30.5,1000,{.forwards=false, .maxSpeed = 60}, false); // drives reverse into long goal
-    indexer.move(65); // switches indexer on optimal scoring speed
-    outtake.move(65); // switches outtake on optimal scoring speed
+    chassis.moveToPoint(-23,30.8,1300,{.forwards=false, .maxSpeed = 45}, false); // drives reverse into long goal
+    indexer.move(60); // switches indexer on optimal scoring speed
+    outtake.move(60); // switches outtake on optimal scoring speed
     pros::delay(1800); // waits for blocks to go into long goal
     // push blocks into control zone
     chassis.moveToPoint(-8,31,800); // moves a bit forward 
     descoreMech.set_value(true); // flips up descore mech
     chassis.moveToPoint(-24,31,1000,{.forwards=false,.minSpeed=60}, false); // rams into goal to push into control zone
-    pros::delay(300);
-    chassis.moveToPoint(-2,30,1000);
-    loaderMech.set_value(false);
-    outtake.move(127);
-    indexer.move(0);
-    chassis.turnToPoint(-30.27,2.3,750, {.maxSpeed = 65,.minSpeed = 30, .earlyExitRange = 10});
-    pros::delay(200);
-    chassis.moveToPoint(-30.27,2.3,1000, {.maxSpeed = 80,.minSpeed = 40}, false);
-    
-    //chassis.turnToHeading(47,1000);
-    //pros::delay(400);
-    
-    //chassis.moveToPose(-34,-6,50,2500,{.forwards=false}, false);
-    chassis.turnToPoint(-34, -6, 800, {.forwards = false});
-    chassis.moveToPose(-35.7,-7,406.5,1500,{.forwards=false}, false);
+    pros::delay(300); // waits for balls to settle
+    // movement to 3 ball stack
+    chassis.moveToPoint(-2,30,1000); // moves forward to prepare for turning in 3 balls
+    descoreMech.set_value(false); // sets descore mech to retract
+    outtake.move(127); // sets outtake to help intake balls up
+    indexer.move(0); // turns indexer off to help keep balls in
+    chassis.turnToPoint(-30.27,2.3,750, {.maxSpeed = 65,.minSpeed = 30, .earlyExitRange = 10}); // turns toward point and EER allows for quick transition into the movement to it
+    pros::delay(200); // delay for turning bc async off
+    chassis.moveToPoint(-30.27,2.3,1000, {.maxSpeed = 80,.minSpeed = 40}, false); // moves forward to point to intake
+    chassis.turnToPoint(-34, -6, 800, {.forwards = false}); // aligns with blocks
+    chassis.moveToPose(-35.7,-5.5,406.5,1300,{.forwards=false}, false); // turns around with a quick swing with async off to let swing/turn settle
     //pros::delay(1000);
-    outtake.move(-65);
-    indexer.move(65);
+    outtake.move(-50); //optimal scoring speed for mid goal
+    indexer.move(50); //^^
 }
 // to manipulate intake, intake.move(127 or 0);
 // to give delay pros::delay(delay in ms);
