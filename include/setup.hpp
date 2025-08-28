@@ -4,6 +4,7 @@
 #include "lemlib/api.hpp"
 #include "pros/adi.hpp"
 #include "pros/distance.hpp"
+#include "pros/motors.hpp"
 
 // general setup
 
@@ -11,8 +12,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
-inline pros::MotorGroup left_dt({-1, -2, 3}, pros::MotorGearset::blue);    // left side
-inline pros::MotorGroup right_dt({10, 9, -8}, pros::MotorGearset::blue);  // right side
+inline pros::MotorGroup left_dt({-7, -6, 5}, pros::MotorGearset::blue);    // left side
+inline pros::MotorGroup right_dt({14, 15, -16}, pros::MotorGearset::blue);  // right side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -24,19 +25,20 @@ inline lemlib::Drivetrain drivetrain(&left_dt,
 							  2
 );
 
+inline pros::Imu imu(20);
 // declare sensors needed for odom setup
-inline pros::Rotation horizontalEnc(14);
-inline pros::Rotation verticalEnc(4);
-inline pros::Imu imu(19);
+/*inline pros::Rotation horizontalEnc(17);
+inline pros::Rotation verticalEnc(18);
+
 
 // configure tracking wheels
 inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
-inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -0.475);
+inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -0.475);*/
 
 // configure entire odom setup
-inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
+inline lemlib::OdomSensors sensors(nullptr,
 							nullptr,
-							&horizontalTrackingWheel,
+							nullptr,
 							nullptr,
 							&imu
 );
@@ -50,7 +52,7 @@ inline lemlib::ControllerSettings lateral_controller(5, //proportional gain (kP)
                                           100, // small error range timeout, in milliseconds
                                            1, // large error1range, in inches
                                          750, // large error range timeout, in milliseconds
-                                              5// maximum acceleration (slew)
+                                              5 // maximum acceleration (slew)
 );
 
 // angular pid
@@ -93,11 +95,13 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 );
 
 // declare additional motors, sensors, and pnuematics here
-inline pros::Motor indexer(11);
+inline pros::Motor frontIntake(-9);
 
-inline pros::Motor outtake(20);
+inline pros::Motor middleRollers(-8);
 
-inline pros::Motor intake(-12, pros::MotorGearset::blue);
+inline pros::Motor colorSortRoller(4);
+
+inline pros::Motor scoringRoller(-10);
 
 inline pros::adi::DigitalOut loaderMech('A');
 
@@ -105,12 +109,14 @@ inline pros::adi::DigitalOut descoreMech('C');
 
 inline pros::adi::DigitalOut wingMech('D');
 
-inline pros::Optical opticalSensor(1);
+//inline pros::Optical opticalSensor(1);
 
-inline pros::Distance leftDistance(16);
+inline pros::Distance topDistance(2);
+inline pros::Distance middleDistance(3);
+inline pros::Distance bottomDistance(11);
 
-inline pros::Distance rightDistance(15);
+//inline pros::Distance rightDistance(15);
 
-inline pros::Distance backDistance(17);
+//inline pros::Distance backDistance(17);
 
-inline pros::Distance topCounterDistance(5);
+//inline pros::Distance topCounterDistance(5);

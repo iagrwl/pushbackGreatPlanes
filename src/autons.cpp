@@ -5,7 +5,7 @@
 #include "setup.hpp"
 
 
-pros::Distance* currSensor;
+/*pros::Distance* currSensor;
 
 int currCount = 0;
 int direction = 1;
@@ -28,8 +28,11 @@ void scoreBlocks(int count, bool isTop, int speed) {
     indexer.move(0);
     outtake.move(127);
 }
+*/
 
-void two_goal(){
+
+/*
+void two_goal_RIGHT(){
     // setup
     intake.move(127); // switches intake on max speed
     outtake.move(127); // switches outtake on max speed to assist intaking bhna
@@ -67,51 +70,50 @@ void two_goal(){
     outtake.move(-50); //optimal scoring speed for mid goal
     indexer.move(50); //^^
 }
-// to manipulate intake, intake.move(127 or 0);
-// to give delay pros::delay(delay in ms);
+*/
 
 /*
-// make each auton route it's own function and write them here
-void one_goal() {
-    chassis.turnToPoint(); //point towards 3 stack 
-    //start intake 
-    chassis.moveToPoint();  //move towards 3 stack and collect
-    //collection delay
-    chassis.moveToPose(); //move in front of match loader 
-    chassis.turnToPoint(); //turn in match loader direction
-    chassis.moveToPoint(); //move into match loader and collect
-    chassis.moveToPose(); //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
-
-    //baaaam
-}
-
-void two_goal(){
-    chassis.turnToPoint(); //face in direction of line-up point
-    chassis.moveToPoint(); //move downwards into line-up point
-    chassis.turnToPoint(); //line-up with match loader
-    //start intake
-    chassis.moveToPoint(); //move into match loader and collect
-    //collection delay
-    chassis.moveToPose();  //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
-    //stop outtake 
-    //start intake
-    chassis.swingToPoint(); //lock right dt to swing pointing towards 3 stack
-    chassis.moveToPoint(); //move upwards into 3 stack and collect
-    //collection delay
-    chassis.turnToPoint(); //point robot inverse to low goal
-    chassis.moveToPoint(); //back up into goal
-    //stop intake to allocate more current to outtake
-    //start outtake
-    //dump delay
-    //baaamamamammmm
+void two_goal_LEFT(){
+    
+    // setup
+    intake.move(127); // switches intake on max speed
+    outtake.move(127); // switches outtake on max speed to assist intaking bhna
+    // move to loader
+    chassis.moveToPoint(0,30,1000); // moves laterally in front of loader
+    chassis.turnToHeading(-90,750); // turns right into loader
+    pros::delay(100); // waits for turn to completely finish
+    // loader pick up
+    loaderMech.set_value(true); // extends the loader mech
+    chassis.moveToPoint(-12,30.5,1100, {.maxSpeed=50}, false); // ramming into the loader
+    pros::delay(120); // waits for blocks to come down into intake
+    chassis.moveToPoint(2,30.5,1200,{.forwards=false}); // moves back to mid position between goal and loader
+    loaderMech.set_value(false); // retracts loader mech
+    // scoring into long goal
+    chassis.moveToPoint(23,30.6,1300,{.forwards=false, .maxSpeed = 40}, false); // drives reverse into long goal
+    indexer.move(60); // switches indexer on optimal scoring speed
+    outtake.move(60); // switches outtake on optimal scoring speed
+    pros::delay(1800); // waits for blocks to go into long goal
+    // push blocks into control zone
+    chassis.moveToPoint(8,30.6,800); // moves a bit forward 
+    descoreMech.set_value(true); // flips up descore mech
+    chassis.moveToPoint(24,30.6,1000,{.forwards=false,.minSpeed=60}, false); // rams into goal to push into control zone
+    pros::delay(300); // waits for balls to settle
+    // movement to 3 ball stack
+    chassis.moveToPoint(2,29.5,1000); // moves forward to prepare for turning in 3 balls
+    descoreMech.set_value(false); // sets descore mech to retract
+    outtake.move(127); // sets outtake to help intake balls up
+    indexer.move(0); // turns indexer off to help keep balls in
+    chassis.turnToPoint(32,1,750, {.maxSpeed = 65,.minSpeed = 30, .earlyExitRange = 10}); // turns toward point and EER allows for quick transition into the movement to it
+    pros::delay(200); // delay for turning bc async off
+    chassis.moveToPose(38.5,-4,130,1400, {.maxSpeed = 70,.minSpeed = 40}, false); // moves forward to point to intake
+    pros::delay(500);
+    intake.move(-80);
+    outtake.move(-127);
+    indexer.move(-127);
 }
 */
+
+/*
 void solo_awp(){
     intake.move(100);
     outtake.move(100);
@@ -157,10 +159,10 @@ void solo_awp(){
 
     
 }
+*/
 
-
-
-void one_goal() {
+/*
+void one_goal_left() {
     intake.move(127);
     outtake.move(127);
 
@@ -175,7 +177,7 @@ void one_goal() {
     chassis.moveToPoint(-30.73, -1.12, 1000);
     chassis.turnToPoint(-30.5, -10, 800, {});
     
-    chassis.moveToPoint(-30.5, -15, 1000, {/*.forwards = false*/});
+    chassis.moveToPoint(-30.5, -15, 1000, {/*.forwards = false*//*});
     pros::delay(100);
     intake.move(127);
     pros::delay(300);
@@ -196,6 +198,44 @@ void one_goal() {
     chassis.moveToPoint(-22, 35, 2000, {.forwards = false, .maxSpeed = 80, .minSpeed = 30});
 }
 
+void one_goal_right(){
+    intake.move(127);
+    outtake.move(127);
+
+    chassis.moveToPoint(0, 15, 1000, {.minSpeed = 40, .earlyExitRange = 2});
+    chassis.swingToHeading(-50, lemlib::DriveSide::RIGHT, 1000, {.maxSpeed = 80});
+    
+    chassis.moveToPoint(9.11, 28.21, 1000);
+    pros::delay(250);
+    loaderMech.set_value(true);
+       
+    chassis.turnToPoint(30.73, -1.12, 800);
+    chassis.moveToPoint(30.73, -1.12, 1000);
+    chassis.turnToPoint(30.5, -10, 800, {});
+    
+    chassis.moveToPoint(30.5, -15, 1000, {/*.forwards = false*//*});
+    pros::delay(100);
+    intake.move(127);
+    pros::delay(300);
+    chassis.moveToPoint(31, 25, 1500, {.forwards = false, .maxSpeed = 60});
+    pros::delay(100);
+    while (left_dt.get_actual_velocity() < -5 || right_dt.get_actual_velocity() < -5) {
+    }
+
+    left_dt.move(-127);
+    right_dt.move(-127);
+    indexer.move(127);
+    pros::delay(2000);
+    chassis.moveToPoint(32, 6, 1000);
+    chassis.turnToHeading(90, 800, {.minSpeed = 30, .earlyExitRange = 15});
+    chassis.moveToPoint(22, 6, 1000, {.forwards = false, .minSpeed = 50, .earlyExitRange = 2});
+    wingMech.set_value(true);
+    chassis.turnToHeading(180, 800, {.minSpeed = 30, .earlyExitRange = 15});
+    chassis.moveToPoint(22, 35, 2000, {.forwards = false, .maxSpeed = 80, .minSpeed = 30});
+}
+*/
+
+/*
 void turnTesting(bool isCW) {
 
     const int SIZE = 6;
@@ -218,6 +258,9 @@ void turnTesting(bool isCW) {
 
     }
 }
+    */
+
+    /*
 
 void driveTesting(bool isForward) {
 
@@ -240,4 +283,4 @@ void driveTesting(bool isForward) {
         
 
     }
-}
+}*/

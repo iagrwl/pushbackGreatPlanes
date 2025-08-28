@@ -7,8 +7,10 @@
 
 void turnTesting(bool isCW);
 void driveTesting(bool isForward);
-void two_goal();
-void one_goal();
+void two_goal_RIGHT();
+void two_goal_LEFT();
+void one_goal_left();
+void one_goal_right();
 void solo_awp();
 
 void scoreBlocks(int count, bool isTop, int speed = 127);

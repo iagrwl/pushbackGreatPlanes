@@ -10,9 +10,9 @@
 void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
-    pros::lcd::print(2, "dist: %d", topCounterDistance.get_distance());
+    //pros::lcd::print(2, "dist: %d", topCounterDistance.get_distance());
 		std::uint32_t now = pros::millis();
-		std::int32_t intakePosition = intake.get_raw_position(&now);
+		//std::int32_t intakePosition = intake.get_raw_position(&now);
 
         pros::delay(10); // Delay to avoid overloading the system
     }
@@ -20,18 +20,21 @@ void positionTracker() {
 
 
 rd::Selector selector({
-  // format is {"name of route", &routeFunction}
+  /*// format is {"name of route", &routeFunction}
   // it's a 2D array, the string inputted will be
   // displayed on the screen and the referenced 
   // function is what will be run
-  {"two goal",&two_goal },
-  {"", }
+  {"two goal LEFT",&two_goal_LEFT },
+  {"two goal RIGHT", &two_goal_RIGHT},
+  {"one goal LEFT", &one_goal_left},
+  {"one goal RIGHT", &one_goal_right},
+  {"solo awp", &solo_awp}*/
 });
 
 rd::Console console;
 
 void initialize() {
-	pros::lcd::initialize(); // initialize if you want posTracker
+	//pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
@@ -53,7 +56,6 @@ void initialize() {
 
 		}
 	});
-
 }
 
 void disabled() {
@@ -61,34 +63,26 @@ void disabled() {
 
 void competition_initialize() {
   selector.focus();
-  pros::Task Rumble(&rumble);
+  //pros::Task Rumble(&rumble);
 }
 
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
-  //driveTesting(true);
-  //turnTesting(true);
-  //two_goal();
-  
-  //intake.move(127);
-  //scoreBlocks(5, true);
-  //one_goal();
-  solo_awp();
+  selector.run_auton();
  }
 
 void opcontrol() {
   while (true) {
     // drive functions should be called in here
-    handleDynamicDriveMode(); // testing feature
+    handleDriveMode(true); // testing feature
     
     handleIntakeCommands();
-    handleOuttakeCommands();
+    /*handleOuttakeCommands();
 
     handleLoaderMechCommands();
     handleDescoreMechCommands();
     handleWingMechCommands();    
-    toggleHighSpeed();
+    toggleHighSpeed();*/
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}
