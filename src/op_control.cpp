@@ -1,5 +1,6 @@
 #include "main.h"
 #include "pros/distance.hpp"
+#include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "setup.hpp"
 
@@ -268,39 +269,48 @@ void handleDynamicDriveMode() { // function that allows driver to switch drive m
         }
     }
 }
-int BLOCK_DISTANCE = 50;
+int BLOCK_DISTANCE = 80;
 
-bool isBlockThere(pros::Distance currDist) {
-  if (currDist.get_distance() > BLOCK_DISTANCE) {
+int BOTTOM_BLOCK_DISTANCE = BLOCK_DISTANCE + 30;
+
+bool isBlockThere(pros::Distance& currDist) {
+  if (currDist.get_distance() <= BLOCK_DISTANCE) {
     pros::delay(500);
-    return currDist.get_distance() > BLOCK_DISTANCE;
+    return currDist.get_distance() <= BLOCK_DISTANCE;
   }
-  return false;;
+  return false;
 }
+
+pros::Task* intakeOn = nullptr;
+
 void spinIntake() {
   frontIntake.move(127);
   middleRollers.move(127);
   colorSortRoller.move(127);
   scoringRoller.move(127);
+  pros::delay(50);
   while (!isBlockThere(bottomDistance)) {
-    if (isBlockThere(topDistance)) {
+    if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
+      scoringRoller.move(50);
+    }
+    if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
+      middleRollers.move(0);
       scoringRoller.move(0);
     }
-    if (isBlockThere(middleDistance)) {
-      middleRollers.move(0);
-    }
+    /*if(colorSortRoller.get_actual_velocity() < 10) {
+      colorSortRoller.move(0);
+    }*/
+    pros::lcd::print(3, "no bottom block");
+    pros::delay(10);
   }
   frontIntake.move(0);
-  colorSortRoller.move(0);
+  pros::lcd::print(4, "bottom block");
 }
 
 void handleIntakeCommands () { // handles intake control using the left trigger buttons on the controller
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // checks for new press from the left top trigger buttons 
     if (!isIntakeForward) {
-      frontIntake.move(127);
-      middleRollers.move(127);
-      scoringRoller.move(127);
-      colorSortRoller.move(127);
+      intakeOn = new pros::Task(&spinIntake);
       isIntakeForward = true;
     } else {
       isIntakeForward = false;
@@ -308,10 +318,8 @@ void handleIntakeCommands () { // handles intake control using the left trigger 
       middleRollers.move(0);
       scoringRoller.move(0);
       colorSortRoller.move(0);
+      pros::lcd::print(5, "stop");
     }
-  }
-  if (isIntakeForward) {
-    
   }
 }
 /*

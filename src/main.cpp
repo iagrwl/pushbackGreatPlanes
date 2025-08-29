@@ -10,7 +10,7 @@
 void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
-    //pros::lcd::print(2, "dist: %d", topCounterDistance.get_distance());
+    pros::lcd::print(2, "dist: %d", bottomDistance.get_distance());
 		std::uint32_t now = pros::millis();
 		//std::int32_t intakePosition = intake.get_raw_position(&now);
 
@@ -34,7 +34,7 @@ rd::Selector selector({
 rd::Console console;
 
 void initialize() {
-	//pros::lcd::initialize(); // initialize if you want posTracker
+	pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);

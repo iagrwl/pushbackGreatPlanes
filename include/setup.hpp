@@ -111,9 +111,9 @@ inline pros::adi::DigitalOut wingMech('D');
 
 //inline pros::Optical opticalSensor(1);
 
-inline pros::Distance topDistance(2);
-inline pros::Distance middleDistance(3);
-inline pros::Distance bottomDistance(11);
+inline pros::Distance topDistance(19);
+inline pros::Distance middleDistance(13);
+inline pros::Distance bottomDistance(18);
 
 //inline pros::Distance rightDistance(15);
 
