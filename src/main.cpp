@@ -40,7 +40,7 @@ void initialize() {
 	pros::Task pos(&positionTracker);
   chassis.calibrate();
 
-  loaderMech.set_value(false);
+  
 
   left_dt.set_brake_mode(pros::MotorBrake::coast);
   right_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -63,7 +63,11 @@ void disabled() {
 
 void competition_initialize() {
   selector.focus();
-  //pros::Task Rumble(&rumble);
+  //testing sequence
+  toggleScoringBar();
+  pros::delay(1000);
+  toggleScoringBar();
+  
 }
 
 void autonomous() {
@@ -72,17 +76,14 @@ void autonomous() {
  }
 
 void opcontrol() {
+  
   while (true) {
-    // drive functions should be called in here
-    handleDriveMode(true); // testing feature
-    
+    // driver control functions go here
+    handleDriveMode(true);
     handleIntakeCommands();
-    /*handleOuttakeCommands();
+    handleOuttakeCommands();
 
-    handleLoaderMechCommands();
-    handleDescoreMechCommands();
-    handleWingMechCommands();    
-    toggleHighSpeed();*/
+
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}

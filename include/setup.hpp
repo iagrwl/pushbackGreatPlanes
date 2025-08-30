@@ -95,28 +95,17 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 );
 
 // declare additional motors, sensors, and pnuematics here
+
+//intake groups
 inline pros::Motor frontIntake(-9);
-
 inline pros::Motor middleRollers(-8);
-
 inline pros::Motor colorSortRoller(4);
-
 inline pros::Motor scoringRoller(-10);
 
-inline pros::adi::DigitalOut loaderMech('A');
+//extensions
+inline pros::adi::DigitalOut scoringBar('A');
 
-inline pros::adi::DigitalOut descoreMech('C');
-
-inline pros::adi::DigitalOut wingMech('D');
-
-//inline pros::Optical opticalSensor(1);
-
+// clog sensors
 inline pros::Distance topDistance(19);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
-
-//inline pros::Distance rightDistance(15);
-
-//inline pros::Distance backDistance(17);
-
-//inline pros::Distance topCounterDistance(5);
