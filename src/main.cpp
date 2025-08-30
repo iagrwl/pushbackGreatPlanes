@@ -56,6 +56,8 @@ void initialize() {
 
 		}
 	});
+    pros::Task* tempTask = new pros::Task(pullTempsTask);
+    pros::Task* ampsTask = new pros::Task(pullAmpsTask);
 }
 
 void disabled() {
@@ -63,11 +65,10 @@ void disabled() {
 
 void competition_initialize() {
   selector.focus();
+
   //testing sequence
-  toggleScoringBar();
-  pros::delay(1000);
-  toggleScoringBar();
-  
+  testing_sequence();
+
 }
 
 void autonomous() {
