@@ -56,8 +56,7 @@ void initialize() {
 
 		}
 	});
-    pros::Task* tempTask = new pros::Task(pullTempsTask);
-    pros::Task* ampsTask = new pros::Task(pullAmpsTask);
+    pros::Task* motorDataTask = new pros::Task(StallCheck);
 }
 
 void disabled() {
@@ -83,7 +82,7 @@ void opcontrol() {
     handleDriveMode(true);
     handleIntakeCommands();
     handleOuttakeCommands();
-
+    handleScoringBarCommands();
 
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);

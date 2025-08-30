@@ -5,11 +5,14 @@
 #include "setup.hpp"
 
 //states
-bool isOuttakeToggled = false;
-bool OuttakeOverride = false;
 bool isIntakeForward = false;
-bool isHighSpeed = false;
+bool isHighSpeedScoring = false;
 bool isScoringBarUp = false;
+bool isFI_Stop = false;
+bool isMR_Stop = false;
+bool isCSR_Stop = false;
+bool isSR_Stop = false;
+bool isStallOverride = false;
 
 //constants
 int block_dist = 80;
@@ -33,39 +36,94 @@ double MR_amps = 0;
 double CSR_amps = 0;
 double SR_amps = 0;
 
-//func to make pulling temps easy
+//rpms
+double FI_rpm = 0;
+double MR_rpm = 0;
+double CSR_rpm = 0;
+double SR_rpm = 0;
+
+//temps for checking spikeronis
+double FI_prevTemp = 0;
+double MR_prevTemp = 0;
+double CSR_prevTemp = 0;
+double SR_prevTemp = 0;
+
+//threshold values
+const double ampThreshold = 1500;
+const double rpmThreshold = 5;
+const double tempSpikeThreshold = 10;
+
+//helper boy 1
 double getTempF(pros::Motor& m) {
     return m.get_temperature() * 9.0 / 5.0 + 32;
 }
 
-//acts as a refresher func for temps
-void pullTempsTask(void* param) {
-    while (true) {
-        FI_temp  = getTempF(frontIntake);
-        MR_temp  = getTempF(middleRollers);
-        CSR_temp = getTempF(colorSortRoller);
-        SR_temp  = getTempF(scoringRoller);
-
-        pros::delay(100);
-    }
-}
-
-//func to make pulling amps easy
+//helper boy 2
 double getAmps(pros::Motor& m) {
     return m.get_current_draw(); 
 }
 
-//acts as a refresher func for amps
-void pullAmpsTask(void* param) {
-    while (true) {
-        FI_amps  = getAmps(frontIntake);
-        MR_amps  = getAmps(middleRollers);
-        CSR_amps = getAmps(colorSortRoller);
-        SR_amps  = getAmps(scoringRoller);
+//helper boy 3
+double getRPM(pros::Motor& m) {
+    return m.get_actual_velocity();
+}
 
-        pros::delay(100);
+
+void StallCheck(void* param) {
+    while (true) {
+        //front intake
+        FI_temp = getTempF(frontIntake);
+        FI_amps = getAmps(frontIntake);
+        FI_rpm = getRPM(frontIntake);
+
+        //middle rollers
+        MR_temp = getTempF(middleRollers);
+        MR_amps = getAmps(middleRollers);
+        MR_rpm = getRPM(middleRollers);
+
+        //color sort rollers
+        CSR_temp = getTempF(colorSortRoller);
+        CSR_amps = getAmps(colorSortRoller);
+        CSR_rpm = getRPM(colorSortRoller);
+
+        //scoring roller
+        SR_temp = getTempF(scoringRoller);
+        SR_amps = getAmps(scoringRoller);
+        SR_rpm = getRPM(scoringRoller);
+
+        //below code checks each motor if the amps is greater than the threshold then checks if the rpm is less then the threshold then checks if the average temp delta spike is more than the threshold
+
+        //front intake
+        if ((FI_amps > ampThreshold && abs(FI_rpm) < rpmThreshold) && (FI_temp - FI_prevTemp > tempSpikeThreshold)) {
+            frontIntake.move(0);
+        }
+
+        //middle rollers
+        if ((MR_amps > ampThreshold && abs(MR_rpm) < rpmThreshold) && (MR_temp - MR_prevTemp > tempSpikeThreshold)) {
+            middleRollers.move(0);
+        }
+
+        //color sort rollers
+        if ((CSR_amps > ampThreshold && abs(CSR_rpm) < rpmThreshold) && (CSR_temp - CSR_prevTemp > tempSpikeThreshold)) {
+            colorSortRoller.move(0);
+        }
+
+        //scoring rollers
+        if ((SR_amps > ampThreshold && abs(SR_rpm) < rpmThreshold) && (SR_temp - SR_prevTemp > tempSpikeThreshold)) {
+            scoringRoller.move(0);
+        }
+
+        //updates spike check readings
+        FI_prevTemp = FI_temp;
+        MR_prevTemp = MR_temp;
+        CSR_prevTemp = CSR_temp;
+        SR_prevTemp = SR_temp;
+
+        pros::delay(100); //delay so brain dont go boom boom
     }
 }
+
+//DRIVE
 
 // drive mode handler
 void handleDriveMode(bool isArcade) {
@@ -86,7 +144,7 @@ void handleTank() {
   chassis.tank(leftY, rightY); // move the robot
 }
 
-// lets driver switch drive modes (x + right arrow 3x in 1 sec)
+// lets driver switch drive modes (x + right arrow 3x in 1 sec) fea
 void handleDynamicDriveMode() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) &&
       controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
@@ -143,6 +201,8 @@ void testing_sequence(){
   pros::lcd::set_text(1, "bobot passed");
 }
 
+//CORE
+
 // intake control (L1 toggle)
 void handleIntakeCommands() {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
@@ -192,8 +252,27 @@ void handleOuttakeCommands() {
   }
 }
 
-//scoring bar toggler (B button)
+//EXTENSIONS
+void handleScoringBarCommands() { 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { 
+    !isScoringBarUp ? isScoringBarUp = true : isScoringBarUp = false;
+    scoringBar.set_value(isScoringBarUp); 
+  }
+}
+
+//TOGGLERS
+
+//scoring bar toggler
 void toggleScoringBar() {
   isScoringBarUp = !isScoringBarUp;
   scoringBar.set_value(isScoringBarUp);
+}
+
+//MACROS
+
+//stall overrider in case code starts bugging during match
+void toggleStallOverride(){
+   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { 
+    !isStallOverride ? isStallOverride = true : isStallOverride = false;
+  }
 }

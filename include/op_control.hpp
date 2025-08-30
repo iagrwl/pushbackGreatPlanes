@@ -5,8 +5,7 @@
 
 //other
 void testing_sequence();
-void pullTempsTask(void* param); 
-void pullAmpsTask(void* param); 
+void StallCheck(void* param);
 
 //drive
 void handleArcade();
@@ -17,4 +16,5 @@ void handleDriveMode(bool isArcade);
 void toggleScoringBar();
 void handleIntakeCommands();
 void handleOuttakeCommands();
+void handleScoringBarCommands();
 void rumble();
