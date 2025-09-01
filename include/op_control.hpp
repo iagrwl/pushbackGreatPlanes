@@ -5,7 +5,7 @@
 
 //other
 void testing_sequence();
-void StallCheck(void* param);
+void stall_checker();
 
 //drive
 void handleArcade();
