@@ -297,9 +297,9 @@ void spinIntake() {
       middleRollers.move(0);
       scoringRoller.move(0);
     }
-    /*if(colorSortRoller.get_actual_velocity() < 10) {
+    if(colorSortRoller.get_actual_velocity() < 10) {
       colorSortRoller.move(0);
-    }*/
+    }
     pros::lcd::print(3, "no bottom block");
     pros::delay(10);
   }
