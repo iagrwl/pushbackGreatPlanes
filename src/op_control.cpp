@@ -11,6 +11,7 @@ bool isIntakeForward = false;
 bool isHighSpeed = false;
 bool isScoringBarUp = false;
 
+
 // constants
 int block_dist = 80;
 int bottom_block_dist = block_dist + 30;
@@ -20,6 +21,10 @@ int toggle_power = 60;
 bool DriveMode = true;                   // true = arcade, false = tank
 int DynamicDriveSwitchClickCount = 0;    // tracks how many times toggle combo clicked
 uint32_t lastDynamicSwitchClickTime = 0; // stores last time the combo was pressed
+
+//threshold vals
+double amp_threshold = 2000;
+double rpm_threshold = 70.0;
 
 // drive mode handler
 void handleDriveMode(bool isArcade) {
@@ -86,20 +91,7 @@ void spinIntake() {
   scoringRoller.move(127);
   pros::delay(50);
 
-  while (!isBlockThere(bottomDistance)) {
-    if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
-      scoringRoller.move(50);
-    }
-    if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
-      middleRollers.move(0);
-      scoringRoller.move(0);
-    }
-    pros::lcd::print(3, "no bottom block");
-    pros::delay(10);
-  }
-
-  frontIntake.move(0);
-  pros::lcd::print(4, "bottom block");
+  
 }
 
 // intake control (L1 toggle)
@@ -148,4 +140,49 @@ void handleOuttakeCommands() {
     colorSortRoller.move(0);
     scoringRoller.move(0); 
   }
+}
+// Variables to store RPM and current for each intake motor
+double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
+double frontIntake_rpm = 0.0, frontIntake_current = 0.0;
+double middleRollers_rpm = 0.0, middleRollers_current = 0.0;
+double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
+
+
+void stall_checker() {
+  colorSortRoller_rpm = colorSortRoller.get_actual_velocity();
+  colorSortRoller_current = colorSortRoller.get_current_draw();
+  frontIntake_rpm = frontIntake.get_actual_velocity();
+  frontIntake_current = frontIntake.get_current_draw();
+  middleRollers_rpm = middleRollers.get_actual_velocity();
+  middleRollers_current = middleRollers.get_current_draw();
+  scoringRoller_rpm = scoringRoller.get_actual_velocity();
+  scoringRoller_current = scoringRoller.get_current_draw();
+
+  
+  bool frontIntakeStall = (frontIntake_current > amp_threshold && frontIntake_rpm < rpm_threshold);
+  if (frontIntakeStall) {
+    frontIntake.move(0);
+  }
+  bool colorSortRollerStall = (colorSortRoller_current > amp_threshold && colorSortRoller_rpm < rpm_threshold);
+  if (colorSortRollerStall) {
+    colorSortRoller.move(0);
+  }
+  bool middleRollersStall = (middleRollers_current > amp_threshold && middleRollers_rpm < rpm_threshold);
+  if (middleRollersStall) {
+    middleRollers.move(0);
+  }
+  bool scoringRollerStall = (scoringRoller_current > 1300 && scoringRoller_rpm < 150);
+  if (scoringRollerStall) {
+    scoringRoller.move(0);
+  }
+
+  
+  pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
+    frontIntakeStall ? "front full" : "");
+  pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
+    colorSortRollerStall ? "lower full" : "");
+  pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
+    middleRollersStall ? "middle full" : "");
+  pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
+    scoringRollerStall ? "top full" : "");
 }

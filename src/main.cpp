@@ -11,6 +11,7 @@ void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(2, "dist: %d", bottomDistance.get_distance());
+     pros::lcd::print(3, "color: %.2f", racism.get_hue());
 		std::uint32_t now = pros::millis();
 		//std::int32_t intakePosition = intake.get_raw_position(&now);
 
@@ -18,6 +19,12 @@ void positionTracker() {
     }
 }
 
+static void stall_check(void*){
+    while(true){
+        stall_checker();
+        pros::delay(100);
+    }
+}
 
 rd::Selector selector({
   /*// format is {"name of route", &routeFunction}
@@ -38,6 +45,11 @@ void initialize() {
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
+  racism.set_led_pwm(100);
+
+  static pros::Task checkforstall(stall_check);
+
+  
   chassis.calibrate();
 
   
@@ -63,11 +75,6 @@ void disabled() {
 
 void competition_initialize() {
   selector.focus();
-  //testing sequence
-  toggleScoringBar();
-  pros::delay(1000);
-  toggleScoringBar();
-  
 }
 
 void autonomous() {
@@ -87,4 +94,4 @@ void opcontrol() {
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}
-} 
+}

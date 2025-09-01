@@ -106,6 +106,7 @@ inline pros::Motor scoringRoller(-10);
 inline pros::adi::DigitalOut scoringBar('A');
 
 // clog sensors
-inline pros::Distance topDistance(19);
+inline pros::Optical racism(19);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
+inline pros::Distance topDistance(11);
