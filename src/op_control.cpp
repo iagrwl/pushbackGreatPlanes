@@ -4,311 +4,93 @@
 #include "pros/misc.h"
 #include "setup.hpp"
 
-/*bool isIndexerOn = false;
-bool isFirstTimePressed = true;
-bool isOuttakeToggled = false;
-bool OuttakeOverride = false;
-bool isIntakeForward = true;
-bool isDescoreExtended = false;
-bool isLoaderExtended = false;
-bool isWingExtended = false;
-bool isHighSpeed = false;
-int toggle_power = 60;
-
-bool DriveMode = true; // true for arcade false for tank
-int DynamicDriveSwitchClickCount = 0; // tracks how many times toggle combo has been clicked in sequence
-uint32_t lastDynamicSwitchClickTime = 0; // js stores the last timestamp of when the combo has been clicked
-
-// write every driver control task as its own function here.
-
-void handleArcade() {
-  int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-  int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-  // move the robot
-  chassis.arcade(leftY, rightX);
-}
-
-void handleTank() {
-  int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-  int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-  // move the robot
-  chassis.tank(leftY, rightY);
-}
-
-void handleDriveMode(bool isArcade) {
-  isArcade ? handleArcade() : handleTank();
-}
-/*
-void handleDynamicDriveMode() { // function that allows driver to switch drive modes by clicking x and right arrow button on the controller 3 times in a row to switch
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) && controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        uint32_t now = pros::millis(); // simply gets the current time in relation to when prog started
-        if (now - lastDynamicSwitchClickTime <= 1000) { // if the current time minus by the last time the combo was pressed is less than 1 second then the condition passess
-            DynamicDriveSwitchClickCount++; // adds one to the combo click count
-        } 
-        else { // if the combo is not pressed within the last in a second then this passes
-            DynamicDriveSwitchClickCount = 1; // resets the combo count
-        }
-
-        lastDynamicSwitchClickTime = now; // since the combo condition was passed above the last time the combo was click is set to the current prog runtime
-
-        if (DynamicDriveSwitchClickCount >= 3) { // checks if the combo click count is more than or equal to 3
-            DriveMode = !DriveMode; // flips the drive mode statement to toggle the drive mode
-            DynamicDriveSwitchClickCount = 0; // sets the click count all the way to zero to prevent early engagement of dynamic drive switching
-            controller.rumble("."); // rumbles to notify driver
-            if (DriveMode == true){
-              handleArcade();
-            }
-            else if (DriveMode == false)
-            {
-              handleTank();
-            }
-            
-        }
-    }
-}
-*/
-/*
-void toggleHighSpeed() { // function that uses the up arrow to toggle between high speed and low speed for scoring. starts in low speed mode as default
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {  // if the controller gets a new press from the up arrow then this passes
-        isHighSpeed = !isHighSpeed; // flips the highspeed boolean to allow for differentiation in speed
-        if (isHighSpeed){ // if the high speed condition is true then the speed is max (127)
-          toggle_power = 127; // sets the toggled power to 127
-        } else{ // if the above statement fails then this statement passes
-          toggle_power = 50; // sets the toggled power to 50
-        }
-    }
-}
-
-void handleIntakeCommands () { // handles intake control using the left trigger buttons on the controller
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // checks for new press from the left top trigger buttons
-    isOuttakeToggled = !isOuttakeToggled; // flips the boolean to toggle the boolean that keeps track if the outtake is toggled
-
-    if (isOuttakeToggled) { // if the outtake is toggle and the above statement is passed then this passes
-      intake.move(127); // moves the intake at max speed
-      if (!OuttakeOverride){ // if the outtake override is the inverse of the current state then this passes
-        outtake.move(127); // it moves the outtake/colorsort roller forward at max speed. this moves because it helps the intake pull balls up
-        isIntakeForward = true; // sets the intake boolean to true that keeps tracks of the direction of the intake
-      }
-    } 
-    else { // if the above statement does not pass this statement passes
-        intake.move(0); // switches the intake off
-      if (!OuttakeOverride){
-        outtake.move(0); // if the outtake override is the inverse of the currentt state then this passes
-        isIntakeForward = false; // sets the intake boolean to false
-      }
-    }
-  }
-
-if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // if the bottom left trigger button is held activate reverse intake/outtake/color sort roller
-    
-    isOuttakeToggled = false; // turn off outtake toggle to avoid conflict with manual override
-    
-    isIndexerOn = false; // disable indexer while L2 is held
-    intake.move(-80); // run intake in reverse at reduced speed
-    indexer.move(-127); // run indexer in reverse at full power
-    outtake.move(-127); // run outtake in reverse at full power to eject balls
-    OuttakeOverride = true; // set override to prevent other intake/outtake logic from interfering
-    isIntakeForward = false; // update intake direction state to indicate reverse mode
-} else if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !isIntakeForward) {
-    isIndexerOn = true; // re-enable indexer once L2 is released and intake was previously reversed
-    intake.move(0); // stop intake motor as reverse mode is no longer active
-    OuttakeOverride = false; // clear override so normal intake/outtake logic resumes
-}
-}
-
-void handleOuttakeCommands() { // function to control the scoring of game elements using outtake
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // this function is simply to avoid the L2 button interfering from this func to the above oen
-    return;//skip logic coolio
-  }
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // if the right top trigger button is held then this passes
-    indexer.move(toggle_power); // sets the indexer to the selected power mode
-    isIndexerOn = true; // sets the boolean to true
-    outtake.move(toggle_power); // sets the outtake to the selected power mode
-    OuttakeOverride = true; // turns on override to force engagement of above code
-    descoreMech.set_value(false);
-    isDescoreExtended = false;
-  } 
-  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // if the right bottom trigger button is held then this passes
-    indexer.move(toggle_power); // sets the indexer to selected power mode
-    isIndexerOn = true; // sets the boolean to true
-    outtake.move(-toggle_power); // sets the outtake to inverse of the selected power mode to spin in reverse
-    OuttakeOverride = true; // forces engagement of above code
-  } 
-  else { // if all above statements fail this passes
-
-    if (isIndexerOn) {
-    indexer.move(0); // stop the indexer motor if it was previously running 
-    isIndexerOn = false; // update the indexer state 
-    }
-
-    if (isOuttakeToggled) {
-        outtake.move(toggle_power); // run the outtake motor at the current toggled power if outtake toggle is active
-    } 
-    else {
-        outtake.move(0); // stop the outtake motor if the toggle is not active 
-    }
-
-    OuttakeOverride = false; // reset the override state so normal intake/outtake control can resume
-    }
-}
-
-
-void handleLoaderMechCommands() { 
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { 
-    if (!isLoaderExtended) { 
-      // if loader is not extended, extend it
-      isLoaderExtended = true; 
-
-      // but make sure descore retracts
-      if (isDescoreExtended) { 
-        isDescoreExtended = false; 
-        descoreMech.set_value(false); 
-      }
-    } else { 
-      // if loader already extended, retract it
-      isLoaderExtended = false; 
-    }
-    loaderMech.set_value(isLoaderExtended); 
-  }
-}
-
-void handleDescoreMechCommands() { 
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { 
-    if (!isDescoreExtended) { 
-      // if descore is not extended extend it
-      isDescoreExtended = true; 
-
-      // but make sure loader retracts
-      if (isLoaderExtended) { 
-        isLoaderExtended = false; 
-        loaderMech.set_value(false); 
-      }
-    } else { 
-      // if descore already extended, retract it
-      isDescoreExtended = false; 
-    }
-    descoreMech.set_value(isDescoreExtended); 
-  }
-}
-
-
-void handleWingMechCommands() { // handles wing mech controls
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { // passes if B button is clicked
-    !isWingExtended ? isWingExtended = true : isWingExtended = false; // toggle wing mech state
-    wingMech.set_value(isWingExtended); // apply the current state to the wing mech
-  }
-}
-
-//rumbles controller BRRRRRRR
-void rumble() {
-  for (int i = 60; i > 0; i--) {
-    if (i == 10) {
-      controller.rumble("--");
-    }
-    pros::delay(1000);
-  }
-}*/
-
-bool isIndexerOn = false;
-bool isFirstTimePressed = true;
+// states
 bool isOuttakeToggled = false;
 bool OuttakeOverride = false;
 bool isIntakeForward = false;
-bool isDescoreExtended = false;
-bool isLoaderExtended = false;
-bool isWingExtended = false;
 bool isHighSpeed = false;
+bool isScoringBarUp = false;
+bool isBlockDetected = true;
+
+
+// constants
+
 int toggle_power = 60;
 
-bool DriveMode = true; // true for arcade false for tank
-int DynamicDriveSwitchClickCount = 0; // tracks how many times toggle combo has been clicked in sequence
-uint32_t lastDynamicSwitchClickTime = 0; // js stores the last timestamp of when the combo has been clicked
+// dynamic switching vars
+bool DriveMode = true;                   // true = arcade, false = tank
+int DynamicDriveSwitchClickCount = 0;    // tracks how many times toggle combo clicked
+uint32_t lastDynamicSwitchClickTime = 0; // stores last time the combo was pressed
+
+//threshold vals
+double amp_threshold = 2000;
+double rpm_threshold = 70.0;
+
+// drive mode handler
+void handleDriveMode(bool isArcade) {
+  isArcade ? handleArcade() : handleTank();
+}
 
 void handleArcade() {
   int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-  // move the robot
-  chassis.arcade(leftY, rightX);
+  chassis.arcade(leftY, rightX); // move the robot
 }
 
 void handleTank() {
   int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
   int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-  // move the robot
-  chassis.tank(leftY, rightY);
+  chassis.tank(leftY, rightY); // move the robot
 }
 
-void handleDriveMode(bool isArcade) {
-  isArcade ? handleArcade() : handleTank();
-}
-
-void handleDynamicDriveMode() { // function that allows driver to switch drive modes by clicking x and right arrow button on the controller 3 times in a row to switch
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) && controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        uint32_t now = pros::millis(); // simply gets the current time in relation to when prog started
-        if (now - lastDynamicSwitchClickTime <= 1000) { // if the current time minus by the last time the combo was pressed is less than 1 second then the condition passess
-            DynamicDriveSwitchClickCount++; // adds one to the combo click count
-        } 
-        else { // if the combo is not pressed within the last in a second then this passes
-            DynamicDriveSwitchClickCount = 1; // resets the combo count
-        }
-
-        lastDynamicSwitchClickTime = now; // since the combo condition was passed above the last time the combo was click is set to the current prog runtime
-
-        if (DynamicDriveSwitchClickCount >= 3) { // checks if the combo click count is more than or equal to 3
-            DriveMode = !DriveMode; // flips the drive mode statement to toggle the drive mode
-            DynamicDriveSwitchClickCount = 0; // sets the click count all the way to zero to prevent early engagement of dynamic drive switching
-            controller.rumble("."); // rumbles to notify driver
-            if (DriveMode == true){
-              handleArcade();
-            }
-            else if (DriveMode == false)
-            {
-              handleTank();
-            }
-            
-        }
+// lets driver switch drive modes (x + right arrow 3x in 1 sec)
+void handleDynamicDriveMode() {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT) &&
+      controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+    
+    uint32_t now = pros::millis(); // current prog time
+    if (now - lastDynamicSwitchClickTime <= 1000) {
+      DynamicDriveSwitchClickCount++; // add to combo count
+    } else {
+      DynamicDriveSwitchClickCount = 1; // reset combo
     }
-}
-int BLOCK_DISTANCE = 80;
 
-int BOTTOM_BLOCK_DISTANCE = BLOCK_DISTANCE + 30;
+    lastDynamicSwitchClickTime = now;
 
-bool isBlockThere(pros::Distance& currDist) {
-  if (currDist.get_distance() <= BLOCK_DISTANCE) {
-    pros::delay(500);
-    return currDist.get_distance() <= BLOCK_DISTANCE;
+    if (DynamicDriveSwitchClickCount >= 3) {
+      DriveMode = !DriveMode;              // flip drive mode
+      DynamicDriveSwitchClickCount = 0;    // reset combo count
+      controller.rumble(".");              // notify driver
+      DriveMode ? handleArcade() : handleTank();
+    }
   }
-  return false;
 }
+
+// scoring bar toggle
+void toggleScoringBar() {
+  isScoringBarUp = !isScoringBarUp;
+  scoringBar.set_value(isScoringBarUp);
+}
+
+// block detection helper
+
 
 pros::Task* intakeOn = nullptr;
 
+// intake spinnnner
 void spinIntake() {
   frontIntake.move(127);
   middleRollers.move(127);
   colorSortRoller.move(127);
   scoringRoller.move(127);
   pros::delay(50);
-  while (!isBlockThere(bottomDistance)) {
-    if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
-      scoringRoller.move(50);
-    }
-    if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
-      middleRollers.move(0);
-      scoringRoller.move(0);
-    }
-    if(colorSortRoller.get_actual_velocity() < 10) {
-      colorSortRoller.move(0);
-    }
-    pros::lcd::print(3, "no bottom block");
-    pros::delay(10);
-  }
-  frontIntake.move(0);
-  pros::lcd::print(4, "bottom block");
+
+  
 }
 
-void handleIntakeCommands () { // handles intake control using the left trigger buttons on the controller
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // checks for new press from the left top trigger buttons 
+// intake control (L1 toggle)
+void handleIntakeCommands() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
     if (!isIntakeForward) {
       intakeOn = new pros::Task(&spinIntake);
       isIntakeForward = true;
@@ -322,39 +104,79 @@ void handleIntakeCommands () { // handles intake control using the left trigger 
     }
   }
 }
-/*
-void handleScoringCommands() {
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // this function is simply to avoid the L2 button interfering from this func to the above oen
-    return;//skip logic coolio
+
+// outtake control (R1 / R2)
+void handleOuttakeCommands() {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    return; // avoid L2 interfering w intake
   }
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // if the right top trigger button is held then this passes
-    indexer.move(toggle_power); // sets the indexer to the selected power mode
-    isIndexerOn = true; // sets the boolean to true
-    outtake.move(toggle_power); // sets the outtake to the selected power mode
-    OuttakeOverride = true; // turns on override to force engagement of above code
-    descoreMech.set_value(false);
-    isDescoreExtended = false;
+
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // R1 = score forward
+    scoringBar.set_value(true);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    colorSortRoller.move(127);
+    scoringRoller.move(127);
   } 
-  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // if the right bottom trigger button is held then this passes
-    indexer.move(toggle_power); // sets the indexer to selected power mode
-    isIndexerOn = true; // sets the boolean to true
-    outtake.move(-toggle_power); // sets the outtake to inverse of the selected power mode to spin in reverse
-    OuttakeOverride = true; // forces engagement of above code
+
+  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = reverse score
+    scoringBar.set_value(false);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    colorSortRoller.move(127);
+    scoringRoller.move(-127);
   } 
-  else { // if all above statements fail this passes
+  
+  else { // when neither is pressed
+    scoringBar.set_value(false);
+    frontIntake.move(0);
+    middleRollers.move(0);
+    colorSortRoller.move(0);
+    scoringRoller.move(0); 
+  }
+}
+// Variables to store RPM and current for each intake motor
+double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
+double frontIntake_rpm = 0.0, frontIntake_current = 0.0;
+double middleRollers_rpm = 0.0, middleRollers_current = 0.0;
+double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
 
-    if (isIndexerOn) {
-    indexer.move(0); // stop the indexer motor if it was previously running 
-    isIndexerOn = false; // update the indexer state 
-    }
 
-    if (isOuttakeToggled) {
-        outtake.move(toggle_power); // run the outtake motor at the current toggled power if outtake toggle is active
-    } 
-    else {
-        outtake.move(0); // stop the outtake motor if the toggle is not active 
-    }
+void stall_checker() {
+  colorSortRoller_rpm = colorSortRoller.get_actual_velocity();
+  colorSortRoller_current = colorSortRoller.get_current_draw();
+  frontIntake_rpm = frontIntake.get_actual_velocity();
+  frontIntake_current = frontIntake.get_current_draw();
+  middleRollers_rpm = middleRollers.get_actual_velocity();
+  middleRollers_current = middleRollers.get_current_draw();
+  scoringRoller_rpm = scoringRoller.get_actual_velocity();
+  scoringRoller_current = scoringRoller.get_current_draw();
 
-    OuttakeOverride = false; // reset the override state so normal intake/outtake control can resume
-    }
-}*/
+  
+  bool frontIntakeStall = (frontIntake_current > amp_threshold && frontIntake_rpm < rpm_threshold);
+  if (frontIntakeStall) {
+    frontIntake.move(0);
+  }
+  bool colorSortRollerStall = (colorSortRoller_current > amp_threshold && colorSortRoller_rpm < rpm_threshold);
+  if (colorSortRollerStall) {
+    colorSortRoller.move(0);
+  }
+  bool middleRollersStall = (middleRollers_current > amp_threshold && middleRollers_rpm < rpm_threshold);
+  if (middleRollersStall) {
+    middleRollers.move(0);
+  }
+  bool scoringRollerStall = (scoringRoller_current > 1300 && scoringRoller_rpm < 150);
+  if (scoringRollerStall) {
+    scoringRoller.move(0);
+  }
+
+  
+  pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
+    frontIntakeStall ? "front full" : "");
+  pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
+    colorSortRollerStall ? "lower full" : "");
+  pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
+    middleRollersStall ? "middle full" : "");
+  pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
+    scoringRollerStall ? "top full" : "");
+}

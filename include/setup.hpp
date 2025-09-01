@@ -8,6 +8,8 @@
 
 // general setup
 
+inline bool KeepRed = true;
+
 // controller
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
@@ -19,8 +21,8 @@ inline pros::MotorGroup right_dt({14, 15, -16}, pros::MotorGearset::blue);  // r
 // (wheel size, width, rpm, etc.)
 inline lemlib::Drivetrain drivetrain(&left_dt,
 							  &right_dt,
-							  10.125,
-							  lemlib::Omniwheel::NEW_325,
+							  10.25,
+							  lemlib::Omniwheel::NEW_325 * 24/23.68,
 							  450,
 							  2
 );
@@ -56,14 +58,14 @@ inline lemlib::ControllerSettings lateral_controller(5, //proportional gain (kP)
 );
 
 // angular pid
-inline lemlib::ControllerSettings angular_controller(3.3, // proportional gain (kP) was 3.5
+inline lemlib::ControllerSettings angular_controller(3.5, // proportional gain (kP) was 3.5
                                               0.4, // integral gain (kI)
-                                              20, // derivative gain (kD)
+                                              22, // derivative gain (kD)
                                               3.5, // anti windup
-                                              0.5, // small error range, in degrees
-                                              75, // small error range timeout, in milliseconds
-                                              2, // large error range, in degrees
-                                              750, // large error range timeout, in milliseconds
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -95,28 +97,18 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 );
 
 // declare additional motors, sensors, and pnuematics here
+
+//intake groups
 inline pros::Motor frontIntake(-9);
-
 inline pros::Motor middleRollers(-8);
-
 inline pros::Motor colorSortRoller(4);
-
 inline pros::Motor scoringRoller(-10);
 
-inline pros::adi::DigitalOut loaderMech('A');
+//extensions
+inline pros::adi::DigitalOut scoringBar('A');
 
-inline pros::adi::DigitalOut descoreMech('C');
-
-inline pros::adi::DigitalOut wingMech('D');
-
-//inline pros::Optical opticalSensor(1);
-
-inline pros::Distance topDistance(19);
+// clog sensors
+inline pros::Optical colorSortOptical(19);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
-
-//inline pros::Distance rightDistance(15);
-
-//inline pros::Distance backDistance(17);
-
-//inline pros::Distance topCounterDistance(5);
+inline pros::Distance topDistance(11);
