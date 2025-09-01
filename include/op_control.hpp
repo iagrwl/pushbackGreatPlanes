@@ -4,7 +4,6 @@
 // so that they can be referenced in different files.
 
 //other
-void testing_sequence();
 void stall_checker();
 
 //drive
