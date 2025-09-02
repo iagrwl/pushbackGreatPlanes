@@ -30,7 +30,7 @@ void sortOut() {
     colorSortRoller.move(80);
     frontIntake.move(127);
     IsColorSortEngaged = false;
-    pros::lcd::print(4, "sort %d", i++);
+    //pros::lcd::print(4, "sort %d", i++);
 }
 
 void colorSort() {

@@ -17,7 +17,6 @@ bool isBlockDetected = true;
 
 
 // constants
-
 int toggle_power = 60;
 
 // amp and rpm for stalling
@@ -28,7 +27,7 @@ double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
 
 //threshold vals
 double amp_threshold = 2000;
-double rpm_threshold = 70.0;
+double rpm_threshold = 150;
 
 //stall states
 bool frontIntakeStall = false;
@@ -150,7 +149,7 @@ void spinIntake() {
 pros::Task* intakeOn = nullptr;
 // intake control (L1 toggle)
 void handleIntakeCommands() {
-  /*if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
     isIntakeForward = !isIntakeForward;
     // Reset stall flags on toggle
     frontIntakeStall = false;
@@ -169,37 +168,27 @@ void handleIntakeCommands() {
     scoringRoller.move(0);
     colorSortRoller.move(0);
   }
-  if (frontIntakeStall){
-    frontIntake.move(0);
-  }
-  if (colorSortRollerStall){
-    colorSortRoller.move(0);
-  }
-  if (middleRollersStall){
-    middleRollers.move(0);
-  }
   if (scoringRollerStall){
-    scoringRoller.move(0);
-  }*/
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // checks for new press from the left top trigger buttons 
-    if (!isIntakeForward) {
-      intakeOn = new pros::Task(&spinIntake);
-      isIntakeForward = true;
-    } else {
-      isIntakeForward = false;
-      frontIntake.move(0);
+    scoringRoller.move(20);
+    if (middleRollersStall){
       middleRollers.move(0);
-      scoringRoller.move(0);
-      colorSortRoller.move(0);
-      pros::lcd::print(5, "stop");
+      if (colorSortRollerStall){
+        colorSortRoller.move(0);
+        if (frontIntakeStall){
+          frontIntake.move(0);
+        }
+      }
+      
     }
+      
+        
   }
+
+    
 }
 
 // outtake control (R1 / R2)
 void handleOuttakeCommands() {
-  
-
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // R1 = score forward
     OuttakeOverride = true;
     scoringBar.set_value(true);
@@ -242,26 +231,28 @@ void stall_checker() {
   scoringRoller_rpm = scoringRoller.get_actual_velocity();
   scoringRoller_current = scoringRoller.get_current_draw();
   
+  //lower the amp thresh. the more sensitive 
+  //higher the rpm thresh. the more sensitive
   if (OuttakeOverride == false){
-    if (!frontIntakeStall)
-    frontIntakeStall = (frontIntake_current > 2500 && frontIntake_rpm < 220);
-    if (!colorSortRollerStall)
-      colorSortRollerStall = (colorSortRoller_current > amp_threshold && colorSortRoller_rpm < 175);
-    if (!middleRollersStall)
-      middleRollersStall = (middleRollers_current > amp_threshold && middleRollers_rpm < rpm_threshold);
-    if (!scoringRollerStall)
-      scoringRollerStall = (scoringRoller_current > 1000 && scoringRoller_rpm < 160);
+    if (!scoringRollerStall){
+      scoringRollerStall = (scoringRoller_current > 1800 && scoringRoller_rpm < 180);
+      if (!middleRollersStall){
+        middleRollersStall = (middleRollers_current > 2000 && middleRollers_rpm < 160);
+        if (!colorSortRollerStall){
+          colorSortRollerStall = (colorSortRoller_current > 2000 && colorSortRoller_rpm < 180);
+          if (!frontIntakeStall)
+            frontIntakeStall = (frontIntake_current > 2350 && frontIntake_rpm < 30);
+        }
+      }
+    }
   }
-  
-
-  
   pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
-    frontIntakeStall ? "FRONT FULL" : "");
+    frontIntakeStall ? "----FRONT FULL" : "");
   pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
-    colorSortRollerStall ? "LOWER FULL" : "");
+    colorSortRollerStall ? "----LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
-    middleRollersStall ? "MIDDLE FULL" : "");
+    middleRollersStall ? "----MIDDLE FULL" : "");
   pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
-    scoringRollerStall ? "TOP FULL" : "");
+    scoringRollerStall ? "----TOP FULL" : "");
   logData();
 }

@@ -68,4 +68,4 @@ plot_current(axes[1], motor)
 plot_stall(axes[2], motor)
 
 plt.tight_layout()
-plt.show
+plt.show()

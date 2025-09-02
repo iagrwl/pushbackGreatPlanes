@@ -11,8 +11,8 @@ void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(2, "dist: %d", bottomDistance.get_distance());
-    pros::lcd::print(3, "color: %.2f", colorSortOptical.get_hue());
-    pros::lcd::print(5, "currProx: %d", colorSortOptical.get_proximity());
+    //pros::lcd::print(3, "color: %.2f", colorSortOptical.get_hue());
+    //pros::lcd::print(5, "currProx: %d", colorSortOptical.get_proximity());
 		std::uint32_t now = pros::millis();
 		//std::int32_t intakePosition = intake.get_raw_position(&now);
 
@@ -48,7 +48,7 @@ void initialize() {
 	pros::Task pos(&positionTracker);
   pros::Task colorSortOn(&colorSort);
 
-  //static pros::Task checkforstall(stall_check);
+  static pros::Task checkforstall(stall_check);
 
   
   chassis.calibrate();
