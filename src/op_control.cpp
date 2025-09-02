@@ -3,6 +3,8 @@
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "setup.hpp"
+#include <fstream>
+#include <string>
 
 // states
 bool isOuttakeToggled = false;
@@ -33,6 +35,36 @@ bool colorSortRollerStall = false;
 bool middleRollersStall = false;
 bool scoringRollerStall = false;
 
+pros::Mutex log_mutex;
+std::ofstream logFile;
+bool logInitialized = false;
+
+void initLog() {
+  if (!logInitialized) {
+    logFile.open("/usd/stall_log.csv", std::ios::out | std::ios::trunc);
+    if (logFile.is_open()) {
+      logFile << "time_ms,frontIntake_rpm,frontIntake_current,frontIntakeStall,"
+                 "colorSortRoller_rpm,colorSortRoller_current,colorSortRollerStall,"
+                 "middleRollers_rpm,middleRollers_current,middleRollersStall,"
+                 "scoringRoller_rpm,scoringRoller_current,scoringRollerStall"
+              << std::endl;
+      logInitialized = true;
+    }
+  }
+}
+
+void logData() {
+  if (logInitialized && logFile.is_open()) {
+    log_mutex.take();
+    logFile << pros::millis() << ","
+            << frontIntake_rpm << "," << frontIntake_current << "," << frontIntakeStall << ","
+            << colorSortRoller_rpm << "," << colorSortRoller_current << "," << colorSortRollerStall << ","
+            << middleRollers_rpm << "," << middleRollers_current << "," << middleRollersStall << ","
+            << scoringRoller_rpm << "," << scoringRoller_current << "," << scoringRollerStall
+            << std::endl;
+    log_mutex.give();
+  }
+}
 
 
 // dynamic switching vars
@@ -168,6 +200,7 @@ void handleOuttakeCommands() {
 
 
 void stall_checker() {
+  initLog();
   colorSortRoller_rpm = colorSortRoller.get_actual_velocity();
   colorSortRoller_current = colorSortRoller.get_current_draw();
   frontIntake_rpm = frontIntake.get_actual_velocity();
@@ -198,4 +231,5 @@ void stall_checker() {
     middleRollersStall ? "MIDDLE FULL" : "");
   pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
     scoringRollerStall ? "TOP FULL" : "");
+  logData();
 }
