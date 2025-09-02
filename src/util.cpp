@@ -1,4 +1,5 @@
 #include "main.h";
+#include "pros/llemu.hpp"
 #include "setup.hpp"
 
 int BLUE_MAX = 230;
@@ -17,9 +18,24 @@ bool isBlockThere(pros::Distance& currDist, bool isBlockPassing) {
   return false;
 }
 
+int i = 0;
+int det = 0;
+
+void sortOut() {
+    IsColorSortEngaged = true;
+    frontIntake.move(40);
+    //pros::delay(100);
+    colorSortRoller.move(-127);
+    pros::delay(500);
+    colorSortRoller.move(80);
+    frontIntake.move(127);
+    IsColorSortEngaged = false;
+    pros::lcd::print(4, "sort %d", i++);
+}
+
 void colorSort() {
 int min, max;
-    if (KeepRed){
+    if (!KeepRed){
         min = RED_MIN;
         max = RED_MAX;
     } else {
@@ -28,16 +44,16 @@ int min, max;
     } 
     while (true) {
         if (isBlockThere(bottomDistance, true)) {
+            det++;
             colorSortOptical.set_led_pwm(100);
-            while (colorSortOptical.get_proximity() > 50) {
+            while (colorSortOptical.get_proximity() < 100) {
                 pros::delay(10);
             }
             float currHue = colorSortOptical.get_hue();
             if (currHue < max && currHue > min) {
-                colorSortRoller.move(-127);
-                pros::delay(200);
-                colorSortRoller.move(127);
+                pros::Task sort(&sortOut);
             }
+            //pros::lcd::print(4, "currHue: %.2f", currHue);
         }
         pros::delay(30);
     }

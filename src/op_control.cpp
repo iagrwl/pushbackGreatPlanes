@@ -3,6 +3,7 @@
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "setup.hpp"
+#include "util.hpp"
 
 // states
 bool isOuttakeToggled = false;
@@ -17,14 +18,30 @@ bool isBlockDetected = true;
 
 int toggle_power = 60;
 
+// amp and rpm for stalling
+double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
+double frontIntake_rpm = 0.0, frontIntake_current = 0.0;
+double middleRollers_rpm = 0.0, middleRollers_current = 0.0;
+double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
+
+//threshold vals
+double amp_threshold = 2000;
+double rpm_threshold = 70.0;
+
+//stall states
+bool frontIntakeStall = false;
+bool colorSortRollerStall = false;
+bool middleRollersStall = false;
+bool scoringRollerStall = false;
+
+
+
 // dynamic switching vars
 bool DriveMode = true;                   // true = arcade, false = tank
 int DynamicDriveSwitchClickCount = 0;    // tracks how many times toggle combo clicked
 uint32_t lastDynamicSwitchClickTime = 0; // stores last time the combo was pressed
 
-//threshold vals
-double amp_threshold = 2000;
-double rpm_threshold = 70.0;
+
 
 // drive mode handler
 void handleDriveMode(bool isArcade) {
@@ -74,23 +91,65 @@ void toggleScoringBar() {
 
 // block detection helper
 
-
-pros::Task* intakeOn = nullptr;
-
-// intake spinnnner
 void spinIntake() {
-  frontIntake.move(127);
+  if (!IsColorSortEngaged) frontIntake.move(127);
   middleRollers.move(127);
-  colorSortRoller.move(127);
+  if (!IsColorSortEngaged) colorSortRoller.move(80);
   scoringRoller.move(127);
   pros::delay(50);
-
-  
+  while (!isBlockThere(bottomDistance)) {
+    if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
+      scoringRoller.move(50);
+    }
+    if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
+      middleRollers.move(0);
+      scoringRoller.move(0);
+    }
+    if(colorSortRoller.get_actual_velocity() < 5 && isBlockThere(middleDistance)) {
+      colorSortRoller.move(0);
+    }
+    pros::lcd::print(3, "no bottom block");
+    pros::delay(10);
+  }
+  if (!IsColorSortEngaged) frontIntake.move(0);
+  pros::lcd::print(4, "bottom block");
 }
 
+pros::Task* intakeOn = nullptr;
 // intake control (L1 toggle)
 void handleIntakeCommands() {
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+  /*if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+    isIntakeForward = !isIntakeForward;
+    // Reset stall flags on toggle
+    frontIntakeStall = false;
+    colorSortRollerStall = false;
+    middleRollersStall = false;
+    scoringRollerStall = false;
+  }
+  if (isIntakeForward) {
+    if (!IsColorSortEngaged) frontIntake.move(80);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    if (!IsColorSortEngaged) colorSortRoller.move(127);
+  } else {
+    frontIntake.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(0);
+    colorSortRoller.move(0);
+  }
+  if (frontIntakeStall){
+    frontIntake.move(0);
+  }
+  if (colorSortRollerStall){
+    colorSortRoller.move(0);
+  }
+  if (middleRollersStall){
+    middleRollers.move(0);
+  }
+  if (scoringRollerStall){
+    scoringRoller.move(0);
+  }*/
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // checks for new press from the left top trigger buttons 
     if (!isIntakeForward) {
       intakeOn = new pros::Task(&spinIntake);
       isIntakeForward = true;
@@ -107,27 +166,30 @@ void handleIntakeCommands() {
 
 // outtake control (R1 / R2)
 void handleOuttakeCommands() {
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-    return; // avoid L2 interfering w intake
-  }
+  
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // R1 = score forward
+    OuttakeOverride = true;
     scoringBar.set_value(true);
     frontIntake.move(127);
     middleRollers.move(127);
     colorSortRoller.move(127);
     scoringRoller.move(127);
+    
   } 
 
   else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = reverse score
+    OuttakeOverride = true;
     scoringBar.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
     colorSortRoller.move(127);
     scoringRoller.move(-127);
+    
   } 
   
-  else { // when neither is pressed
+  else if (!isIntakeForward) { // when neither is pressed
+    OuttakeOverride = false;
     scoringBar.set_value(false);
     frontIntake.move(0);
     middleRollers.move(0);
@@ -135,11 +197,6 @@ void handleOuttakeCommands() {
     scoringRoller.move(0); 
   }
 }
-// Variables to store RPM and current for each intake motor
-double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
-double frontIntake_rpm = 0.0, frontIntake_current = 0.0;
-double middleRollers_rpm = 0.0, middleRollers_current = 0.0;
-double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
 
 
 void stall_checker() {
@@ -151,32 +208,26 @@ void stall_checker() {
   middleRollers_current = middleRollers.get_current_draw();
   scoringRoller_rpm = scoringRoller.get_actual_velocity();
   scoringRoller_current = scoringRoller.get_current_draw();
-
   
-  bool frontIntakeStall = (frontIntake_current > amp_threshold && frontIntake_rpm < rpm_threshold);
-  if (frontIntakeStall) {
-    frontIntake.move(0);
+  if (OuttakeOverride == false){
+    if (!frontIntakeStall)
+    frontIntakeStall = (frontIntake_current > 2500 && frontIntake_rpm < 220);
+    if (!colorSortRollerStall)
+      colorSortRollerStall = (colorSortRoller_current > amp_threshold && colorSortRoller_rpm < 175);
+    if (!middleRollersStall)
+      middleRollersStall = (middleRollers_current > amp_threshold && middleRollers_rpm < rpm_threshold);
+    if (!scoringRollerStall)
+      scoringRollerStall = (scoringRoller_current > 1000 && scoringRoller_rpm < 160);
   }
-  bool colorSortRollerStall = (colorSortRoller_current > amp_threshold && colorSortRoller_rpm < rpm_threshold);
-  if (colorSortRollerStall) {
-    colorSortRoller.move(0);
-  }
-  bool middleRollersStall = (middleRollers_current > amp_threshold && middleRollers_rpm < rpm_threshold);
-  if (middleRollersStall) {
-    middleRollers.move(0);
-  }
-  bool scoringRollerStall = (scoringRoller_current > 1300 && scoringRoller_rpm < 150);
-  if (scoringRollerStall) {
-    scoringRoller.move(0);
-  }
+  
 
   
   pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
-    frontIntakeStall ? "front full" : "");
+    frontIntakeStall ? "FRONT FULL" : "");
   pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
-    colorSortRollerStall ? "lower full" : "");
+    colorSortRollerStall ? "LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
-    middleRollersStall ? "middle full" : "");
+    middleRollersStall ? "MIDDLE FULL" : "");
   pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
-    scoringRollerStall ? "top full" : "");
+    scoringRollerStall ? "TOP FULL" : "");
 }

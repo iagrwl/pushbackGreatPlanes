@@ -275,7 +275,7 @@ void driveTesting(bool isForward) {
 
         pros::delay(500);
 
-        pros::lcd::print(i+2, "%d: %.2f", currDist, chassis.getPose().y);
+        pros::lcd::print(i+4, "%d: %.2f", currDist, chassis.getPose().y);
 
         chassis.moveToPoint(0, 0, 3000, {.forwards = false});
         
