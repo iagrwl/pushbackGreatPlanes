@@ -8,6 +8,9 @@
 
 // general setup
 
+inline bool KeepRed = true;
+inline bool IsColorSortEngaged = false;
+
 // controller
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
@@ -19,8 +22,8 @@ inline pros::MotorGroup right_dt({14, 15, -16}, pros::MotorGearset::blue);  // r
 // (wheel size, width, rpm, etc.)
 inline lemlib::Drivetrain drivetrain(&left_dt,
 							  &right_dt,
-							  10.125,
-							  lemlib::Omniwheel::NEW_325,
+							  10.25,
+							  lemlib::Omniwheel::NEW_325 * 24/23.68,
 							  450,
 							  2
 );
@@ -44,7 +47,7 @@ inline lemlib::OdomSensors sensors(nullptr,
 );
 
 // lateral pid
-inline lemlib::ControllerSettings lateral_controller(5, //proportional gain (kP)
+inline lemlib::ControllerSettings lateral_controller(5.5, //proportional gain (kP)
                                             0.5, // integral gain (kI)
                                         18, // derivative gain (kD)
                                          1,//windup
@@ -56,14 +59,14 @@ inline lemlib::ControllerSettings lateral_controller(5, //proportional gain (kP)
 );
 
 // angular pid
-inline lemlib::ControllerSettings angular_controller(3.3, // proportional gain (kP) was 3.5
+inline lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP) was 3.5
                                               0.4, // integral gain (kI)
-                                              20, // derivative gain (kD)
+                                              22, // derivative gain (kD)
                                               3.5, // anti windup
                                               0.5, // small error range, in degrees
-                                              75, // small error range timeout, in milliseconds
-                                              2, // large error range, in degrees
-                                              750, // large error range timeout, in milliseconds
+                                                50, // small error range timeout, in milliseconds
+                                              1.5, // large error range, in degrees
+                                              200, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -106,7 +109,7 @@ inline pros::Motor scoringRoller(-10);
 inline pros::adi::DigitalOut scoringBar('A');
 
 // clog sensors
-inline pros::Optical racism(19);
+inline pros::Optical colorSortOptical(11);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
-inline pros::Distance topDistance(11);
+inline pros::Distance topDistance(19);

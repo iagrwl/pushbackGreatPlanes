@@ -235,7 +235,7 @@ void one_goal_right(){
 }
 */
 
-/*
+
 void turnTesting(bool isCW) {
 
     const int SIZE = 6;
@@ -258,9 +258,8 @@ void turnTesting(bool isCW) {
 
     }
 }
-    */
 
-    /*
+
 
 void driveTesting(bool isForward) {
 
@@ -276,11 +275,11 @@ void driveTesting(bool isForward) {
 
         pros::delay(500);
 
-        pros::lcd::print(i+2, "%d: %.2f", currDist, chassis.getPose().y);
+        pros::lcd::print(i+4, "%d: %.2f", currDist, chassis.getPose().y);
 
         chassis.moveToPoint(0, 0, 3000, {.forwards = false});
         
         
 
     }
-}*/
+}

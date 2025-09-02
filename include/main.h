@@ -78,6 +78,7 @@ void opcontrol(void);
 #include "setup.hpp"
 #include "op_control.hpp"
 #include "autons.hpp"
+#include "util.hpp"
 
 #endif
 
