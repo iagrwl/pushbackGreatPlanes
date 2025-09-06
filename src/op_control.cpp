@@ -14,7 +14,7 @@ bool isIntakeForward = false;
 bool isHighSpeed = false;
 bool isScoringBarUp = false;
 bool isBlockDetected = true;
-
+bool IntakeOverride = false;
 
 // constants
 int toggle_power = 60;
@@ -156,6 +156,7 @@ void handleIntakeCommands() {
     colorSortRollerStall = false;
     middleRollersStall = false;
     scoringRollerStall = false;
+    
   }
   if (isIntakeForward) {
     if (!IsColorSortEngaged) frontIntake.move(80);
@@ -177,14 +178,9 @@ void handleIntakeCommands() {
         if (frontIntakeStall){
           frontIntake.move(0);
         }
-      }
-      
+      } 
     }
-      
-        
   }
-
-    
 }
 
 // outtake control (R1 / R2)
@@ -246,6 +242,7 @@ void stall_checker() {
       }
     }
   }
+
   pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
     frontIntakeStall ? "----FRONT FULL" : "");
   pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
