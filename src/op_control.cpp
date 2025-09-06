@@ -15,6 +15,7 @@ bool isHighSpeed = false;
 bool isScoringBarUp = false;
 bool isBlockDetected = true;
 bool IntakeOverride = false;
+bool isLoaderExtended = false;
 
 // constants
 int toggle_power = 60;
@@ -211,9 +212,6 @@ void handleIntakeCommands() {
       middleRollers.move(0);
       if (colorSortRollerStall){
         colorSortRoller.move(0);
-        if (frontIntakeStall){
-          frontIntake.move(0);
-        }
       } 
     }
   }
@@ -243,16 +241,19 @@ void handleOuttakeCommands() {
   
   else if (!isIntakeForward) { // when neither is pressed
     OuttakeOverride = false;
-    scoringBar.set_value(false);
+    
     frontIntake.move(0);
     middleRollers.move(0);
     colorSortRoller.move(0);
     scoringRoller.move(0); 
+    pros::delay(500);
+    scoringBar.set_value(false);
   }
 }
 
 
 void stall_checker() {
+  
   initLog();
   colorSortRoller_rpm = colorSortRoller.get_actual_velocity();
   colorSortRoller_current = colorSortRoller.get_current_draw();
@@ -269,7 +270,7 @@ void stall_checker() {
     if (!scoringRollerStall){
       scoringRollerStall = (scoringRoller_current > 1800 && scoringRoller_rpm < 180);
       if (!middleRollersStall){
-        middleRollersStall = (middleRollers_current > 2000 && middleRollers_rpm < 160);
+        middleRollersStall = (middleRollers_current > 2000 && middleRollers_rpm < 200);
         if (!colorSortRollerStall){
           colorSortRollerStall = (colorSortRoller_current > 2000 && colorSortRoller_rpm < 180);
           if (!frontIntakeStall)
@@ -280,7 +281,7 @@ void stall_checker() {
   }
 
   pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
-    frontIntakeStall ? "----FRONT FULL" : "");
+    frontIntakeStall ? "FRONT FULL NOT STOPPING" : "");
   pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
     colorSortRollerStall ? "----LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
@@ -288,4 +289,11 @@ void stall_checker() {
   pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
     scoringRollerStall ? "----TOP FULL" : "");
   logData();
+}
+
+void handleLoaderMechCommands() {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+    isLoaderExtended = !isLoaderExtended;
+    LoaderMech.set_value(isLoaderExtended);
+  }
 }

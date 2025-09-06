@@ -107,6 +107,7 @@ inline pros::Motor scoringRoller(-10);
 
 //extensions
 inline pros::adi::DigitalOut scoringBar('A');
+inline pros::adi::DigitalOut LoaderMech('B');
 
 // clog sensors
 inline pros::Optical colorSortOptical(11);

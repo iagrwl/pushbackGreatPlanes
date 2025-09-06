@@ -92,6 +92,7 @@ void opcontrol() {
     handleDriveMode(true);
     handleIntakeCommands();
     handleOuttakeCommands();
+    handleLoaderMechCommands();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}

@@ -24,7 +24,7 @@ print("12 - All Drivetrain Motors")
 motor_choice = input("Enter 1-12: ").strip()
 
 # figure setup
-fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+fig, axes = plt.subplots(3, 1, figsize=(12, 12), sharex=True)
 
 # helper to select column suffix
 motor_map = {
@@ -74,16 +74,44 @@ def plot_current(ax, motor=None, intake=True, group=None):
     ax.grid(True, color='gray')
     ax.set_title('Motor Current over Time', color='white')
 
+# New helper to plot stall state
+def plot_stall_state(ax, motor=None, group=None):
+    """
+    Plots stall boolean columns as step lines.
+    - If a specific motor is selected, plot its stall column.
+    - If group == "dt", skip (no stall booleans for drivetrain).
+    - Otherwise, plot all intake/scoring rollers' stall booleans.
+    """
+    if group == "dt":
+        ax.set_visible(False)
+        return
+    if motor:
+        stall_col = f"{motor}Stall"
+        if stall_col in df.columns:
+            ax.step(df['time_s'], df[stall_col], label=f"{motor} Stall", color='magenta', where='post')
+    else:
+        for key, (m, intake) in motor_map.items():
+            stall_col = f"{m}Stall"
+            if stall_col in df.columns:
+                ax.step(df['time_s'], df[stall_col], label=f"{m} Stall", where='post')
+    ax.set_ylabel('Stall State\n(1=True, 0=False)', color='white')
+    ax.legend()
+    ax.grid(True, color='gray')
+    ax.set_title('Stall State (1=True, 0=False)', color='white')
+
 if motor_choice in motor_map:
     motor, intake = motor_map[motor_choice]
     plot_rpm(axes[0], motor, intake)
     plot_current(axes[1], motor, intake)
+    plot_stall_state(axes[2], motor)
 elif motor_choice == '12':
     plot_rpm(axes[0], group="dt")
     plot_current(axes[1], group="dt")
+    plot_stall_state(axes[2], group="dt")
 else:
     plot_rpm(axes[0], None)
     plot_current(axes[1], None)
+    plot_stall_state(axes[2])
 
 plt.tight_layout()
 plt.show()
