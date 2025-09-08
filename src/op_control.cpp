@@ -16,6 +16,7 @@ bool isScoringBarUp = false;
 bool isBlockDetected = true;
 bool IntakeOverride = false;
 bool isLoaderExtended = false;
+bool isIntakeOn = false;
 
 // constants
 int toggle_power = 60;
@@ -205,6 +206,7 @@ void handleIntakeCommands() {
     middleRollers.move(0);
     scoringRoller.move(0);
     colorSortRoller.move(0);
+    isIntakeOn = false;
   }
   if (scoringRollerStall){
     scoringRoller.move(20);
@@ -225,23 +227,18 @@ void handleOuttakeCommands() {
     frontIntake.move(127);
     middleRollers.move(127);
     colorSortRoller.move(127);
-    scoringRoller.move(127);
-    
-  } 
-
-  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = reverse score
+    scoringRoller.move(127); 
+  }
+  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = low score
     OuttakeOverride = true;
     scoringBar.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
     colorSortRoller.move(127);
     scoringRoller.move(-127);
-    
   } 
-  
-  else if (!isIntakeForward) { // when neither is pressed
+  else if (!isIntakeForward || isIntakeOn) { // when neither is pressed
     OuttakeOverride = false;
-    
     frontIntake.move(0);
     middleRollers.move(0);
     colorSortRoller.move(0);
