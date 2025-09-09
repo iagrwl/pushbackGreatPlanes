@@ -196,27 +196,32 @@ void handleIntakeCommands() {
     scoringRollerStall = false;
     
   }
+  if (scoringRollerStall){
+    scoringRoller.move(20);
+  }
+  if (colorSortRollerStall){
+    colorSortRoller.move(0);
+  } 
+  if (middleRollersStall){
+  middleRollers.move(0);
+  }
   if (isIntakeForward) {
-    if (!IsColorSortEngaged) frontIntake.move(80);
+    if (!IsColorSortEngaged)
+    frontIntake.move(80);
     middleRollers.move(127);
     scoringRoller.move(127);
-    if (!IsColorSortEngaged) colorSortRoller.move(127);
-  } else {
+    if (!IsColorSortEngaged) 
+    colorSortRoller.move(127);
+  } 
+  else {
     frontIntake.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
     colorSortRoller.move(0);
     isIntakeOn = false;
   }
-  if (scoringRollerStall){
-    scoringRoller.move(20);
-    if (middleRollersStall){
-      middleRollers.move(0);
-      if (colorSortRollerStall){
-        colorSortRoller.move(0);
-      } 
-    }
-  }
+  
+  
 }
 
 // outtake control (R1 / R2)
@@ -243,7 +248,6 @@ void handleOuttakeCommands() {
     middleRollers.move(0);
     colorSortRoller.move(0);
     scoringRoller.move(0); 
-    pros::delay(500);
     scoringBar.set_value(false);
   }
 }
@@ -265,26 +269,22 @@ void stall_checker() {
   //higher the rpm thresh. the more sensitive
   if (OuttakeOverride == false){
     if (!scoringRollerStall){
-      scoringRollerStall = (scoringRoller_current > 1800 && scoringRoller_rpm < 180);
+      scoringRollerStall = (scoringRoller_rpm < 180);
       if (!middleRollersStall){
-        middleRollersStall = (middleRollers_current > 2000 && middleRollers_rpm < 200);
+        middleRollersStall = (middleRollers_rpm < 160);
         if (!colorSortRollerStall){
-          colorSortRollerStall = (colorSortRoller_current > 2000 && colorSortRoller_rpm < 180);
+          colorSortRollerStall = (colorSortRoller_rpm < 180);
           if (!frontIntakeStall)
-            frontIntakeStall = (frontIntake_current > 2350 && frontIntake_rpm < 30);
+            frontIntakeStall = (frontIntake_rpm < 30);
         }
       }
     }
   }
 
-  pros::lcd::print(4, "RPM: %.2f, A: %.2f%s", frontIntake_rpm, frontIntake_current,
-    frontIntakeStall ? "FRONT FULL NOT STOPPING" : "");
-  pros::lcd::print(5, "RPM: %.2f, A: %.2f%s", colorSortRoller_rpm, colorSortRoller_current,
-    colorSortRollerStall ? "----LOWER FULL" : "");
-  pros::lcd::print(6, "RPM: %.2f, A: %.2f%s", middleRollers_rpm, middleRollers_current,
-    middleRollersStall ? "----MIDDLE FULL" : "");
-  pros::lcd::print(7, "RPM: %.2f, A: %.2f%s", scoringRoller_rpm, scoringRoller_current,
-    scoringRollerStall ? "----TOP FULL" : "");
+  pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? "FRONT FULL NOT STOPPING" : "");
+  pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? "----LOWER FULL" : "");
+  pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? "----MIDDLE FULL" : "");
+  pros::lcd::print(7, "RPM: %.2f", scoringRoller_rpm, scoringRollerStall ? "----TOP FULL" : "");
   logData();
 }
 
