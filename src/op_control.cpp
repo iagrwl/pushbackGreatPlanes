@@ -159,6 +159,14 @@ void handleIOCommands() {
       isIntakeOn = false;
     }
   }
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+    scoringBar.set_value(true);
+    isOuttakeOn = true;
+  }
+  else if (isOuttakeOn){
+    scoringBar.set_value(false);
+    isOuttakeOn = false;
+  }
 }
 
 // outtake control (R1 / R2)
