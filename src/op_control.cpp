@@ -159,14 +159,26 @@ void handleIOCommands() {
       isIntakeOn = false;
     }
   }
+
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
     scoringBar.set_value(true);
+    frontIntake.move(127);
+    colorSortRoller.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
     isOuttakeOn = true;
   }
   else if (isOuttakeOn){
-    scoringBar.set_value(false);
-    isOuttakeOn = false;
-  }
+    if (!isIntakeOn){
+      scoringBar.set_value(false);
+      frontIntake.move(0);
+      colorSortRoller.move(0);
+      middleRollers.move(0);
+      scoringRoller.move(0);
+      isOuttakeOn = false;
+    }
+      
+    }
 }
 
 // outtake control (R1 / R2)
