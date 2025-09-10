@@ -89,7 +89,7 @@ void opcontrol() {
   
   while (true) {
     // driver control functions go here
-    handleDriveMode(false);
+    handleDriveMode(true);
     handleIOCommands();
     handleLoaderMechCommands();
     // 20 ms delay to avoid strain on the brain
