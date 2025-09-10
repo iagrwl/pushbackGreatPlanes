@@ -7,26 +7,30 @@
 #include <fstream>
 #include <string>
 
-// states
+//STATES
+//stalling
 bool frontIntakeStall = false;
 bool colorSortRollerStall = false;
 bool middleRollersStall = false;
 bool scoringRollerStall = false;
-bool isHighSpeed = false;
+//extensions
 bool isScoringBarUp = false;
-bool isBlockDetected = true;
 bool isLoaderExtended = false;
+//core func
 bool isIntakeOn = false;
 bool isOuttakeOn = false;
-bool shouldSC = false;
+bool shouldSC = false; // should stall check? bool
+//other
+bool isBlockDetected = true;
+bool isHighSpeed = false;
 
-// amp and rpm for stalling
+//amp rpm vars
 double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
 double frontIntake_rpm = 0.0, frontIntake_current = 0.0;
 double middleRollers_rpm = 0.0, middleRollers_current = 0.0;
 double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
 
-// drivetrain storage
+//drivetrain storage
 double leftDT_rpm[3] = {0}, leftDT_current[3] = {0};
 double rightDT_rpm[3] = {0}, rightDT_current[3] = {0};
 pros::Mutex log_mutex;
@@ -142,23 +146,24 @@ void spinIntake() {
 //pros::Task* intakeOn = nullptr;
 // intake control (L1 toggle)
 void handleIOCommands() {
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-    if (!isIntakeOn){
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { //if a new press of the top left trigger button is registered
+    if (!isIntakeOn){ //passes if the intake is off
       //spins motors
       frontIntake.move(127);
       colorSortRoller.move(127);
       middleRollers.move(127);
       scoringRoller.move(127);
       //sets flags
-      isIntakeOn = true;
-      shouldSC = true;
+      isIntakeOn = true; //sets the intake as on
+      shouldSC = true; //allows the stall code to run
       //staller
-      if (scoringRollerStall){
-        scoringRoller.move(10);
+      if (scoringRollerStall){ //if the scoring roller is marked as stalling this passes
+        scoringRoller.move(10); //reduce speed to idle to prevent motor heating but keep blocks up and tensioned
       }
-      else if (!scoringRollerStall){
-        scoringRoller.move(127);
+      else if (!scoringRollerStall){ //if the scoring roller isnt marked as stalling this passes
+        scoringRoller.move(127); //returns the scoring roller back to running stage
       }
+      //similar logic below
 
       if (middleRollersStall){
         middleRollers.move(0);
@@ -174,39 +179,41 @@ void handleIOCommands() {
         colorSortRoller.move(127);
       }
     }
-    else if (isIntakeOn){
+    else if (isIntakeOn){ //if the intake is on then this passes
       //stops motors
       frontIntake.move(0);
       colorSortRoller.move(0);
       middleRollers.move(0);
       scoringRoller.move(0);
-      isIntakeOn = false;
-      shouldSC = false;
+      isIntakeOn = false; //sets the intake to off
+      shouldSC = false; //tells the stall check code to turn off
     }
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-    scoringBar.set_value(true);
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){ //if the top right trigger button is HELD this passes
+    scoringBar.set_value(true); //sets the scoringbar/descore mech to push up to allow scoring into high goal
     frontIntake.move(127);
     colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    isOuttakeOn = true;
-    shouldSC = false;
+    isOuttakeOn = true; //marks the outtake as on
+    shouldSC = false; //tells the stall code to bypass to allow clean scoring
   }
-  else if (isOuttakeOn){
-    scoringBar.set_value(false);
+  else if (isOuttakeOn){ //if the top right trigger button is let go of this passes
+    scoringBar.set_value(false); //the scoring bar is dropped to allow for descoring
+    //motors are shut off after the scoring sequence of intaking (L1 toggle) and the R1 or R2 combination if pressed
     frontIntake.move(0);
     colorSortRoller.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
-    isOuttakeOn = false;
-    shouldSC = false;
+    isOuttakeOn = false; //marks the outtake as off
+    shouldSC = false; //tells the stall check code to turn off
     }
 }
 
 void stall_checker() {
-  initLog();
+  initLog(); //initalizes the sd card for data input
+  //updates variables every time the function is called
   colorSortRoller_rpm = colorSortRoller.get_actual_velocity();
   colorSortRoller_current = colorSortRoller.get_current_draw();
   frontIntake_rpm = frontIntake.get_actual_velocity();
@@ -215,16 +222,17 @@ void stall_checker() {
   middleRollers_current = middleRollers.get_current_draw();
   scoringRoller_rpm = scoringRoller.get_actual_velocity();
   scoringRoller_current = scoringRoller.get_current_draw();
-  
-  //higher the rpm thresh. the more sensitive
-  if (shouldSC){
-    if (colorSortRoller_rpm < 20){
-      colorSortRollerStall = true;
-    } 
-    else if (colorSortRoller_rpm > 50){
-      colorSortRollerStall = false;
-    }
 
+  //every time the intake sequence is toggled these flaggers reset
+  //higher the rpm thresh. the more sensitive
+  if (shouldSC){ //if the stall check code is permitted to run, set by other parts in the code this passes
+    if (colorSortRoller_rpm < 20){ //if the rollers' rpm is below 20 the roller is marked as stalling
+      colorSortRollerStall = true; //the roller is marked as stalling
+    } 
+    else if (colorSortRoller_rpm > 50){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
+      colorSortRollerStall = false; //the roller is marked as running
+    }
+    //similar logic below
     if (middleRollers_rpm < 20){
       middleRollersStall = true;
     } 
@@ -240,17 +248,17 @@ void stall_checker() {
     }
     
   }
-
+  //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen
   pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? " FRONT FULL" : "");
   pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? " LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? " MIDDLE FULL" : "");
   pros::lcd::print(7, "RPM: %.2f", scoringRoller_rpm, scoringRollerStall ? " TOP FULL" : "");
-  logData();
+  logData(); //logs the data onto the sd card for data analysis
 }
 
-void handleLoaderMechCommands() {
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-    isLoaderExtended = !isLoaderExtended;
-    loaderMech.set_value(isLoaderExtended);
+void handleLoaderMechCommands() { //toggle button for loader mech
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { //if the controller recognizes a new press from the left arrow button
+    isLoaderExtended = !isLoaderExtended; //flips the condition of the current state of the loader
+    loaderMech.set_value(isLoaderExtended); //sets the physical state to the bool condition of the loader
   }
 }
