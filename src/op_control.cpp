@@ -8,7 +8,10 @@
 #include <string>
 
 // states
-
+bool frontIntakeStall = false;
+bool colorSortRollerStall = false;
+bool middleRollersStall = false;
+bool scoringRollerStall = false;
 bool isHighSpeed = false;
 bool isScoringBarUp = false;
 bool isBlockDetected = true;
@@ -25,14 +28,6 @@ double scoringRoller_rpm = 0.0, scoringRoller_current = 0.0;
 // drivetrain storage
 double leftDT_rpm[3] = {0}, leftDT_current[3] = {0};
 double rightDT_rpm[3] = {0}, rightDT_current[3] = {0};
-
-
-//stall states
-bool frontIntakeStall = false;
-bool colorSortRollerStall = false;
-bool middleRollersStall = false;
-bool scoringRollerStall = false;
-
 pros::Mutex log_mutex;
 std::ofstream logFile;
 bool logInitialized = false;
@@ -142,18 +137,17 @@ void spinIntake() {
   frontIntake.move(0);
   pros::lcd::print(4, "bottom block");
 }
-
 pros::Task* intakeOn = nullptr;
 // intake control (L1 toggle)
-void handleIntakeCommands() {
+void handleIOCommands() {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-    if (isIntakeOn = false){
+    if (isIntakeOn = false){ //if the intake is off further pass
         //stall reset
         frontIntakeStall = false;
         colorSortRollerStall = false;
         middleRollersStall = false;
         scoringRollerStall = false;
-        if (isOuttakeOn = false){
+        if (isOuttakeOn = false){ //if the outtake is off furhter pass
             //spins motors
             frontIntake.move(127);
             colorSortRoller.move(127);
@@ -161,56 +155,30 @@ void handleIntakeCommands() {
             scoringRoller.move(127);
             isIntakeOn = true;
         }
+        elif (isOuttakeOn = true){ //if the outtake is on
+          //what happens when the intake is off and outtake on
+        }
     }
-    else if (isOuttakeOn = false){
+    else if (isIntakeOn = true){ //if intake is on
         //stall reset
         frontIntakeStall = false;
         colorSortRollerStall = false;
         middleRollersStall = false;
         scoringRollerStall = false;
-        if (isOuttakeOn = false){
-            //stops motors
-        frontIntake.move(0);
-        colorSortRoller.move(0);
-        middleRollers.move(0);
-        scoringRoller.move(0);
-        isIntakeOn = false;
+        if (isOuttakeOn = false){//if the outtake is off then stop intake sys
+          //stops motors
+          frontIntake.move(0);
+          colorSortRoller.move(0);
+          middleRollers.move(0);
+          scoringRoller.move(0);
+          isIntakeOn = false;
         }  
     }
+
   }
 }
 
-// outtake control (R1 / R2)
-void handleOuttakeCommands() {
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // R1 = score forward
-    isOuttakeOn = true;
-    scoringBar.set_value(true);
-    frontIntake.move(127);
-    colorSortRoller.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-}
-  else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = low score
-    scoringBar.set_value(false);
-    frontIntake.move(127);
-    colorSortRoller.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(-127);
-  } 
-  else if (isIntakeOn = false){ // when neither is pressed
-    isOuttakeOn = false;
-    scoringBar.set_value(false);
-    frontIntake.move(0);
-    middleRollers.move(0);
-    colorSortRoller.move(0);
-    scoringRoller.move(0); 
-    
-  }
-  else{
-    isOuttakeOn = false;
-    scoringBar.set_value(false); 
-  }
-}
+
 
 
 void stall_checker() {

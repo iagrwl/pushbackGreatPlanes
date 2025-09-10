@@ -15,8 +15,7 @@ void handleDriveMode(bool isArcade);
 
 //handlers
 void toggleScoringBar();
-void handleIntakeCommands();
-void handleOuttakeCommands();
+void handleIOCommands();
 void handleScoringBarCommands();
 void handleLoaderMechCommands();
 void rumble();
