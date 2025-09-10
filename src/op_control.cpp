@@ -109,71 +109,103 @@ void handleTank() {
 }
 
 void spinIntake() {
-  // if (!IsColorSortEngaged) 
-  // frontIntake.move(127);
-  // middleRollers.move(127);
-  // if (!IsColorSortEngaged) 
-  // colorSortRoller.move(80);
-  // scoringRoller.move(127);
-  // pros::delay(50);
-  // while (!isBlockThere(bottomDistance)) {
-  //   if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
-  //     scoringRoller.move(50);
-  //   }
+  if (!IsColorSortEngaged) 
+  frontIntake.move(127);
+  middleRollers.move(127);
+  if (!IsColorSortEngaged) 
+  colorSortRoller.move(80);
+  scoringRoller.move(127);
+  pros::delay(50);
+  while (!isBlockThere(bottomDistance)) {
+    if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
+      scoringRoller.move(50);
+    }
 
-  //   if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
-  //     middleRollers.move(0);
-  //     scoringRoller.move(0);
-  //   }
+    if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
+      middleRollers.move(0);
+      scoringRoller.move(0);
+    }
 
-  //   if(colorSortRoller.get_actual_velocity() < 5 && isBlockThere(middleDistance)) {
-  //     colorSortRoller.move(0);
-  //   }
+    if(colorSortRoller.get_actual_velocity() < 5 && isBlockThere(middleDistance)) {
+      colorSortRoller.move(0);
+    }
 
-  //   pros::lcd::print(3, "no bottom block");
-  //   pros::delay(10);
-  // }
-  // if (!IsColorSortEngaged)
-  // frontIntake.move(0);
-  // pros::lcd::print(4, "bottom block");
+    pros::lcd::print(3, "no bottom block");
+    pros::delay(10);
+  }
+  if (!IsColorSortEngaged)
+  frontIntake.move(0);
+  pros::lcd::print(4, "bottom block");
 }
+
 pros::Task* intakeOn = nullptr;
 // intake control (L1 toggle)
-void handleIOCommands() {
+void handleIntakeCommands() {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-    if (isIntakeOn = false){ //if the intake is off further pass
+    if (isIntakeOn = false){
         //stall reset
-        // frontIntakeStall = false;
-        // colorSortRollerStall = false;
-        // middleRollersStall = false;
-        // scoringRollerStall = false;
-        isIntakeOn = true;
-        frontIntake.move(127);
-        colorSortRoller.move(127);
-        middleRollers.move(127);
-        scoringRoller.move(127);
-        
-        
+        frontIntakeStall = false;
+        colorSortRollerStall = false;
+        middleRollersStall = false;
+        scoringRollerStall = false;
+        if (isOuttakeOn = false){
+            //spins motors
+            frontIntake.move(127);
+            colorSortRoller.move(127);
+            middleRollers.move(127);
+            scoringRoller.move(127);
+            isIntakeOn = true;
+        }
     }
-    else if (isIntakeOn = true){ //if intake is on
+    else if (isOuttakeOn = false){
         //stall reset
-        // frontIntakeStall = false;
-        // colorSortRollerStall = false;
-        // middleRollersStall = false;
-        // scoringRollerStall = false;
-        isIntakeOn = false;
+        frontIntakeStall = false;
+        colorSortRollerStall = false;
+        middleRollersStall = false;
+        scoringRollerStall = false;
+        if (isOuttakeOn = false){
+            //stops motors
         frontIntake.move(0);
         colorSortRoller.move(0);
         middleRollers.move(0);
         scoringRoller.move(0);
-        
-        
+        isIntakeOn = false;
+        }  
     }
-
   }
 }
 
-
+// outtake control (R1 / R2)
+void handleOuttakeCommands() {
+//   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // R1 = score forward
+//     isOuttakeOn = true;
+//     scoringBar.set_value(true);
+//     frontIntake.move(127);
+//     colorSortRoller.move(127);
+//     middleRollers.move(127);
+//     scoringRoller.move(127);
+// }
+//   else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // R2 = low score
+//     scoringBar.set_value(false);
+//     frontIntake.move(127);
+//     colorSortRoller.move(127);
+//     middleRollers.move(127);
+//     scoringRoller.move(-127);
+//   } 
+//   else if (isIntakeOn = false){ // when neither is pressed
+//     isOuttakeOn = false;
+//     scoringBar.set_value(false);
+//     frontIntake.move(0);
+//     middleRollers.move(0);
+//     colorSortRoller.move(0);
+//     scoringRoller.move(0); 
+    
+//   }
+//   else{
+//     isOuttakeOn = false;
+//     scoringBar.set_value(false); 
+//   }
+}
 
 
 void stall_checker() {
@@ -191,29 +223,29 @@ void stall_checker() {
   if (isOuttakeOn == false && isIntakeOn == true){
     if (colorSortRoller_rpm < 150){
       colorSortRollerStall = true;
-      //colorSortRoller.move(0);
+      colorSortRoller.move(0);
     } 
     else if (colorSortRoller_rpm > 150){
       colorSortRollerStall = false;
-      //colorSortRoller.move(127);
+      colorSortRoller.move(127);
     }
 
     if (middleRollers_rpm < 150){
       middleRollersStall = true;
-      //middleRollers.move(0);
+      middleRollers.move(0);
     } 
     else if (middleRollers_rpm > 150){
       middleRollersStall = false;
-      //middleRollers.move(127);
+      middleRollers.move(127);
     }
 
     if (scoringRoller_rpm < 150){
       scoringRollerStall = true;
-      //scoringRoller.move(20);
+      scoringRoller.move(20);
     }
     else if (scoringRoller_rpm > 150){
       scoringRollerStall = false;
-      //scoringRoller.move(127);
+      scoringRoller.move(127);
     }
     
   }
