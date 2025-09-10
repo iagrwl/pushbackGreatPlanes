@@ -196,29 +196,29 @@ void stall_checker() {
   
   //higher the rpm thresh. the more sensitive
   if (shouldSC){
-    if (colorSortRoller_rpm < 150){
+    if (colorSortRoller_rpm < 20){
       colorSortRollerStall = true;
       colorSortRoller.move(0);
     } 
-    else if (colorSortRoller_rpm > 150){
+    else if (colorSortRoller_rpm > 20){
       colorSortRollerStall = false;
       colorSortRoller.move(127);
     }
 
-    if (middleRollers_rpm < 150){
+    if (middleRollers_rpm < 20){
       middleRollersStall = true;
       middleRollers.move(0);
     } 
-    else if (middleRollers_rpm > 150){
+    else if (middleRollers_rpm > 20){
       middleRollersStall = false;
       middleRollers.move(127);
     }
 
-    if (scoringRoller_rpm < 150){
+    if (scoringRoller_rpm < 20){
       scoringRollerStall = true;
       scoringRoller.move(20);
     }
-    else if (scoringRoller_rpm > 150){
+    else if (scoringRoller_rpm > 20){
       scoringRollerStall = false;
       scoringRoller.move(127);
     }
