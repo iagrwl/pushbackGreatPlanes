@@ -46,7 +46,7 @@ void initialize() {
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
-  pros::Task colorSortOn(&colorSort);
+  //pros::Task colorSortOn(&colorSort);
 
   static pros::Task checkforstall(stall_check);
 
