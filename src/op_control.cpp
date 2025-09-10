@@ -200,28 +200,28 @@ void stall_checker() {
       colorSortRollerStall = true;
       colorSortRoller.move(0);
     } 
-    // else if (colorSortRoller_rpm > 150){
-    //   colorSortRollerStall = false;
-    //   colorSortRoller.move(127);
-    // }
+    else if (colorSortRoller_rpm > 150){
+      colorSortRollerStall = false;
+      colorSortRoller.move(127);
+    }
 
     if (middleRollers_rpm < 150){
       middleRollersStall = true;
       middleRollers.move(0);
     } 
-    // else if (middleRollers_rpm > 150){
-    //   middleRollersStall = false;
-    //   middleRollers.move(127);
-    // }
+    else if (middleRollers_rpm > 150){
+      middleRollersStall = false;
+      middleRollers.move(127);
+    }
 
     if (scoringRoller_rpm < 150){
       scoringRollerStall = true;
       scoringRoller.move(20);
     }
-    // else if (scoringRoller_rpm > 150){
-    //   scoringRollerStall = false;
-    //   scoringRoller.move(127);
-    // }
+    else if (scoringRoller_rpm > 150){
+      scoringRollerStall = false;
+      scoringRoller.move(127);
+    }
     
   }
 
