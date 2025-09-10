@@ -149,8 +149,30 @@ void handleIOCommands() {
       colorSortRoller.move(127);
       middleRollers.move(127);
       scoringRoller.move(127);
+      //sets flags
       isIntakeOn = true;
       shouldSC = true;
+      //staller
+      if (scoringRollerStall){
+        scoringRoller.move(10);
+      }
+      else if (!scoringRollerStall){
+        scoringRoller.move(127);
+      }
+
+      if (middleRollersStall){
+        middleRollers.move(0);
+      }
+      else if (!middleRollersStall){
+        middleRollers.move(127);
+      }
+
+      if (colorSortRollerStall){
+        colorSortRoller.move(0);
+      }
+      else if (!colorSortRollerStall){
+        colorSortRoller.move(127);
+      }
     }
     else if (isIntakeOn){
       //stops motors
@@ -198,37 +220,31 @@ void stall_checker() {
   if (shouldSC){
     if (colorSortRoller_rpm < 20){
       colorSortRollerStall = true;
-      colorSortRoller.move(0);
     } 
-    else if (colorSortRoller_rpm > 20){
+    else if (colorSortRoller_rpm > 50){
       colorSortRollerStall = false;
-      colorSortRoller.move(127);
     }
 
     if (middleRollers_rpm < 20){
       middleRollersStall = true;
-      middleRollers.move(0);
     } 
-    else if (middleRollers_rpm > 20){
+    else if (middleRollers_rpm > 50){
       middleRollersStall = false;
-      middleRollers.move(127);
     }
 
     if (scoringRoller_rpm < 20){
       scoringRollerStall = true;
-      scoringRoller.move(20);
     }
-    else if (scoringRoller_rpm > 20){
+    else if (scoringRoller_rpm > 50){
       scoringRollerStall = false;
-      scoringRoller.move(127);
     }
     
   }
 
-  pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? "FRONT FULL NOT STOPPING" : "");
-  pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? "----LOWER FULL" : "");
-  pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? "----MIDDLE FULL" : "");
-  pros::lcd::print(7, "RPM: %.2f", scoringRoller_rpm, scoringRollerStall ? "----TOP FULL" : "");
+  pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? " FRONT FULL" : "");
+  pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? " LOWER FULL" : "");
+  pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? " MIDDLE FULL" : "");
+  pros::lcd::print(7, "RPM: %.2f", scoringRoller_rpm, scoringRollerStall ? " TOP FULL" : "");
   logData();
 }
 
