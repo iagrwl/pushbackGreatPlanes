@@ -142,7 +142,7 @@ void spinIntake() {
 // intake control (L1 toggle)
 void handleIOCommands() {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-    if (isIntakeOn = false){
+    if (!isIntakeOn){
       //spins motors
       frontIntake.move(127);
       colorSortRoller.move(127);
@@ -150,7 +150,7 @@ void handleIOCommands() {
       scoringRoller.move(127);
       isIntakeOn = true;
     }
-    else if (isIntakeOn = true){
+    else if (isIntakeOn){
       //stops motors
       frontIntake.move(0);
       colorSortRoller.move(0);
