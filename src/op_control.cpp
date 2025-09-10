@@ -169,14 +169,14 @@ void handleIOCommands() {
     isOuttakeOn = true;
   }
   else if (isOuttakeOn){
-    if (!isIntakeOn){
-      scoringBar.set_value(false);
-      frontIntake.move(0);
-      colorSortRoller.move(0);
-      middleRollers.move(0);
-      scoringRoller.move(0);
-      isOuttakeOn = false;
-    }
+    
+    scoringBar.set_value(false);
+    frontIntake.move(0);
+    colorSortRoller.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(0);
+    isOuttakeOn = false;
+    
       
     }
 }
