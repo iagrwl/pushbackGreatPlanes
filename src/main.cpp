@@ -20,6 +20,61 @@ void positionTracker() {
     }
 }
 
+float wallDistance(bool shouldPrint = false) {
+    //This accounts for the sensor turning off of the center of the bot
+    //X means offset from the center along the width of the bot, Y means along the length
+    float offsetX = 6.0; 
+    float offsetY = 0; 
+
+    float distancemm = sideDistance.get();
+    float distanceIn = distancemm / 25.4 + offsetX;
+
+    float angDeg = chassis.getPose().theta;
+    float angRad = angDeg * M_PI / 180.0;
+
+    //It was buggy so now if the angle is like 400 it'll turn to 40
+    float angle = fmod(angDeg, 360.0);
+    //Mod doesn't work on negatives for some reason
+    if (angle < 0) angle += 360.0;
+
+    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
+    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
+
+    float correctedDist = 0;
+
+    //Left Wall
+    if (angle >= 315 || angle < 45) {
+        correctedDist = distanceIn * cos(angRad) + rotatedX;
+    //Back Wall
+    } else if (angle >= 45 && angle < 135) {
+        correctedDist = distanceIn * sin(angRad) + rotatedY;
+    //Right Wall
+    } else if (angle >= 135 && angle < 225) {
+        correctedDist = -distanceIn * cos(angRad) - rotatedX;
+    //Close Wall
+    } else {
+        correctedDist = -distanceIn * sin(angRad) - rotatedY;
+    }
+
+    if (shouldPrint) {
+        pros::lcd::print(4, "Raw Distance: %f", distancemm);
+        pros::lcd::print(5, "Distance: %f", distanceIn);
+        pros::lcd::print(6, "Corrected: %f", correctedDist);
+    }
+
+    return correctedDist;
+}
+
+
+void wallDistanceTask(void* param) {
+    while (true) {
+        wallDistance(true); 
+        pros::delay(50);    
+    }
+}
+
+
+
 static void stall_check(void*){
     while(true){
         stall_checker();
@@ -46,6 +101,8 @@ void initialize() {
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
+
+  pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
   //pros::Task colorSortOn(&colorSort);
 
   static pros::Task checkforstall(stall_check);
@@ -82,14 +139,14 @@ void autonomous() {
   // runs selected auton
   //selector.run_auton();
   //turnTesting(true);
-  driveTesting(true);
+  //driveTesting(true);
  }
 
 void opcontrol() {
   
   while (true) {
     // driver control functions go here
-    handleDriveMode(false); //false for tank
+    handleDriveMode(true); //false for tank
     handleIOCommands();
     handleLoaderMechCommands();
     // 20 ms delay to avoid strain on the brain

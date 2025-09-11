@@ -226,29 +226,29 @@ void stall_checker() {
   //every time the intake sequence is toggled these flaggers reset
   //higher the rpm thresh. the more sensitive
   if (shouldSC){ //if the stall check code is permitted to run, set by other parts in the code this passes
-    if (colorSortRoller_rpm < 20){ //if the rollers' rpm is below 20 the roller is marked as stalling
+    if (colorSortRoller_rpm < 10){ //if the rollers' rpm is below 20 the roller is marked as stalling
       colorSortRollerStall = true; //the roller is marked as stalling
     } 
-    else if (colorSortRoller_rpm > 50){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
+    else if (colorSortRoller_rpm > 40){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
       colorSortRollerStall = false; //the roller is marked as running
     }
     //similar logic below
-    if (middleRollers_rpm < 20){
+    if (middleRollers_rpm < 10){
       middleRollersStall = true;
     } 
-    else if (middleRollers_rpm > 50){
+    else if (middleRollers_rpm > 40){
       middleRollersStall = false;
     }
 
-    if (scoringRoller_rpm < 20){
+    if (scoringRoller_rpm < 10){
       scoringRollerStall = true;
     }
-    else if (scoringRoller_rpm > 50){
+    else if (scoringRoller_rpm > 40){
       scoringRollerStall = false;
     }
     
-  }
-  //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen
+  }                                                                                                                   
+  //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen (o)(o)
   pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? " FRONT FULL" : "");
   pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? " LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? " MIDDLE FULL" : "");

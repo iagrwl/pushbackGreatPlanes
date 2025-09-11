@@ -4,16 +4,10 @@
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 
-// float wallDistance() {
-//     float offset = 0;
-//     float distancemm = sideDistance.get();
-//     pros::lcd::print(4, "Raw Distance: %f", distancemm);
-//     float distanceIn = distancemm / 25.4 + offset;
-//     pros::lcd::print(5, "Distance: %f", distanceIn);
-//     float angDeg = chassis.getPose().theta;
-//     float angRad = angDeg * M_PI / 180.0;
-//     return distanceIn * cos(angRad);
-// }
+void two_goal_LEFT() {
+    chassis.setPose(0,0,30);
+    
+}
 
 /*pros::Distance* currSensor;
 
