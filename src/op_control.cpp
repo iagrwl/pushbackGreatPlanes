@@ -156,28 +156,10 @@ void handleIOCommands() {
       //sets flags
       isIntakeOn = true; //sets the intake as on
       shouldSC = true; //allows the stall code to run
-      //staller
-      if (scoringRollerStall){ //if the scoring roller is marked as stalling this passes
-        scoringRoller.move(10); //reduce speed to idle to prevent motor heating but keep blocks up and tensioned
-      }
-      else if (!scoringRollerStall){ //if the scoring roller isnt marked as stalling this passes
-        scoringRoller.move(127); //returns the scoring roller back to running stage
-      }
-      //similar logic below
-
-      if (middleRollersStall){
-        middleRollers.move(0);
-      }
-      else if (!middleRollersStall){
-        middleRollers.move(127);
-      }
-
-      if (colorSortRollerStall){
-        colorSortRoller.move(0);
-      }
-      else if (!colorSortRollerStall){
-        colorSortRoller.move(127);
-      }
+      frontIntakeStall = false;
+      colorSortRollerStall = false;
+      middleRollersStall = false;
+      scoringRollerStall = false;
     }
     else if (isIntakeOn){ //if the intake is on then this passes
       //stops motors
@@ -187,6 +169,10 @@ void handleIOCommands() {
       scoringRoller.move(0);
       isIntakeOn = false; //sets the intake to off
       shouldSC = false; //tells the stall check code to turn off
+      frontIntakeStall = false;
+      colorSortRollerStall = false;
+      middleRollersStall = false;
+      scoringRollerStall = false;
     }
   }
 
@@ -198,6 +184,10 @@ void handleIOCommands() {
     scoringRoller.move(127);
     isOuttakeOn = true; //marks the outtake as on
     shouldSC = false; //tells the stall code to bypass to allow clean scoring
+    frontIntakeStall = false;
+    colorSortRollerStall = false;
+    middleRollersStall = false;
+    scoringRollerStall = false;
   }
   else if (isOuttakeOn){ //if the top right trigger button is let go of this passes
     scoringBar.set_value(false); //the scoring bar is dropped to allow for descoring
@@ -208,6 +198,7 @@ void handleIOCommands() {
     scoringRoller.move(0);
     isOuttakeOn = false; //marks the outtake as off
     shouldSC = false; //tells the stall check code to turn off
+    isIntakeOn = false;
     }
 }
 
@@ -226,33 +217,62 @@ void stall_checker() {
   //every time the intake sequence is toggled these flaggers reset
   //higher the rpm thresh. the more sensitive
   if (shouldSC){ //if the stall check code is permitted to run, set by other parts in the code this passes
-    if (colorSortRoller_rpm < 10){ //if the rollers' rpm is below 20 the roller is marked as stalling
+    if (colorSortRoller_rpm < 50){ //if the rollers' rpm is below 20 the roller is marked as stalling
       colorSortRollerStall = true; //the roller is marked as stalling
     } 
-    else if (colorSortRoller_rpm > 40){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
+    else if (colorSortRoller_rpm > 100){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
       colorSortRollerStall = false; //the roller is marked as running
     }
     //similar logic below
-    if (middleRollers_rpm < 10){
-      middleRollersStall = true;
-    } 
-    else if (middleRollers_rpm > 40){
-      middleRollersStall = false;
-    }
+    
 
-    if (scoringRoller_rpm < 10){
+    if (scoringRoller_rpm < 30){
       scoringRollerStall = true;
+      if (middleRollers_rpm < 180){
+      middleRollersStall = true;
+      } 
+      else if (middleRollers_rpm > 200){
+        middleRollersStall = false;
+      }
     }
-    else if (scoringRoller_rpm > 40){
+    else if (scoringRoller_rpm > 180){
       scoringRollerStall = false;
     }
+
+    if (frontIntake_rpm < 50){
+      frontIntakeStall = true;
+    }
+    else if (frontIntake_rpm > 10){
+      frontIntakeStall = false;
+    }
     
+
+    if (frontIntakeStall) {
+      frontIntake.move(0);
+    } else {
+      frontIntake.move(127);
+    }
+    if (colorSortRollerStall) {
+      colorSortRoller.move(0);
+    } else {
+      colorSortRoller.move(127);
+    }
+    if (middleRollersStall) {
+      middleRollers.move(30);
+    } else {
+      middleRollers.move(127);
+    }
+    if (scoringRollerStall) {
+      scoringRoller.move(30);
+    } else {
+      scoringRoller.move(127);
+    }
   }                                                                                                                   
   //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen (o)(o)
-  pros::lcd::print(4, "RPM: %.2f", frontIntake_rpm,frontIntakeStall ? " FRONT FULL" : "");
-  pros::lcd::print(5, "RPM: %.2f", colorSortRoller_rpm,colorSortRollerStall ? " LOWER FULL" : "");
-  pros::lcd::print(6, "RPM: %.2f", middleRollers_rpm, middleRollersStall ? " MIDDLE FULL" : "");
-  pros::lcd::print(7, "RPM: %.2f", scoringRoller_rpm, scoringRollerStall ? " TOP FULL" : "");
+  pros::lcd::print(4, "RPM: %.2f %s", frontIntake_rpm, frontIntakeStall ? "FRONT FULL" : "");
+  pros::lcd::print(5, "RPM: %.2f %s", colorSortRoller_rpm, colorSortRollerStall ? "LOWER FULL" : "");
+  pros::lcd::print(6, "RPM: %.2f %s", middleRollers_rpm, middleRollersStall ? "MIDDLE FULL" : "");
+  pros::lcd::print(7, "RPM: %.2f %s", scoringRoller_rpm, scoringRollerStall ? "TOP FULL" : "");
   logData(); //logs the data onto the sd card for data analysis
 }
 

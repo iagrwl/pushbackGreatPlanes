@@ -57,9 +57,9 @@ float wallDistance(bool shouldPrint = false) {
     }
 
     if (shouldPrint) {
-        pros::lcd::print(4, "Raw Distance: %f", distancemm);
-        pros::lcd::print(5, "Distance: %f", distanceIn);
-        pros::lcd::print(6, "Corrected: %f", correctedDist);
+        // pros::lcd::print(4, "Raw Distance: %f", distancemm);
+        // pros::lcd::print(5, "Distance: %f", distanceIn);
+        // pros::lcd::print(6, "Corrected: %f", correctedDist);
     }
 
     return correctedDist;
