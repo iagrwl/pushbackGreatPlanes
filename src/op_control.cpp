@@ -247,11 +247,7 @@ void stall_checker() {
     }
     
 
-    if (frontIntakeStall) {
-      frontIntake.move(0);
-    } else {
-      frontIntake.move(127);
-    }
+
     if (colorSortRollerStall) {
       colorSortRoller.move(0);
     } else {
