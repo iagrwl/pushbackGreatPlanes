@@ -138,8 +138,7 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  //turnTesting(true);
-  //driveTesting(true);
+  solo_awp();
  }
 
 void opcontrol() {

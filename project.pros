@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "parth code",
+    "project_name": "poopface",
     "target": "v5",
     "templates": {
       "LemLib": {

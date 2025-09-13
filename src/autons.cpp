@@ -3,6 +3,7 @@
 #include "pros/distance.hpp"
 #include "pros/llemu.hpp"
 #include "setup.hpp"
+#include "op_control.hpp"
 
 void two_goal_LEFT() {
     chassis.setPose(0,0,30);
@@ -117,53 +118,35 @@ void two_goal_LEFT(){
 }
 */
 
-/*
+
 void solo_awp(){
-    intake.move(100);
-    outtake.move(100);
-
-    chassis.moveToPoint(0, 15, 1000, {.minSpeed = 40, .earlyExitRange = 2});
-    chassis.swingToHeading(-50, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
-    pros::delay(100);
-    outtake.move(50);
-    chassis.moveToPoint(-9.11, 28.21, 1000);
-    intake.move(50);
-    //pros::delay(250);
-    //loaderMech.set_value(true);
-
-    chassis.turnToPoint(3.26, 38.26, 750);
-    intake.move(0);
-    outtake.move(0);
-    loaderMech.set_value(false);
-    chassis.moveToPose(3.26, 38.26, 45.07, 1500, {.minSpeed = 50});
-    pros::delay(100);
-    intake.move(-85);
-    outtake.move(-85);
-    pros::delay(1000);
-    intake.move(127);
-    outtake.move(127);
-    chassis.moveToPoint(-5.04, 28.77, 1000, {.forwards = false});
-    chassis.turnToPoint(40, 28.58, 800, {.minSpeed = 30, .earlyExitRange = 20});
-    chassis.moveToPoint(40, 28.58, 3000);
-    chassis.turnToPoint(28.66, 38.5, 800, {.forwards = false});
-    chassis.moveToPoint(28.66, 38.5, 1500, {.forwards = false}, false);
-    left_dt.move(-127);
-    right_dt.move(-127);
-    indexer.move(127);
-    outtake.move(-127);
-    pros::delay(700);
-    indexer.move(-127);
-    outtake.move(127);
-    left_dt.move(0);
-    right_dt.move(0);
-
-    //intake.move(0);
-    //outtake.move(0);
-
-
     
+    frontIntake.move(127);
+    colorSortRoller.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(0,4,500);
+    chassis.turnToHeading(-17.5,1000);
+    chassis.moveToPoint(-7, 26, 3000, {.minSpeed = 40,});
+    pros::delay(700);
+    loaderMech.set_value(true);
+    pros::delay(1100);
+    chassis.moveToPose(3, 39.5,46, 4000,{.maxSpeed=70});
+    pros::delay(1300);
+    loaderMech.set_value(false);
+    frontIntake.move(-127);
+    colorSortRoller.move(-127);
+    middleRollers.move(-127);   
+    scoringRoller.move(-127);
+    pros::delay(750);
+    frontIntake.move(127);
+    colorSortRoller.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 50});
+    chassis.turnToHeading(90,1000);
+    chassis.moveToPose(36.8,34.34,90,3000,{.minSpeed=50});
 }
-*/
 
 /*
 void one_goal_left() {
