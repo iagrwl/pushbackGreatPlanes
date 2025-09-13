@@ -176,6 +176,35 @@ void handleIOCommands() {
     }
   }
 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) { //if a new press of the top left trigger button is registered
+    if (!isIntakeOn){ //passes if the intake is off
+      //spins motors
+      frontIntake.move(-127);
+      colorSortRoller.move(-127);
+      middleRollers.move(-127);
+      scoringRoller.move(-127);
+      //sets flags
+      isIntakeOn = true; //sets the intake as on
+      frontIntakeStall = false;
+      colorSortRollerStall = false;
+      middleRollersStall = false;
+      scoringRollerStall = false;
+    }
+    else if (isIntakeOn){ //if the intake is on then this passes
+      //stops motors
+      frontIntake.move(0);
+      colorSortRoller.move(0);
+      middleRollers.move(0);
+      scoringRoller.move(0);
+      isIntakeOn = false; //sets the intake to off
+      shouldSC = false; //tells the stall check code to turn off
+      frontIntakeStall = false;
+      colorSortRollerStall = false;
+      middleRollersStall = false;
+      scoringRollerStall = false;
+    }
+  }
+
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){ //if the top right trigger button is HELD this passes
     scoringBar.set_value(true); //sets the scoringbar/descore mech to push up to allow scoring into high goal
     frontIntake.move(127);
@@ -191,6 +220,30 @@ void handleIOCommands() {
   }
   else if (isOuttakeOn){ //if the top right trigger button is let go of this passes
     scoringBar.set_value(false); //the scoring bar is dropped to allow for descoring
+    //motors are shut off after the scoring sequence of intaking (L1 toggle) and the R1 or R2 combination if pressed
+    frontIntake.move(0);
+    colorSortRoller.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(0);
+    isOuttakeOn = false; //marks the outtake as off
+    shouldSC = false; //tells the stall check code to turn off
+    isIntakeOn = false;
+    }
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){ //if the top right trigger button is HELD this passes
+    scoringBar.set_value(false); 
+    frontIntake.move(127);
+    colorSortRoller.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(-127);
+    isOuttakeOn = true; //marks the outtake as on
+    shouldSC = false; //tells the stall code to bypass to allow clean scoring
+    frontIntakeStall = false;
+    colorSortRollerStall = false;
+    middleRollersStall = false;
+    scoringRollerStall = false;
+  }
+  else if (isOuttakeOn){ //if the top right trigger button is let go of this passes
     //motors are shut off after the scoring sequence of intaking (L1 toggle) and the R1 or R2 combination if pressed
     frontIntake.move(0);
     colorSortRoller.move(0);
