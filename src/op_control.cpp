@@ -16,6 +16,8 @@ bool scoringRollerStall = false;
 //extensions
 bool isScoringBarUp = false;
 bool isLoaderExtended = false;
+bool isWingsOut = false;
+bool isParkDown = false;
 //core func
 bool isIntakeOn = false;
 bool isOuttakeOn = false;
@@ -176,7 +178,7 @@ void handleIOCommands() {
     }
   }
 
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) { //if a new press of the top left trigger button is registered
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) { //if a new press of the bottom left trigger button is registered
     if (!isIntakeOn){ //passes if the intake is off
       //spins motors
       frontIntake.move(-127);
@@ -331,3 +333,18 @@ void handleLoaderMechCommands() { //toggle button for loader mech
     loaderMech.set_value(isLoaderExtended); //sets the physical state to the bool condition of the loader
   }
 }
+
+void handleWingMechCommands() { //toggle button for loader mech
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { //if the controller recognizes a new press from the B button
+    isWingsOut = !isWingsOut; //flips the condition of the current state of the wings
+    wingMech.set_value(isWingsOut); //sets the physical state to the bool condition of the wings
+  }
+}
+
+void handleParkCommands() { //toggle button for loader mech
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) { //if the controller recognizes a new press from the down arrow button
+    isParkDown = !isParkDown; //flips the condition of the current state of the park bool
+    parkMech.set_value(isParkDown); //sets the physical state to the bool condition of the park sys
+  }
+}
+
