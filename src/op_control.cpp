@@ -154,7 +154,18 @@ void handleIOCommands() {
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    if (middleRollersStall) {
+      middleRollers.move(20);
+    } else {
+      middleRollers.move(127);
+    }
+    if (scoringRollerStall) {
+      scoringRoller.move(20);
+    } else {
+      scoringRoller.move(127);
+    }
   } else { // if the L1 is toggled off then this passes
+    shouldSC = false;
     frontIntake.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
@@ -187,18 +198,7 @@ void stall_checker() {
     } 
     else if (middleRollers_rpm > 40){
       middleRollersStall = false;
-    }
-
-    if (middleRollersStall) {
-      middleRollers.move(30);
-    } else {
-      middleRollers.move(127);
-    }
-    if (scoringRollerStall) {
-      scoringRoller.move(30);
-    } else {
-      scoringRoller.move(127);
-    }
+    } 
   }                                                                                                                   
   //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen (o)(o)
   pros::lcd::print(4, "RPM: %.2f %s", frontIntake_rpm, frontIntakeStall ? "FRONT FULL" : "");
