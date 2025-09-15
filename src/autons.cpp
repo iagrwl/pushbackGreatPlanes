@@ -127,41 +127,45 @@ void solo_awp(){
     //getting off the park zone
     chassis.moveToPoint(0,4,500);
     //collecting 3 stack
-    chassis.turnToHeading(-17.5,1000);
-    chassis.moveToPoint(-7, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
-    pros::delay(660);
+    chassis.turnToHeading(-18,1000);
+    chassis.moveToPoint(-9, 25, 2000);
+    pros::delay(500);
     loaderMech.set_value(true);
-    pros::delay(1100);
-    loaderMech.set_value(false);
+    pros::delay(300);
+    chassis.moveToPoint(-8,25, 1000,{.forwards = false},false);
     //low goal alignment
-    chassis.moveToPose(3.6, 39.8,  33.2, 4500,{.maxSpeed = 70, .minSpeed = 40},false);
+    chassis.turnToHeading(46,1000);
+    loaderMech.set_value(false);
+    chassis.moveToPose(4,36,45,1500,{.lead=-20,.maxSpeed = 60},false);
     //reverses intake
-    frontIntake.move(-100);
+    frontIntake.move(-80);
     middleRollers.move(-127);   
     scoringRoller.move(-127);
     //scoring delay
-    pros::delay(3000);
+    pros::delay(1400);
     //intake forward
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    //moving to other side
-    chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
-    chassis.turnToHeading(90,1000);
-    //collect 3 stack
-    chassis.moveToPose(47,30,85,4000,{.minSpeed=50});
-    pros::delay(1200);
-    loaderMech.set_value(true);
-    chassis.turnToHeading(135,1500);
-    pros::delay(500);
-    loaderMech.set_value(false);
-    //align with mid goal
-    chassis.moveToPose(30.5,38.5,135,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
-    //reverse mid rollers for 100ms to give space for blocks to score
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(150);
-    middleRollers.move(127);
+    // //moving to other side
+    // chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
+    // chassis.turnToHeading(90,1000);
+    // //collect 3 stack
+    // chassis.moveToPose(38,32,90,2000,{.minSpeed=50});
+    // pros::delay(1200);
+    // loaderMech.set_value(true);
+    // chassis.turnToHeading(135,1500);
+    // pros::delay(500);
+    // loaderMech.set_value(false);
+    // //align with mid goal
+    // chassis.moveToPose(28,41,130,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
+    // //reverse mid rollers for 100ms to give space for blocks to score
+    // middleRollers.move(-127);
+    // scoringRoller.move(-127);
+    // pros::delay(150);
+    // middleRollers.move(127);
+    // pros::delay(2000);
+    // chassis.moveToPoint(30,30,3000,{.maxSpeed=70, .minSpeed = 40},false);
 }
 
 void one_goal() {
