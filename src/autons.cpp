@@ -157,12 +157,12 @@ void one_goal() {
     chassis.moveToPoint(-7, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
     pros::delay(600);
     loaderMech.set_value(true);
-    chassis.turnToPoint(-25.82, 39.44, 800);
-    chassis.moveToPoint(-25.82, 39.44, 1200);
+    chassis.turnToPoint(-25.82, 38.44, 800);
+    chassis.moveToPoint(-25.82, 38.44, 1200);
     pros::delay(200);
     loaderMech.set_value(false);
     chassis.turnToHeading(-72, 800, {});
-    pros::delay(250);
+    pros::delay(50);
     loaderMech.set_value(true);
     chassis.moveToPoint(-16.27, 27.05, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 10});
     chassis.turnToPoint(-31.21, -3.95, 800);
@@ -171,17 +171,20 @@ void one_goal() {
     chassis.moveToPoint(-31.51, 20.44, 1500, {.forwards = false});
     pros::delay(700);
     scoringBar.set_value(true);
-    pros::delay(1000);
+    pros::delay(1300);
+    chassis.moveToPoint(-31.51, -17.41, 2000, {.minSpeed = 40});
+    pros::delay(200);
     scoringBar.set_value(false);
-    chassis.moveToPoint(-32.08, -17.41, 1800, {}, false);
-    //pros::delay(100);
+    chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
+    pros::delay(100);
     chassis.moveToPoint(-31.51, 22.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
-    pros::delay(500);
-    chassis.moveToPoint(-31.51, 17.44, 1000, {});
+    pros::delay(750);
+    chassis.moveToPoint(-31.51, 13.44, 1000, {});
     scoringBar.set_value(false);
-    chassis.moveToPoint(-31.51, 22.44, 1000, {.forwards = false});
+    chassis.moveToPoint(-31.51, 30.44, 2000, {.forwards = false});
+
 
 }
 /*
