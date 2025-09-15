@@ -114,79 +114,59 @@ void handleTank() {
   chassis.tank(leftY, rightY); // move the robot
 }
 
-void spinIntake() {
-  // if (!IsColorSortEngaged) 
-  // frontIntake.move(127);
-  // middleRollers.move(127);
-  // if (!IsColorSortEngaged) 
-  // colorSortRoller.move(80);
-  // scoringRoller.move(127);
-  // pros::delay(50);
-  // while (!isBlockThere(bottomDistance)) {
-  //   if (isBlockThere(topDistance) && !isBlockThere(middleDistance)) {
-  //     scoringRoller.move(50);
-  //   }
 
-  //   if (isBlockThere(middleDistance) && isBlockThere(topDistance)) {
-  //     middleRollers.move(0);
-  //     scoringRoller.move(0);
-  //   }
-
-  //   if(colorSortRoller.get_actual_velocity() < 5 && isBlockThere(middleDistance)) {
-  //     colorSortRoller.move(0);
-  //   }
-
-  //   pros::lcd::print(3, "no bottom block");
-  //   pros::delay(10);
-  // }
-  // if (!IsColorSortEngaged)
-  // frontIntake.move(0);
-  // pros::lcd::print(4, "bottom block");
-}
-
-//pros::Task* intakeOn = nullptr;
-// intake control (L1 toggle)
-void handleIOCommands() {
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+// the return; cmd exits the loop 
+void handleIOCommands() { 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // if L1 is clicked then system is toggled on or off
     isIntakeOn = !isIntakeOn;
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+    shouldSC = false;
     frontIntake.move(-127);
-    colorSortRoller.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
     return;
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
+    shouldSC = false;
     scoringBar.set_value(true);
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     return;
-  } else {
+  } else { // what happens when the R1 is let go off
     scoringBar.set_value(false);
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
+    shouldSC = false;
     scoringBar.set_value(false);
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(-127);
     return;
   }
 
-  if (isIntakeOn) {
+  if (isIntakeOn) { // if the L1 is toggled on then this passes
+    shouldSC = true;
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-  } else {
+    if (middleRollersStall) {
+      middleRollers.move(20);
+    } else {
+      middleRollers.move(127);
+    }
+    if (scoringRollerStall) {
+      scoringRoller.move(20);
+    } else {
+      scoringRoller.move(127);
+    }
+  } else { // if the L1 is toggled off then this passes
+    shouldSC = false;
     frontIntake.move(0);
-    colorSortRoller.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
   }
@@ -207,46 +187,21 @@ void stall_checker() {
   //every time the intake sequence is toggled these flaggers reset
   //higher the rpm thresh. the more sensitive
   if (shouldSC){ //if the stall check code is permitted to run, set by other parts in the code this passes
-    if (colorSortRoller_rpm < 20){ //if the rollers' rpm is below 20 the roller is marked as stalling
-      colorSortRollerStall = true; //the roller is marked as stalling
-    } 
-    else if (colorSortRoller_rpm > 100){ //the roller has an oppurtuinity to recovery itself by having a min rpm of 50+ then it is given power again
-      colorSortRollerStall = false; //the roller is marked as running
-    }
-    //similar logic below
     if (scoringRoller_rpm < 20){
       scoringRollerStall = true;
     }
-    else if (scoringRoller_rpm > 20){
+    else if (scoringRoller_rpm > 40){
       scoringRollerStall = false;
     }
-    if (middleRollers_rpm < 180){
+    if (middleRollers_rpm < 20){
     middleRollersStall = true;
     } 
-    else if (middleRollers_rpm > 200){
+    else if (middleRollers_rpm > 40){
       middleRollersStall = false;
-    }
-
-
-    // if (colorSortRollerStall) {
-    //   colorSortRoller.move(0);
-    // } else {
-    //   colorSortRoller.move(127);
-    // }
-    // if (middleRollersStall) {
-    //   middleRollers.move(30);
-    // } else {
-    //   middleRollers.move(127);
-    // }
-    // if (scoringRollerStall) {
-    //   scoringRoller.move(30);
-    // } else {
-    //   scoringRoller.move(127);
-    // }
+    } 
   }                                                                                                                   
   //displays the rpm and the stall state of each roller section on the brains 4,5,SIX, SEVENNN lines of the screen (o)(o)
   pros::lcd::print(4, "RPM: %.2f %s", frontIntake_rpm, frontIntakeStall ? "FRONT FULL" : "");
-  pros::lcd::print(5, "RPM: %.2f %s", colorSortRoller_rpm, colorSortRollerStall ? "LOWER FULL" : "");
   pros::lcd::print(6, "RPM: %.2f %s", middleRollers_rpm, middleRollersStall ? "MIDDLE FULL" : "");
   pros::lcd::print(7, "RPM: %.2f %s", scoringRoller_rpm, scoringRollerStall ? "TOP FULL" : "");
   logData(); //logs the data onto the sd card for data analysis

@@ -120,33 +120,54 @@ void two_goal_LEFT(){
 
 
 void solo_awp(){
-    
+    //turn on intake
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    //getting off the park zone
     chassis.moveToPoint(0,4,500);
-    chassis.turnToHeading(-17.5,1000);
-    chassis.moveToPoint(-7, 26, 3000, {.minSpeed = 40,});
-    pros::delay(700);
+    //collecting 3 stack
+    chassis.turnToHeading(-18,1000);
+    chassis.moveToPoint(-9, 25, 2000);
+    pros::delay(500);
     loaderMech.set_value(true);
-    pros::delay(1100);
-    chassis.moveToPose(3, 39.5,46, 4000,{.maxSpeed=70});
-    pros::delay(1300);
+    pros::delay(300);
+    chassis.moveToPoint(-8,25, 1000,{.forwards = false},false);
+    //low goal alignment
+    chassis.turnToHeading(46,1000);
     loaderMech.set_value(false);
-    frontIntake.move(-127);
-    colorSortRoller.move(-127);
+    chassis.moveToPose(4,36,45,1500,{.lead=-20,.maxSpeed = 60},false);
+    //reverses intake
+    frontIntake.move(-80);
     middleRollers.move(-127);   
     scoringRoller.move(-127);
-    pros::delay(750);
+    //scoring delay
+    pros::delay(1400);
+    //intake forward
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 50});
-    chassis.turnToHeading(90,1000);
-    chassis.moveToPose(36.8,34.34,90,3000,{.minSpeed=50});
+    // //moving to other side
+    // chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
+    // chassis.turnToHeading(90,1000);
+    // //collect 3 stack
+    // chassis.moveToPose(38,32,90,2000,{.minSpeed=50});
+    // pros::delay(1200);
+    // loaderMech.set_value(true);
+    // chassis.turnToHeading(135,1500);
+    // pros::delay(500);
+    // loaderMech.set_value(false);
+    // //align with mid goal
+    // chassis.moveToPose(28,41,130,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
+    // //reverse mid rollers for 100ms to give space for blocks to score
+    // middleRollers.move(-127);
+    // scoringRoller.move(-127);
+    // pros::delay(150);
+    // middleRollers.move(127);
+    // pros::delay(2000);
+    // chassis.moveToPoint(30,30,3000,{.maxSpeed=70, .minSpeed = 40},false);
 }
+
 void one_goal() {
     frontIntake.move(127);
     colorSortRoller.move(127);
@@ -187,6 +208,7 @@ void one_goal() {
 
 
 }
+
 /*
 void one_goal_left() {
     intake.move(127);
