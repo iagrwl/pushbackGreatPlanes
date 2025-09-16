@@ -27,7 +27,7 @@ void solo_awp(){
     //low goal alignment
     chassis.turnToHeading(46,1000);
     loaderMech.set_value(false);
-    chassis.moveToPose(4,36,45,1500,{.lead=-20,.maxSpeed = 60},false);
+    chassis.moveToPose(2,39,46,1400,{.horizontalDrift = 3,.lead=0.2,.maxSpeed = 65},false);
     //reverses intake
     frontIntake.move(-80);
     middleRollers.move(-127);   
@@ -38,25 +38,25 @@ void solo_awp(){
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    // //moving to other side
-    // chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
-    // chassis.turnToHeading(90,1000);
-    // //collect 3 stack
-    // chassis.moveToPose(38,32,90,2000,{.minSpeed=50});
-    // pros::delay(1200);
-    // loaderMech.set_value(true);
-    // chassis.turnToHeading(135,1500);
-    // pros::delay(500);
-    // loaderMech.set_value(false);
-    // //align with mid goal
-    // chassis.moveToPose(28,41,130,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
-    // //reverse mid rollers for 100ms to give space for blocks to score
-    // middleRollers.move(-127);
-    // scoringRoller.move(-127);
-    // pros::delay(150);
-    // middleRollers.move(127);
-    // pros::delay(2000);
-    // chassis.moveToPoint(30,30,3000,{.maxSpeed=70, .minSpeed = 40},false);
+    //back out and turn towards destin.
+    chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
+    chassis.turnToHeading(90,1000);
+    //collect 3 stack
+    chassis.moveToPose(38,32,90,2000,{.minSpeed=50});
+    pros::delay(1200);
+    loaderMech.set_value(true);
+    chassis.turnToHeading(135,1500);
+    pros::delay(500);
+    loaderMech.set_value(false);
+    //align with mid goal
+    chassis.moveToPose(28,41,130,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
+    //reverse mid rollers for 100ms to give space for blocks to score
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(150);
+    middleRollers.move(127);
+    pros::delay(2000);
+    chassis.moveToPoint(30,30,3000,{.maxSpeed=70, .minSpeed = 40},false);
 }
 
 void one_goal() {
