@@ -56,7 +56,24 @@ void solo_awp(){
     pros::delay(150);
     middleRollers.move(127);
     pros::delay(2000);
-    chassis.moveToPoint(30,30,3000,{.maxSpeed=70, .minSpeed = 40},false);
+    //move to loader
+    scoringRoller.move(127);
+    chassis.moveToPoint(50,20,1000,{.maxSpeed=70, .minSpeed = 40});
+    chassis.turnToHeading(180,500);
+    //drive into loader
+    chassis.moveToPoint(50,-10,1300, {.maxSpeed=90, .minSpeed = 50},false);
+    pros::delay(3000);
+    //backout from loader
+    chassis.moveToPoint(50,0,500);
+    //start alignment for scoring
+    chassis.turnToHeading(180,500);
+    chassis.moveToPoint(50,20,1500,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
+    scoringBar.set_value(true);
+    scoringRoller.move(127);
+    pros::delay(2000);
+    //descore/controlzone
+    chassis.moveToPoint(50,12,750,{.maxSpeed=80, .minSpeed = 40});
+    chassis.moveToPoint(50,25,1500,{.forwards = false , .minSpeed = 80});
 }
 
 void one_goal() {
