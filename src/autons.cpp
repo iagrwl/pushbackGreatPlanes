@@ -19,61 +19,65 @@ void solo_awp(){
     chassis.moveToPoint(0,4,500);
     //collecting 3 stack
     chassis.turnToHeading(-18,1000);
-    chassis.moveToPoint(-9, 25, 2000);
+    chassis.moveToPoint(-10, 30, 2000);
     pros::delay(500);
     loaderMech.set_value(true);
     pros::delay(300);
-    chassis.moveToPoint(-8,25, 1000,{.forwards = false},false);
+    chassis.turnToHeading(-135,1000);
+
+    
     //low goal alignment
-    chassis.turnToHeading(46,1000);
+    chassis.turnToHeading(-135,1000);
     loaderMech.set_value(false);
-    chassis.moveToPose(2,39,46,1400,{.horizontalDrift = 3,.lead=0.2,.maxSpeed = 65},false);
+    chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
     //reverses intake
-    frontIntake.move(-80);
-    middleRollers.move(-127);   
+    middleRollers.move(-127);
     scoringRoller.move(-127);
+    pros::delay(150);
+    middleRollers.move(127);
     //scoring delay
-    pros::delay(1400);
+    pros::delay(2000);
     //intake forward
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     //back out and turn towards destin.
-    chassis.moveToPoint(-7, 32, 3000, {.forwards = false , .minSpeed = 40});
-    chassis.turnToHeading(90,1000);
-    //collect 3 stack
-    chassis.moveToPose(38,32,90,2000,{.minSpeed=50});
-    pros::delay(1200);
+    chassis.moveToPoint(-1, 23, 2000, {.minSpeed = 40, .earlyExitRange = 4});
+    chassis.turnToHeading(92,400,{.maxSpeed = 90});
+    chassis.moveToPose(44, 24,90, 2300, {.lead=0.2,.maxSpeed = 80,.minSpeed = 40});
+    pros::delay(1100);
     loaderMech.set_value(true);
-    chassis.turnToHeading(135,1500);
-    pros::delay(500);
+    pros::delay(700);
+    chassis.turnToHeading(-45,700);
     loaderMech.set_value(false);
-    //align with mid goal
-    chassis.moveToPose(28,41,130,3000,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
-    //reverse mid rollers for 100ms to give space for blocks to score
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(150);
-    middleRollers.move(127);
-    pros::delay(2000);
-    //move to loader
-    scoringRoller.move(127);
-    chassis.moveToPoint(50,20,1000,{.maxSpeed=70, .minSpeed = 40});
-    chassis.turnToHeading(180,500);
-    //drive into loader
-    chassis.moveToPoint(50,-10,1300, {.maxSpeed=90, .minSpeed = 50},false);
-    pros::delay(3000);
-    //backout from loader
-    chassis.moveToPoint(50,0,500);
-    //start alignment for scoring
-    chassis.turnToHeading(180,500);
-    chassis.moveToPoint(50,20,1500,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
-    scoringBar.set_value(true);
-    scoringRoller.move(127);
-    pros::delay(2000);
-    //descore/controlzone
-    chassis.moveToPoint(50,12,750,{.maxSpeed=80, .minSpeed = 40});
-    chassis.moveToPoint(50,25,1500,{.forwards = false , .minSpeed = 80});
+    chassis.moveToPose(26,39.5,318,1200);
+    
+    // //align with mid goal
+    // chassis.moveToPose(30,39,130,3000,{.maxSpeed=65, .minSpeed = 40},false);
+    // //reverse mid rollers for 100ms to give space for blocks to score
+    // middleRollers.move(-127);
+    // scoringRoller.move(-127);
+    // pros::delay(150);
+    // middleRollers.move(127);
+    // pros::delay(2000);
+    // //move to loader
+    // scoringRoller.move(127);
+    // chassis.moveToPoint(50,20,1000,{.maxSpeed=70, .minSpeed = 40});
+    // chassis.turnToHeading(180,500);
+    // //drive into loader
+    // chassis.moveToPoint(50,-10,1300, {.maxSpeed=90, .minSpeed = 50},false);
+    // pros::delay(3000);
+    // //backout from loader
+    // chassis.moveToPoint(50,0,500);
+    // //start alignment for scoring
+    // chassis.turnToHeading(180,500);
+    // chassis.moveToPoint(50,20,1500,{.forwards = false ,.maxSpeed=65, .minSpeed = 40},false);
+    // scoringBar.set_value(true);
+    // scoringRoller.move(127);
+    // pros::delay(2000);
+    // //descore/controlzone
+    // chassis.moveToPoint(50,12,750,{.maxSpeed=80, .minSpeed = 40});
+    // chassis.moveToPoint(50,25,1500,{.forwards = false , .minSpeed = 80});
 }
 
 void one_goal() {
