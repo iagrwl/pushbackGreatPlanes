@@ -45,9 +45,9 @@ void solo_awp(){
     chassis.moveToPoint(-1, 23, 2000, {.minSpeed = 40, .earlyExitRange = 4});
     chassis.turnToHeading(92,400,{.maxSpeed = 90});
     chassis.moveToPose(44, 24,90, 2300, {.lead=0.2,.maxSpeed = 80,.minSpeed = 40});
-    pros::delay(1100);
+    pros::delay(1250);
     loaderMech.set_value(true);
-    pros::delay(700);
+    pros::delay(800);
     chassis.turnToHeading(-45,700);
     loaderMech.set_value(false);
     chassis.moveToPose(26,39.5,318,1200);
