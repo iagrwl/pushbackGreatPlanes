@@ -214,14 +214,14 @@ void handleLoaderMechCommands() { //toggle button for loader mech
   }
 }
 
-void handleWingMechCommands() { //toggle button for loader mech
+void handleWingMechCommands() { //toggle button wing mech
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { //if the controller recognizes a new press from the B button
     isWingsOut = !isWingsOut; //flips the condition of the current state of the wings
     wingMech.set_value(isWingsOut); //sets the physical state to the bool condition of the wings
   }
 }
 
-void handleParkCommands() { //toggle button for loader mech
+void handleParkCommands() { //toggle button for park mech
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) { //if the controller recognizes a new press from the down arrow button
     isParkDown = !isParkDown; //flips the condition of the current state of the park bool
     parkMech.set_value(isParkDown); //sets the physical state to the bool condition of the park sys

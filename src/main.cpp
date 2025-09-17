@@ -6,6 +6,7 @@
 #include "pros/motors.h"
 #include "robodash/api.h" 
 #include "setup.hpp"
+bool isTank = false; 
 
 void positionTracker() {
     while (true) {
@@ -143,10 +144,20 @@ void autonomous() {
  }
 
 void opcontrol() {
-  
+  int holdTime = 0; // counter for the seconds button is held
   while (true) {
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+            holdTime += 20; // loop delay is 20ms
+            if (holdTime >= 3000) { // hold delay
+                isTank = !isTank; // toggle mode
+                controller.rumble(".."); // give feedback
+                holdTime = 0; // reset so it doesn’t keep toggling
+            }
+        } else {
+            holdTime = 0; // reset if released early
+        }
     // driver control functions go here
-    handleDriveMode(true); //false for tank
+    handleDriveMode(isTank); //false for tank
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
