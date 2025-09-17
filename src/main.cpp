@@ -149,6 +149,7 @@ void opcontrol() {
     handleDriveMode(true); //false for tank
     handleIOCommands();
     handleLoaderMechCommands();
+    handleWingMechCommands();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}
