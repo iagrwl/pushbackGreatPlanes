@@ -95,6 +95,16 @@ void solo_awp(){
     middleRollers.move(-127);
     scoringRoller.move(-127);
 
+
+    pros::delay(1000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(34,-4,2500,{.maxSpeed=80},false);
+    scoringRoller.move(0);
+    chassis.turnToHeading(180,1000,{},false);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(33,-25,4000,{.maxSpeed= 80},false);
 }
 
 void one_goal() {
