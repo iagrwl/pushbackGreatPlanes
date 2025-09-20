@@ -139,10 +139,9 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  //solo_awp();
+  solo_awp();
   //one_goal();
-  //two_goal_LEFT();
-    autonSkills();
+  two_goal_LEFT();
  }
 
 void opcontrol() {
@@ -150,7 +149,7 @@ void opcontrol() {
   while (true) {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             holdTime += 20; // loop delay is 20ms
-            if (holdTime >= 3000) { // hold delay
+            if (holdTime >= 2000) { // hold delay
                 isTank = !isTank; // toggle mode
                 controller.rumble(".."); // give feedback
                 holdTime = 0; // reset so it doesn’t keep toggling

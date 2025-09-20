@@ -211,7 +211,7 @@ void handleLoaderMechCommands() { //toggle button for loader mech
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { //if the controller recognizes a new press from the left arrow button
     isLoaderExtended = !isLoaderExtended; //flips the condition of the current state of the loader
     loaderMech.set_value(isLoaderExtended); //sets the physical state to the bool condition of the loader
-  }
+  } 
 }
 
 void handleWingMechCommands() { //toggle button wing mech
