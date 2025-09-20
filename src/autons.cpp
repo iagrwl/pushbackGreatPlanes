@@ -5,6 +5,17 @@
 #include "setup.hpp"
 #include "op_control.hpp"
 
+void autonSkills() {
+    chassis.setPose(0,0,-90);
+    chassis.moveToPoint(-28,0,2000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.turnToHeading(180,500);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(-28,-20,3000);
+}
+
 void two_goal_LEFT() {
     //turn on intake
     frontIntake.move(127);
@@ -26,16 +37,18 @@ void two_goal_LEFT() {
     scoringRoller.move(-127);
     chassis.moveToPoint(3,34,2500,{.forwards=false,.maxSpeed=80});
     pros::delay(400);
-    middleRollers.move(127);
-    pros::delay(700);
+    middleRollers.move(100);
+    pros::delay(1500);
     chassis.moveToPoint(-34,-4,2500,{.maxSpeed=80},false);
-    scoringRoller.move(0);
+    scoringRoller.move(127);
     chassis.turnToHeading(180,1000,{},false);
     loaderMech.set_value(true);
-    chassis.moveToPoint(-33,-25,4000,{.maxSpeed= 80},false);
-    chassis.moveToPoint(-33,20,1500,{.forwards = false, .maxSpeed= 70},false);
-    scoringRoller.move(127);
+    chassis.moveToPoint(-33,-25,1200,{.maxSpeed= 70},false);
+    chassis.moveToPoint(-33,20,2000,{.forwards = false, .maxSpeed= 70},false);
     scoringBar.set_value(true);
+    pros::delay(500);
+    scoringRoller.move(0);
+    scoringBar.set_value(false);
     /*
     chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
     //reverses intake

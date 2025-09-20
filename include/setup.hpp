@@ -116,4 +116,4 @@ inline pros::Optical colorSortOptical(11);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
 inline pros::Distance topDistance(19);
-inline pros::Distance sideDistance(12);
+inline pros::Distance sideDistance(17);
