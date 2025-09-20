@@ -6,8 +6,54 @@
 #include "op_control.hpp"
 
 void two_goal_LEFT() {
-    chassis.setPose(0,0,30);
-    
+    //turn on intake
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    //getting off the park zone
+    chassis.moveToPoint(0,4,500);
+    //collecting 3 stack
+    chassis.turnToHeading(-18,1000);
+    //chassis.moveToPoint(-10, 30, 2000,{.maxSpeed=60});
+    chassis.moveToPoint(-8, 28, 2000,{.maxSpeed=70});
+    pros::delay(600);
+    loaderMech.set_value(true);
+    pros::delay(600);
+    //chassis.turnToHeading(-135,1000,{.maxSpeed=70});
+    chassis.turnToPoint(3,34,1500,{.forwards=false,.maxSpeed=70});
+    loaderMech.set_value(false);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    chassis.moveToPoint(3,34,2500,{.forwards=false,.maxSpeed=80});
+    pros::delay(400);
+    middleRollers.move(127);
+    pros::delay(700);
+    chassis.moveToPoint(-34,-4,2500,{.maxSpeed=80},false);
+    scoringRoller.move(0);
+    chassis.turnToHeading(180,1000,{},false);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(-33,-25,4000,{.maxSpeed= 80},false);
+    chassis.moveToPoint(-33,20,1500,{.forwards = false, .maxSpeed= 70},false);
+    scoringRoller.move(127);
+    scoringBar.set_value(true);
+    /*
+    chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
+    //reverses intake
+
+    pros::delay(150);
+    middleRollers.move(127);
+    //scoring delay
+    pros::delay(2000);
+    //back out and turn towards destin.
+    frontIntake.move(127);
+    middleRollers.move(127);   
+    scoringRoller.move(127);
+
+    chassis.moveToPoint(-32, 0, 2000,{});
+    chassis.turnToHeading(180,700);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(-32,-7,3000,{.maxSpeed=60});
+    */
 }
 
 void solo_awp(){
