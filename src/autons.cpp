@@ -19,7 +19,7 @@ void solo_awp(){
     chassis.moveToPoint(0,4,500);
     //collecting 3 stack
     chassis.turnToHeading(-18,1000);
-    chassis.moveToPoint(-10, 30, 2000);
+    chassis.moveToPoint(-10, 27, 2000);
     pros::delay(500);
     loaderMech.set_value(true);
     pros::delay(300);
@@ -30,27 +30,28 @@ void solo_awp(){
     chassis.turnToHeading(-135,1000);
     loaderMech.set_value(false);
     chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
+
     //reverses intake
     middleRollers.move(-127);
     scoringRoller.move(-127);
-    pros::delay(150);
+    pros::delay(125);
     middleRollers.move(127);
     //scoring delay
-    pros::delay(2000);
+    pros::delay(1200);
     //intake forward
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    //back out and turn towards destin.
-    chassis.moveToPoint(-1, 23, 2000, {.minSpeed = 40, .earlyExitRange = 4});
-    chassis.turnToHeading(92,400,{.maxSpeed = 90});
-    chassis.moveToPose(44, 24,90, 2300, {.lead=0.2,.maxSpeed = 80,.minSpeed = 40});
-    pros::delay(1250);
-    loaderMech.set_value(true);
-    pros::delay(800);
-    chassis.turnToHeading(-45,700);
-    loaderMech.set_value(false);
-    chassis.moveToPose(26,39.5,318,1200);
+    // //back out and turn towards destin.
+    // chassis.moveToPoint(-1, 23, 2000, {.minSpeed = 40, .earlyExitRange = 4});
+    // chassis.turnToHeading(92,400,{.maxSpeed = 90});
+    // chassis.moveToPose(44, 24,88, 2300, {.lead=0.2,.maxSpeed = 80,.minSpeed = 40});
+    // pros::delay(1250);
+    // loaderMech.set_value(true);
+    // pros::delay(800);
+    // chassis.turnToHeading(-45,700);
+    // loaderMech.set_value(false);
+    // chassis.moveToPose(26.5,42,317,1200);
     
     // //align with mid goal
     // chassis.moveToPose(30,39,130,3000,{.maxSpeed=65, .minSpeed = 40},false);
