@@ -234,7 +234,7 @@ void solo_awp(){
     // chassis.moveToPoint(33,-25,4000,{.maxSpeed= 80},false);
 }
 
-void one_goal() {
+void one_goal_left() {
     frontIntake.move(127);
     colorSortRoller.move(127);
     middleRollers.move(127);
@@ -246,7 +246,7 @@ void one_goal() {
     loaderMech.set_value(true);
     chassis.turnToPoint(-25.82, 38.44, 800);
     chassis.moveToPoint(-25.82, 38.44, 1200);
-    pros::delay(200);
+    pros::delay(100);
     loaderMech.set_value(false);
     chassis.turnToHeading(-72, 800, {});
     pros::delay(50);
@@ -263,17 +263,55 @@ void one_goal() {
     pros::delay(200);
     scoringBar.set_value(false);
     chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
-    pros::delay(100);
+    //pros::delay(100);
     chassis.moveToPoint(-31.51, 22.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
-    pros::delay(750);
+    pros::delay(700);
     chassis.moveToPoint(-31.51, 13.44, 1000, {});
     scoringBar.set_value(false);
     chassis.moveToPoint(-31.51, 30.44, 2000, {.forwards = false});
-
-
 }
+
+void one_goal_right() {
+    frontIntake.move(127);
+    colorSortRoller.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(0,4,500);
+    chassis.turnToHeading(17.5,1000);
+    chassis.moveToPoint(8, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
+    pros::delay(600);
+    loaderMech.set_value(true);
+    chassis.turnToPoint(25.82, 40.44, 800);
+    chassis.moveToPoint(26.82, 40.44, 1200);
+    pros::delay(50);
+    loaderMech.set_value(false);
+    chassis.turnToHeading(60, 800, {});
+    pros::delay(50);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(14.27, 27.05, 1500, {.forwards = false/*.minSpeed = 30, .earlyExitRange = 10*/});
+    chassis.turnToPoint(35.21, 3, 800);
+    chassis.moveToPoint(35.21, 3, 1500);
+    chassis.turnToPoint(35.51, 24.44, 800, {.forwards = false});
+    chassis.moveToPoint(35.51, 24.44, 1500, {.forwards = false});
+    pros::delay(700);
+    scoringBar.set_value(true);
+    pros::delay(1300);
+    chassis.moveToPoint(35.51, -10.41, 2000, {.minSpeed = 40});
+    pros::delay(200);
+    scoringBar.set_value(false);
+    chassis.moveToPoint(35.51, -8.41, 2000, {.forwards = false}, false);
+    //pros::delay(100);
+    chassis.moveToPoint(35.51, 24.44, 1500, {.forwards = false});
+    pros::delay(1000);
+    scoringBar.set_value(true);
+    pros::delay(700);
+    chassis.moveToPoint(35.51, 13.44, 1000, {});
+    scoringBar.set_value(false);
+    chassis.moveToPoint(35.51, 30.44, 2000, {.forwards = false});
+}
+
 
 void turnTesting(bool isCW) {
 

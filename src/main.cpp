@@ -141,7 +141,7 @@ void autonomous() {
   //selector.run_auton();
   //ihateprog();
   //solo_awp();
-  //one_goal();
+  one_goal_right();
   //two_goal_LEFT();
   autonSkills();
  }
