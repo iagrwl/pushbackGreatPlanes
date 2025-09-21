@@ -139,10 +139,11 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  ihateprog();
+  //ihateprog();
   //solo_awp();
   //one_goal();
   //two_goal_LEFT();
+  autonSkills();
  }
 
 void opcontrol() {

@@ -6,14 +6,73 @@
 #include "op_control.hpp"
 
 void autonSkills() {
-    chassis.setPose(0,0,-90);
-    chassis.moveToPoint(-28,0,2000);
+ //turn on intake
+    chassis.setPose(0,0,90);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+
+
+    chassis.moveToPoint(31.5,0,1400,{.maxSpeed=85});
+    chassis.turnToHeading(180,800,{.maxSpeed=70});
+    loaderMech.set_value(true);
+
+    chassis.moveToPoint(34.25,-15,2000,{.maxSpeed=100},false);
+
+    //chassis.moveToPoint(0,34.25,500,{.forwards=false,.maxSpeed=85});
+    chassis.turnToHeading(180,500,{.maxSpeed=80});
+    loaderMech.set_value(false);
+    chassis.moveToPoint(35,25,2000,{.forwards=false});
+    pros::delay(600);
+    scoringBar.set_value(true);
+    pros::delay(1600);
+    
+    left_dt.move(127);
+    right_dt.move(-127); 
+    pros::delay(450);
+    left_dt.move(0);
+    right_dt.move(0); 
+    scoringBar.set_value(false);
+    chassis.turnToHeading(280,400);
+    chassis.moveToPoint(1,11,1200,{.maxSpeed=60});
+    pros::delay(200);
+    loaderMech.set_value(true);
+    chassis.turnToHeading(270,500);
+    chassis.moveToPoint(-27,10,1200,{.maxSpeed=67});
+    pros::delay(200);
+    loaderMech.set_value(false);
+    pros::delay(800);
+    loaderMech.set_value(true);
+    chassis.moveToPoint(-34.5,10,1200,{.maxSpeed=50});
+    pros::delay(400);
+    loaderMech.set_value(false);
+    chassis.turnToPoint(-21.5,23,1000,{.forwards=false},false);
+    chassis.moveToPoint(-21.5,23,1300,{.forwards=false},false);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    frontIntake.move(-127);
+    pros::delay(100);
+    middleRollers.move(50);   
+    frontIntake.move(127); 
+    pros::delay(1500);
+    middleRollers.move(-127);
+    pros::delay(100);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(10);
+    chassis.moveToPoint(-57,-17,1600);
     chassis.turnToHeading(180,500);
     loaderMech.set_value(true);
-    chassis.moveToPoint(-28,-20,3000);
+    chassis.moveToPoint(-57,-30,3000,{.maxSpeed= 70},false);
+    chassis.moveToPoint(-57,20,3000,{.forwards = false, .minSpeed= 80});
+    pros::delay(500);
+    scoringBar.set_value(true);
+    pros::delay(2000);
+    scoringRoller.move(0);
+    scoringBar.set_value(false);
+    chassis.moveToPoint(-62,0,1500);
+    chassis.turnToHeading(180,1500,{.forwards=false});
+    chassis.moveToPoint(-62, 130, 2000);
 }
 
 void two_goal_LEFT() {
