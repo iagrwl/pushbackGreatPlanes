@@ -129,7 +129,7 @@ void two_goal_LEFT() {
     */
 }
 void solo_awp(){
-    //turn on intake
+   //turn on intake
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
@@ -139,12 +139,12 @@ void solo_awp(){
     chassis.turnToHeading(90,800,{.maxSpeed=70});
     loaderMech.set_value(true);
 
-    chassis.moveToPoint(15,34.25,1300,{.maxSpeed=100},false);
+    chassis.moveToPoint(15,33.25,1100,{.maxSpeed=100},false);
 
     //chassis.moveToPoint(0,34.25,500,{.forwards=false,.maxSpeed=85});
     chassis.turnToHeading(90,500,{.maxSpeed=80});
     loaderMech.set_value(false);
-    chassis.moveToPoint(-20,35,1000,{.forwards=false},false);
+    chassis.moveToPoint(-20,34,1000,{.forwards=false},false);
     scoringBar.set_value(true);
     pros::delay(1100);
     
@@ -161,12 +161,12 @@ void solo_awp(){
     pros::delay(100);
     chassis.moveToPoint(-10,-34.5,1200,{.maxSpeed=50});
 
-    chassis.turnToHeading(132.5,500);
-    chassis.moveToPoint(-20,-24,1000,{.forwards=false},false);
+    chassis.turnToHeading(133,500);
+    chassis.moveToPoint(-24,-21.5,1200,{.forwards=false},false);
     middleRollers.move(-127);
     scoringRoller.move(-127);
     frontIntake.move(-127);
-    pros::delay(100);
+    pros::delay(150);
     middleRollers.move(127);   
     frontIntake.move(127); 
     pros::delay(450);

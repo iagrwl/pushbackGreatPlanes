@@ -130,6 +130,7 @@ void initialize() {
 }
 
 void disabled() {
+    scoringBar.set_value(true);
   }
 
 void competition_initialize() {
@@ -139,8 +140,8 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  //solo_awp();
-  one_goal_left();
+  solo_awp();
+  //one_goal_right();
   //two_goal_LEFT();
   //autonSkills();
  }
