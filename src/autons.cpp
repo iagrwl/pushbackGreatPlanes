@@ -230,33 +230,34 @@ void one_goal_right() {
     chassis.moveToPoint(8, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
     pros::delay(600);
     loaderMech.set_value(true);
-    chassis.turnToPoint(25.82, 40.44, 800);
-    chassis.moveToPoint(26.82, 40.44, 1200);
+    chassis.turnToPoint(25.32, 39.94, 800);
+    chassis.moveToPoint(26.32, 39.94, 1200);
     pros::delay(50);
     loaderMech.set_value(false);
-    chassis.turnToHeading(60, 800, {});
-    pros::delay(50);
+    chassis.turnToHeading(72, 800, {});
+    pros::delay(100);
     loaderMech.set_value(true);
     chassis.moveToPoint(14.27, 27.05, 1500, {.forwards = false/*.minSpeed = 30, .earlyExitRange = 10*/});
-    chassis.turnToPoint(35.21, 3, 800);
-    chassis.moveToPoint(35.21, 3, 1500);
-    chassis.turnToPoint(35.51, 24.44, 800, {.forwards = false});
-    chassis.moveToPoint(35.51, 24.44, 1500, {.forwards = false});
+    chassis.turnToPoint(33.21, 3, 800);
+    chassis.moveToPoint(33.21, 3, 1500);
+    chassis.turnToPoint(34.51, 26.44, 800, {.forwards = false});
+    chassis.moveToPoint(34.51, 26.44, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 5});
+    //chassis.turnToHeading(180, 800);
     pros::delay(700);
     scoringBar.set_value(true);
     pros::delay(1300);
-    chassis.moveToPoint(35.51, -10.41, 2000, {.minSpeed = 40});
+    chassis.moveToPoint(34.51, -12.41, 2000, {.minSpeed = 40});
     pros::delay(200);
     scoringBar.set_value(false);
-    chassis.moveToPoint(35.51, -8.41, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(34.51, -10.41, 2000, {.forwards = false}, false);
     //pros::delay(100);
-    chassis.moveToPoint(35.51, 24.44, 1500, {.forwards = false});
+    chassis.moveToPoint(34.51, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
-    pros::delay(700);
-    chassis.moveToPoint(35.51, 13.44, 1000, {});
+    pros::delay(600);
+    chassis.moveToPoint(34.51, 13.44, 1000, {});
     scoringBar.set_value(false);
-    chassis.moveToPoint(35.51, 30.44, 2000, {.forwards = false});
+    chassis.moveToPoint(34.51, 30.44, 2000, {.forwards = false});
 }
 
 

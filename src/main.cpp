@@ -140,7 +140,7 @@ void autonomous() {
   // runs selected auton
   //selector.run_auton();
   //solo_awp();
-  //one_goal_right();
+  one_goal_left();
   //two_goal_LEFT();
   //autonSkills();
  }
