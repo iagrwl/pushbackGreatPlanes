@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "poopfacerizzak47",
+    "project_name": "eternity 42824A",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,8 +323,8 @@
       }
     },
     "upload_options": {
-      "slot": 3,
-      "description": "ding dong eat it uo",
+      "slot": 1,
+      "description": "iloveparth",
       "icon": "alien"
     },
     "use_early_access": false
