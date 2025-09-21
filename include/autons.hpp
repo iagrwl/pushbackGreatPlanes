@@ -14,5 +14,4 @@ void one_goal_right();
 void solo_awp();
 void one_goal();
 void autonSkills();
-void ihateprog();
 void scoreBlocks(int count, bool isTop, int speed = 127);

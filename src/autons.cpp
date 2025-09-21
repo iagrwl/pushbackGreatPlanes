@@ -71,7 +71,7 @@ void autonSkills() {
     scoringRoller.move(0);
     scoringBar.set_value(false);
     chassis.moveToPoint(-62,0,1500);
-    chassis.turnToHeading(180,1500,{.forwards=false});
+    chassis.turnToHeading(180,1500);
     chassis.moveToPoint(-62, 130, 2000);
 }
 
@@ -128,7 +128,7 @@ void two_goal_LEFT() {
     chassis.moveToPoint(-32,-7,3000,{.maxSpeed=60});
     */
 }
-void ihateprog(){
+void solo_awp(){
     //turn on intake
     frontIntake.move(127);
     middleRollers.move(127);
@@ -181,59 +181,6 @@ void ihateprog(){
     pros::delay(500);
     scoringBar.set_value(true);
 }
-
-void solo_awp(){
-    //turn on intake
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    //getting off the park zone
-    chassis.moveToPoint(0,4,500);
-    //collecting 3 stack
-    chassis.turnToHeading(-18,1000);
-    //chassis.moveToPoint(-10, 30, 2000,{.maxSpeed=60});
-    chassis.moveToPoint(-8, 28, 2000,{.maxSpeed=70});
-    pros::delay(600);
-    loaderMech.set_value(true);
-    pros::delay(600);
-    chassis.turnToPoint(3,34,1500,{.forwards=false,.maxSpeed=70});
-    loaderMech.set_value(false);
-    chassis.moveToPoint(3.5,34,1000,{.forwards=false,.maxSpeed=80},false);
-    pros::delay(400);
-    scoringRoller.move(-50);
-    middleRollers.move(-127);
-    pros::delay(125);
-    middleRollers.move(127);
-    pros::delay(1000);
-   //back out and turn towards 3 stack
-    chassis.moveToPoint(-1, 25, 2000, {.minSpeed = 40, .earlyExitRange = 2});
-    chassis.turnToHeading(91,400,{.maxSpeed = 90});
-    chassis.moveToPoint(40, 27, 2300, {.maxSpeed = 80,.minSpeed = 40});
-    scoringRoller.move(127);
-    pros::delay(1300);
-    loaderMech.set_value(true);
-    pros::delay(800);
-    chassis.turnToHeading(90,500);
-    chassis.turnToHeading(-45,700);
-    loaderMech.set_value(false);
-    chassis.moveToPoint(25.2,40,1200);
-    pros::delay(1100);
-    frontIntake.move(-75);
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-
-
-    // pros::delay(1000);
-    // frontIntake.move(127);
-    // middleRollers.move(127);
-    // scoringRoller.move(127);
-    // chassis.moveToPoint(27,20,1000,{.forwards=false,.earlyExitRange=10});
-    // chassis.moveToPoint(34,-4,2500,{.maxSpeed=80},false);
-    // chassis.turnToHeading(180,1000,{},false);
-    // loaderMech.set_value(true);
-    // chassis.moveToPoint(33,-25,4000,{.maxSpeed= 80},false);
-}
-
 void one_goal_left() {
     frontIntake.move(127);
     colorSortRoller.move(127);
