@@ -84,21 +84,16 @@ static void stall_check(void*){
 }
 
 rd::Selector selector({
-  /*// format is {"name of route", &routeFunction}
-  // it's a 2D array, the string inputted will be
-  // displayed on the screen and the referenced 
-  // function is what will be run
   {"two goal LEFT",&two_goal_LEFT },
-  {"two goal RIGHT", &two_goal_RIGHT},
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo awp", &solo_awp}*/
+  {"solo awp", &solo_awp}
 });
 
 rd::Console console;
 
 void initialize() {
-	pros::lcd::initialize(); // initialize if you want posTracker
+	//pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
@@ -139,8 +134,8 @@ void competition_initialize() {
 
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
-  solo_awp();
+  selector.run_auton();
+  //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
   //autonSkills();
