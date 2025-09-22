@@ -6,7 +6,7 @@
 #include "pros/motors.h"
 #include "robodash/api.h" 
 #include "setup.hpp"
-bool isTank = false; 
+bool isArcade = true; 
 
 void positionTracker() {
     while (true) {
@@ -152,7 +152,7 @@ void opcontrol() {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             holdTime += 20; // loop delay is 20ms
             if (holdTime >= 2000) { // hold delay
-                isTank = !isTank; // toggle mode
+                isArcade = !isArcade; // toggle mode
                 controller.rumble(".."); // give feedback
                 holdTime = 0; // reset so it doesn’t keep toggling
             }
@@ -160,7 +160,7 @@ void opcontrol() {
             holdTime = 0; // reset if released early
         }
     // driver control functions go here
-    handleDriveMode(isTank); //false for tank
+    handleDriveMode(isArcade); //false for tank
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
