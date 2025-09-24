@@ -39,62 +39,62 @@ std::ofstream logFile;
 bool logInitialized = false;
 
 void initLog() {
-  if (!logInitialized) {
-    logFile.open("/usd/stall_log.csv", std::ios::out | std::ios::trunc);
-    if (logFile.is_open()) {
-      logFile << "time_ms,"
-              << "frontIntake_rpm,frontIntake_current,frontIntakeStall,"
-              << "colorSortRoller_rpm,colorSortRoller_current,colorSortRollerStall,"
-              << "middleRollers_rpm,middleRollers_current,middleRollersStall,"
-              << "scoringRoller_rpm,scoringRoller_current,scoringRollerStall,"
-              // drivetrain motors
-              << "leftDT_m7_rpm,leftDT_m7_amp,"
-              << "leftDT_m6_rpm,leftDT_m6_amp,"
-              << "leftDT_m5_rpm,leftDT_m5_amp,"
-              << "rightDT_m14_rpm,rightDT_m14_amp,"
-              << "rightDT_m15_rpm,rightDT_m15_amp,"
-              << "rightDT_m16_rpm,rightDT_m16_amp"
-              << std::endl;
-      logInitialized = true;
-    }
-  }
+  // if (!logInitialized) {
+  //   logFile.open("/usd/stall_log.csv", std::ios::out | std::ios::trunc);
+  //   if (logFile.is_open()) {
+  //     logFile << "time_ms,"
+  //             << "frontIntake_rpm,frontIntake_current,frontIntakeStall,"
+  //             << "colorSortRoller_rpm,colorSortRoller_current,colorSortRollerStall,"
+  //             << "middleRollers_rpm,middleRollers_current,middleRollersStall,"
+  //             << "scoringRoller_rpm,scoringRoller_current,scoringRollerStall,"
+  //             // drivetrain motors
+  //             << "leftDT_m7_rpm,leftDT_m7_amp,"
+  //             << "leftDT_m6_rpm,leftDT_m6_amp,"
+  //             << "leftDT_m5_rpm,leftDT_m5_amp,"
+  //             << "rightDT_m14_rpm,rightDT_m14_amp,"
+  //             << "rightDT_m15_rpm,rightDT_m15_amp,"
+  //             << "rightDT_m16_rpm,rightDT_m16_amp"
+  //             << std::endl;
+  //     logInitialized = true;
+  //   }
+  // }
 }
 
 void logData() {
-  if (logInitialized && logFile.is_open()) {
-    log_mutex.take();
+  // if (logInitialized && logFile.is_open()) {
+  //   log_mutex.take();
 
-    // collect drivetrain data
-    leftDT_rpm[0] = pros::Motor(-7).get_actual_velocity();
-    leftDT_current[0] = pros::Motor(-7).get_current_draw();
-    leftDT_rpm[1] = pros::Motor(-6).get_actual_velocity();
-    leftDT_current[1] = pros::Motor(-6).get_current_draw();
-    leftDT_rpm[2] = pros::Motor(5).get_actual_velocity();
-    leftDT_current[2] = pros::Motor(5).get_current_draw();
+  //   // collect drivetrain data
+  //   leftDT_rpm[0] = pros::Motor(-7).get_actual_velocity();
+  //   leftDT_current[0] = pros::Motor(-7).get_current_draw();
+  //   leftDT_rpm[1] = pros::Motor(-6).get_actual_velocity();
+  //   leftDT_current[1] = pros::Motor(-6).get_current_draw();
+  //   leftDT_rpm[2] = pros::Motor(5).get_actual_velocity();
+  //   leftDT_current[2] = pros::Motor(5).get_current_draw();
 
-    rightDT_rpm[0] = pros::Motor(14).get_actual_velocity();
-    rightDT_current[0] = pros::Motor(14).get_current_draw();
-    rightDT_rpm[1] = pros::Motor(15).get_actual_velocity();
-    rightDT_current[1] = pros::Motor(15).get_current_draw();
-    rightDT_rpm[2] = pros::Motor(-16).get_actual_velocity();
-    rightDT_current[2] = pros::Motor(-16).get_current_draw();
+  //   rightDT_rpm[0] = pros::Motor(14).get_actual_velocity();
+  //   rightDT_current[0] = pros::Motor(14).get_current_draw();
+  //   rightDT_rpm[1] = pros::Motor(15).get_actual_velocity();
+  //   rightDT_current[1] = pros::Motor(15).get_current_draw();
+  //   rightDT_rpm[2] = pros::Motor(-16).get_actual_velocity();
+  //   rightDT_current[2] = pros::Motor(-16).get_current_draw();
 
-    logFile << pros::millis() << ","
-            << frontIntake_rpm << "," << frontIntake_current << "," << frontIntakeStall << ","
-            << colorSortRoller_rpm << "," << colorSortRoller_current << "," << colorSortRollerStall << ","
-            << middleRollers_rpm << "," << middleRollers_current << "," << middleRollersStall << ","
-            << scoringRoller_rpm << "," << scoringRoller_current << "," << scoringRollerStall << ","
-            // drivetrain
-            << leftDT_rpm[0] << "," << leftDT_current[0] << ","
-            << leftDT_rpm[1] << "," << leftDT_current[1] << ","
-            << leftDT_rpm[2] << "," << leftDT_current[2] << ","
-            << rightDT_rpm[0] << "," << rightDT_current[0] << ","
-            << rightDT_rpm[1] << "," << rightDT_current[1] << ","
-            << rightDT_rpm[2] << "," << rightDT_current[2]
-            << std::endl;
+  //   logFile << pros::millis() << ","
+  //           << frontIntake_rpm << "," << frontIntake_current << "," << frontIntakeStall << ","
+  //           << colorSortRoller_rpm << "," << colorSortRoller_current << "," << colorSortRollerStall << ","
+  //           << middleRollers_rpm << "," << middleRollers_current << "," << middleRollersStall << ","
+  //           << scoringRoller_rpm << "," << scoringRoller_current << "," << scoringRollerStall << ","
+  //           // drivetrain
+  //           << leftDT_rpm[0] << "," << leftDT_current[0] << ","
+  //           << leftDT_rpm[1] << "," << leftDT_current[1] << ","
+  //           << leftDT_rpm[2] << "," << leftDT_current[2] << ","
+  //           << rightDT_rpm[0] << "," << rightDT_current[0] << ","
+  //           << rightDT_rpm[1] << "," << rightDT_current[1] << ","
+  //           << rightDT_rpm[2] << "," << rightDT_current[2]
+  //           << std::endl;
 
-    log_mutex.give();
-  }
+  //   log_mutex.give();
+  // }
 }
 
 // drive mode handler

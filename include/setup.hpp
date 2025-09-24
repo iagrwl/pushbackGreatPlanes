@@ -101,9 +101,9 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 //intake groups
 inline pros::Motor frontIntake(9, pros::MotorGearset::blue);
-inline pros::Motor middleRollers(-8);
+inline pros::Motor middleRollers(-10);
 inline pros::Motor colorSortRoller(4);
-inline pros::Motor scoringRoller(-10);
+inline pros::Motor scoringRoller(-19);
 
 //extensions
 inline pros::adi::DigitalOut scoringBar('A');
@@ -112,7 +112,7 @@ inline pros::adi::DigitalOut wingMech('H');
 inline pros::adi::DigitalOut parkMech('D');
 
 // clog sensors
-inline pros::Optical colorSortOptical(11);
+inline pros::Optical colorSortOptical(12);
 inline pros::Distance middleDistance(13);
 inline pros::Distance bottomDistance(18);
 inline pros::Distance topDistance(19);

@@ -139,9 +139,9 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader 
-    chassis.moveToPoint(15,33.25,1100,{.maxSpeed=100},false);
+    chassis.moveToPoint(15,33.25,1050,{.maxSpeed=100},false);
     //fix lat alignment
-    chassis.turnToHeading(90,500,{.maxSpeed=80});
+    chassis.turnToHeading(90,400,{.maxSpeed=80});
     //retract loader mech
     loaderMech.set_value(false);
     //go to long goal
@@ -161,7 +161,7 @@ void solo_awp(){
     //correctional swing turn
     chassis.turnToHeading(190,400);
     //go to first 3 stack
-    chassis.moveToPoint(-11,1,1200,{.maxSpeed=60});
+    chassis.moveToPoint(-11,1,1200,{.maxSpeed=55});
     //correctional turn
     chassis.turnToHeading(180,500);
     //go to second 3 stack
@@ -169,11 +169,11 @@ void solo_awp(){
     //give initial delay before slow entry
     pros::delay(100);
     //slow entry into 3 stack without loader mech for psi retention
-    chassis.moveToPoint(-10,-34.5,1200,{.maxSpeed=50});
+    chassis.moveToPoint(-10,-35,1200,{.maxSpeed=50});
     //turn opposite of mid goal
     chassis.turnToHeading(133,500);
     //ram mid goal
-    chassis.moveToPoint(-24,-21.5,1200,{.forwards=false},false);
+    chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
     //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -181,17 +181,17 @@ void solo_awp(){
     pros::delay(150);
     middleRollers.move(127);   
     frontIntake.move(127); 
-    pros::delay(450);
+    pros::delay(460);
     //scoring recovery 
     middleRollers.move(-127);
-    pros::delay(100);
+    pros::delay(110);
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(10);
     //moves parallel to long goal
-    chassis.moveToPoint(17,-59,1200);
+    chassis.moveToPoint(17,-59,1300);
     //correctional parallel with goal
-    chassis.turnToHeading(90,500);
+    chassis.turnToHeading(90,400);
     //rams goal
     chassis.moveToPoint(-18,-59,1000,{.forwards=false});
     //lets pid settle
