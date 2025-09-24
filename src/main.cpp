@@ -87,7 +87,7 @@ rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo awp", &solo_awp}
+  {"solo AWP", &solo_awp}
 });
 
 rd::Console console;
