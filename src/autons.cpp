@@ -78,7 +78,7 @@ void autonSkills() {
     chassis.moveToPoint(0,120,2000,{.maxSpeed=70});
     chassis.turnToHeading(90,1000);
     frontIntake.move(-127);
-    chassis.moveToPoint(-15,120,2000,{.minSpeed=100});
+    chassis.moveToPoint(-15,120,2000,{.forwards = false, .minSpeed=100});
     /*
     chassis.turnToHeading(280,400);
     chassis.moveToPoint(1,11,1200,{.maxSpeed=60});

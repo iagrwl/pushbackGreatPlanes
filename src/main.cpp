@@ -87,13 +87,15 @@ rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo AWP", &solo_awp}
+  {"solo AWP", &solo_awp},
+  {"auton skills", &autonSkills}
 });
+
 
 rd::Console console;
 
 void initialize() {
-	pros::lcd::initialize(); // initialize if you want posTracker
+	//pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 
 	pros::Task pos(&positionTracker);
@@ -134,11 +136,11 @@ void competition_initialize() {
 
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
+  selector.run_auton();
   //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
-  autonSkills();
+  //autonSkills();
  }
 
 void opcontrol() {
