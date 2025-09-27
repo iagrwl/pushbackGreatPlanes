@@ -6,35 +6,35 @@
 #include "op_control.hpp"
 
 void autonSkills() {
- //turn on intake
+    //SETUP
     chassis.setPose(0,0,90);
-
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-
-
-    chassis.moveToPoint(31.5,0,1400,{.maxSpeed=85});
+    //Q1
+    chassis.moveToPoint(33.25,0,1400,{.maxSpeed=75});
+    pros::delay(1400);
     chassis.turnToHeading(180,800,{.maxSpeed=70});
     loaderMech.set_value(true);
-
-    chassis.moveToPoint(33.25,-15,4000,{.maxSpeed=90},false);
+    chassis.moveToPoint(33.25,-15,3000,{.maxSpeed=100},false);
+    pros::delay(1000);
     chassis.turnToHeading(180,500,{.maxSpeed=80});
     loaderMech.set_value(false);
-    chassis.moveToPoint(35,30,2000,{.forwards=false,.maxSpeed=80});
+    chassis.moveToPoint(33.25,30,2000,{.forwards=false,.maxSpeed=80});
     pros::delay(900);
     scoringBar.set_value(true);
     pros::delay(2500);
+    //Q2
     chassis.moveToPoint(35,7,2000,{.maxSpeed=85});
     pros::delay(200);
     scoringBar.set_value(false);
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(10);
-    chassis.moveToPoint(-61,7,5000,{.maxSpeed=80});
+    chassis.moveToPoint(-61,5,4000,{.maxSpeed=70});
     chassis.turnToHeading(180,500);
     loaderMech.set_value(true);
-    chassis.moveToPose(-61,-20, 180, 4000,{.maxSpeed= 90},false);
+    chassis.moveToPoint(-61,-20, 3000,{.maxSpeed= 90},false);
     chassis.moveToPoint(-61,20,3000,{.forwards = false, .maxSpeed= 85});
     pros::delay(650);
     scoringBar.set_value(true);
@@ -42,15 +42,16 @@ void autonSkills() {
     chassis.moveToPoint(-61,6,1000,{.maxSpeed= 85});
     chassis.turnToPoint(-43,0,1500,{.minSpeed=80});
     scoringBar.set_value(false);
+    //Q3
     chassis.moveToPoint(-43,0,1000,{.maxSpeed=70});
     chassis.turnToHeading(0,1500);
     loaderMech.set_value(false);
-    chassis.moveToPoint(-43, 75, 3000,{.maxSpeed=70});
+    chassis.moveToPoint(-43, 75, 3000,{});
     chassis.turnToPoint(-60,100,1500,{.maxSpeed=80});
     chassis.moveToPoint(-60,100,1500,{.maxSpeed=70});
     chassis.turnToHeading(0,1500);
     loaderMech.set_value(true);
-    chassis.moveToPose(-60,115, 0, 4000,{.maxSpeed=70});
+    chassis.moveToPoint(-60,115, 4000,{.maxSpeed=70});
     chassis.moveToPoint(-60.5,75,3000,{.forwards=false,.maxSpeed=90});
     loaderMech.set_value(false);
     pros::delay(900);
@@ -63,17 +64,25 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(10);
+    //Q4
     chassis.moveToPoint(34, 90,5000,{.maxSpeed=80});
     chassis.turnToHeading(0,1000);
     loaderMech.set_value(true);
-    chassis.moveToPose(34, 120, 0,5000,{.maxSpeed=90});
+    chassis.moveToPoint(34, 120,5000,{});
     chassis.moveToPoint(34.5, 75,5000,{.forwards=false,.maxSpeed=90});
     pros::delay(650);
     scoringBar.set_value(true);
     pros::delay(3000);
+    //park
     chassis.moveToPoint(34.5,100,2000,{.maxSpeed=70});
     loaderMech.set_value(false);
-    chassis.moveToPose(-15,120,90,2000);
+    chassis.turnToPoint(17.5,100,1000);
+    chassis.moveToPoint(17.5,100,1500);
+    chassis.turnToHeading(180,1000);
+    chassis.moveToPoint(17.5,-15,1500);
+    chassis.turnToHeading(-90,1000);
+    chassis.moveToPoint(-5,-15,1500);
+    //chassis.moveToPose(-15,120,90,2000);
     /*
     chassis.turnToPoint(0,110,1000);
     loaderMech.set_value(false);
@@ -127,6 +136,96 @@ void autonSkills() {
     */
 
 }
+
+void Q1() {
+    chassis.setPose(0,0,90);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(31.5,0,1400,{.maxSpeed=85});
+    chassis.turnToHeading(180,800,{.maxSpeed=70});
+    loaderMech.set_value(true);
+    chassis.moveToPoint(33.25,-15,4000,{.maxSpeed=90},false);
+    chassis.turnToHeading(180,500,{.maxSpeed=80});
+    loaderMech.set_value(false);
+    chassis.moveToPoint(35,30,2000,{.forwards=false,.maxSpeed=80});
+    pros::delay(900);
+    scoringBar.set_value(true);
+    pros::delay(2500);
+    chassis.moveToPoint(35,7,2000,{.maxSpeed=85});
+}
+void Q2() {
+    chassis.setPose(0,0,90);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(35,7,2000,{.maxSpeed=85});
+    pros::delay(200);
+    scoringBar.set_value(false);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(10);
+    chassis.moveToPoint(-61,7,5000,{.maxSpeed=80});
+    chassis.turnToHeading(180,500);
+    loaderMech.set_value(true);
+    chassis.moveToPose(-61,-20, 180, 4000,{.maxSpeed= 90},false);
+    chassis.moveToPoint(-61,20,3000,{.forwards = false, .maxSpeed= 85});
+    pros::delay(650);
+    scoringBar.set_value(true);
+    pros::delay(2000);
+    chassis.moveToPoint(-61,6,1000,{.maxSpeed= 85});
+    chassis.turnToPoint(-43,0,1500,{.minSpeed=80});
+    scoringBar.set_value(false);
+
+}
+void Q3() {
+    //SETUP
+    chassis.setPose(0,0,90);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(-43,0,1000,{.maxSpeed=70});
+    chassis.turnToHeading(0,1500);
+    loaderMech.set_value(false);
+    chassis.moveToPoint(-43, 75, 3000,{.maxSpeed=70});
+    chassis.turnToPoint(-60,100,1500,{.maxSpeed=80});
+    chassis.moveToPoint(-60,100,1500,{.maxSpeed=70});
+    chassis.turnToHeading(0,1500);
+    loaderMech.set_value(true);
+    chassis.moveToPose(-60,115, 0, 4000,{.maxSpeed=70});
+    chassis.moveToPoint(-60.5,75,3000,{.forwards=false,.maxSpeed=90});
+    loaderMech.set_value(false);
+    pros::delay(900);
+    scoringRoller.move(90);
+    scoringBar.set_value(true);
+    pros::delay(4000);
+    chassis.moveToPoint(-60.5,90,2000,{.maxSpeed=85});
+    pros::delay(200);
+    scoringBar.set_value(false);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(10);
+}
+void Q4() {
+    //SETUP
+    chassis.setPose(0,0,90);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);   
+    chassis.moveToPoint(34, 90,5000,{.maxSpeed=80});
+    chassis.turnToHeading(0,1000);
+    loaderMech.set_value(true);
+    chassis.moveToPose(34, 120, 0,5000,{.maxSpeed=90});
+    chassis.moveToPoint(34.5, 75,5000,{.forwards=false,.maxSpeed=90});
+    pros::delay(650);
+    scoringBar.set_value(true);
+    pros::delay(3000);
+    //park
+    chassis.moveToPoint(34.5,100,2000,{.maxSpeed=70});
+    loaderMech.set_value(false);
+    chassis.moveToPose(-15,120,90,2000);
+}
+
 void solo_awp(){
    //turn on intake 
     frontIntake.move(127);
@@ -229,8 +328,7 @@ void two_goal_LEFT() {
     pros::delay(1500);
     chassis.moveToPoint(-34,-4,2500,{.maxSpeed=80},false);
     scoringRoller.move(127);
-    chassis.turnToHeading(180,1000,{},false);
-    
+    chassis.turnToHeading(180,1000,{});
     loaderMech.set_value(true);
     chassis.moveToPoint(-33,-25,1200,{.maxSpeed= 70},false);
     chassis.moveToPoint(-33,20,2000,{.forwards = false, .maxSpeed= 70},false);
@@ -238,6 +336,8 @@ void two_goal_LEFT() {
     pros::delay(500);
     scoringRoller.move(0);
     scoringBar.set_value(false);
+    pros::delay(200);
+    chassis.moveToPoint(-33,10,2000,{},false);
     /*
     chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
     //reverses intake
