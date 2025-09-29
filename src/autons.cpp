@@ -297,7 +297,7 @@ void solo_awp(){
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-59,1000,{.forwards=false});
+    chassis.moveToPoint(-18,-58.5,1000,{.forwards=false});
     //lets pid settle
     pros::delay(500);
     //lets blocks score
