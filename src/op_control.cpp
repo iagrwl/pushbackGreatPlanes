@@ -98,8 +98,8 @@ void logData() {
 }
 
 // drive mode handler
-void handleDriveMode(bool isArcade) {
-  isArcade ? handleArcade() : handleTank();
+void handleDriveMode(bool driveMode) {
+  driveMode ? handleArcade() : handleTank();
 }
 
 void handleArcade() {

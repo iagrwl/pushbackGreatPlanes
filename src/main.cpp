@@ -97,7 +97,6 @@ rd::Console console;
 void initialize() {
 	//pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
-
 	pros::Task pos(&positionTracker);
 
   pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
@@ -157,10 +156,11 @@ void opcontrol() {
             holdTime = 0; // reset if released early
         }
     // driver control functions go here
-    handleDriveMode(isArcade); //false for tank
+    handleDriveMode(isArcade);
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
+    handleParkMechCommands();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}
