@@ -143,6 +143,7 @@ void autonomous() {
  }
 
 void opcontrol() {
+
   int holdTime = 0; // counter for the seconds button is held
   while (true) {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -160,7 +161,8 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
-    handleParkMechCommands();
+    handleParkCommands();
+    parkMacro();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}

@@ -19,5 +19,6 @@ void handleIOCommands();
 void handleScoringBarCommands();
 void handleLoaderMechCommands();
 void handleWingMechCommands();
-void handleParkMechCommands();
+void handleParkCommands();
+void parkMacro();
 void rumble();
