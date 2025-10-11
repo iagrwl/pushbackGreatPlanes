@@ -112,8 +112,6 @@ inline pros::adi::DigitalOut wingMech('H');
 inline pros::adi::DigitalOut parkMech('D');
 
 // clog sensors
-inline pros::Optical colorSortOptical(12);
-inline pros::Distance middleDistance(13);
-inline pros::Distance bottomDistance(18);
-inline pros::Distance topDistance(19);
+inline pros::Optical bottomOptical(12);
+inline pros::Distance bottomDistance(8);
 inline pros::Distance sideDistance(17);

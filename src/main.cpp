@@ -6,14 +6,13 @@
 #include "pros/motors.h"
 #include "robodash/api.h" 
 #include "setup.hpp"
-bool isArcade = true; 
+
 
 void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(2, "dist: %d", bottomDistance.get_distance());
-    //pros::lcd::print(3, "color: %.2f", colorSortOptical.get_hue());
-    //pros::lcd::print(5, "currProx: %d", colorSortOptical.get_proximity());
+
 		std::uint32_t now = pros::millis();
 		//std::int32_t intakePosition = intake.get_raw_position(&now);
 
@@ -92,15 +91,14 @@ rd::Selector selector({
 });
 
 
-rd::Console console;
+//rd::Console console;
 
 void initialize() {
-	//pros::lcd::initialize(); // initialize if you want posTracker
+	pros::lcd::initialize(); // initialize if you want posTracker
                              // comment out if you want autoSelector
 	pros::Task pos(&positionTracker);
 
   pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
-  //pros::Task colorSortOn(&colorSort);
 
   static pros::Task checkforstall(stall_check);
 
@@ -135,7 +133,7 @@ void competition_initialize() {
 
 void autonomous() {
   // runs selected auton
-  selector.run_auton();
+  //selector.run_auton();
   //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
@@ -143,8 +141,11 @@ void autonomous() {
  }
 
 void opcontrol() {
-
+  bool shouldPark = false;
+  bool isArcade = true; //inverse for drivemode swap
   int holdTime = 0; // counter for the seconds button is held
+  int ParkholdTime = 0; // counter for the seconds button is held
+  
   while (true) {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             holdTime += 20; // loop delay is 20ms
@@ -156,13 +157,46 @@ void opcontrol() {
         } else {
             holdTime = 0; // reset if released early
         }
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                ParkholdTime += 20; // loop delay is 20ms
+                if (ParkholdTime >= 30) { // hold delay
+                    controller.rumble(".."); // give feedback
+                    bottomOptical.set_led_pwm(100);
+                    left_dt.move(-127);
+                    right_dt.move(-127);
+                    pros::delay(75);
+                    left_dt.move(0);
+                    right_dt.move(0);
+                    while (shouldPark==false){
+                        frontIntake.move(-70);
+                        middleRollers.move(-100);
+                        scoringRoller.move(-127);
+                        if (bottomDistance.get_distance() >= 40 && bottomDistance.get_distance() <=70){
+                            frontIntake.move(0);
+                            wingMech.set_value(true);
+                            pros::delay(100);
+                            middleRollers.move(0);
+                            scoringRoller.move(0);
+                            shouldPark = true;
+                        }
+                    }
+                    
+                    
+                    ParkholdTime = 0; // reset so it doesn’t keep toggling
+                }  
+            } 
+            
+            else {
+                ParkholdTime = 0; // reset if released early
+            }
+
     // driver control functions go here
     handleDriveMode(isArcade);
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
     handleParkCommands();
-    parkMacro();
+    //checkforpark();
     // 20 ms delay to avoid strain on the brain
 		pros::delay(20);
 	}

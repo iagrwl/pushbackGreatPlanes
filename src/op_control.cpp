@@ -3,7 +3,7 @@
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "setup.hpp"
-#include "util.hpp"
+
 #include <fstream>
 #include <string>
 
@@ -24,6 +24,7 @@ bool shouldSC = false;
 //other
 bool isBlockDetected = true;
 bool isHighSpeed = false;
+bool checkpark = false;
 
 //amp rpm vars
 double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
@@ -227,12 +228,6 @@ void handleParkCommands() { //toggle button for park mech
     parkMech.set_value(isParkDown); //sets the physical state to the bool condition of the park sys
   }
 }
-void parkMacro(){
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) { //if the controller recognizes a new press from the down arrow button
-        left_dt.move(-127);
-        right_dt.move(-127);
-        pros::delay(75);
-    }
-}
 
+//macros
 
