@@ -91,7 +91,7 @@ rd::Selector selector({
 });
 
 
-//rd::Console console;
+rd::Console console;
 
 void initialize() {
 	pros::lcd::initialize(); // initialize if you want posTracker
@@ -134,7 +134,7 @@ void competition_initialize() {
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  //solo_awp();
+  solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
   //autonSkills();
@@ -157,6 +157,7 @@ void opcontrol() {
         } else {
             holdTime = 0; // reset if released early
         }
+
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
                 ParkholdTime += 20; // loop delay is 20ms
                 if (ParkholdTime >= 30) { // hold delay
@@ -180,8 +181,6 @@ void opcontrol() {
                             shouldPark = true;
                         }
                     }
-                    
-                    
                     ParkholdTime = 0; // reset so it doesn’t keep toggling
                 }  
             } 

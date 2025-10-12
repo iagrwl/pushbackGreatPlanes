@@ -100,7 +100,7 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // declare additional motors, sensors, and pnuematics here
 
 //intake groups
-inline pros::Motor frontIntake(9, pros::MotorGearset::blue);
+inline pros::Motor frontIntake(2, pros::MotorGearset::blue);
 inline pros::Motor middleRollers(-10);
 inline pros::Motor colorSortRoller(4);
 inline pros::Motor scoringRoller(-19);

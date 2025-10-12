@@ -233,11 +233,11 @@ void solo_awp(){
     scoringRoller.move(127);
     //go perpendicular to loader
     chassis.moveToPoint(0,31.5,1450,{.maxSpeed=90});
-    chassis.turnToHeading(90,800,{.maxSpeed=70});
+    chassis.turnToHeading(90,825,{.maxSpeed=70});
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader 
-    chassis.moveToPoint(15,33.25,1050,{.maxSpeed=100},false);
+    chassis.moveToPoint(15,33.25,800,{.maxSpeed=110},false);
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
     //retract loader mech
@@ -247,7 +247,7 @@ void solo_awp(){
     //let balls score
     scoringBar.set_value(true);
     //wait for blocks to be scored
-    pros::delay(1100);
+    pros::delay(950);
     //swing w 450ms turn
     left_dt.move(127);
     right_dt.move(-127); 
@@ -266,21 +266,21 @@ void solo_awp(){
     chassis.turnToHeading(180,500);
     loaderMech.set_value(false);
     //go to second 3 stack
-    chassis.moveToPoint(-10,-27,1200,{.maxSpeed=67});
+    chassis.moveToPoint(-10,-27,1200,{.maxSpeed=80});
     //give initial delay before slow entry
     pros::delay(100);
-    //slow entry into 3 stack without loader mech for psi retention
-    chassis.moveToPoint(-10,-35,1200,{.maxSpeed=50});
+    //slow entry into 3 stack 
+    chassis.moveToPoint(-10,-35,1200,{.maxSpeed=60});
     pros::delay(150);
     loaderMech.set_value(true);
     //turn opposite of mid goal
-    chassis.turnToHeading(133,500);
+    chassis.turnToHeading(132,500);
     //ram mid goal
-    chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
+    chassis.moveToPoint(-23.5,-21.8,1100,{.forwards=false},false);
     loaderMech.set_value(false);
     //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
-    scoringRoller.move(-100);
+    scoringRoller.move(-80);
     frontIntake.move(-127);
     pros::delay(150);
     middleRollers.move(127);   
@@ -297,7 +297,7 @@ void solo_awp(){
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-58.5,1000,{.forwards=false});
+    chassis.moveToPoint(-18,-60,1000,{.forwards=false,.maxSpeed=100});
     //lets pid settle
     pros::delay(500);
     //lets blocks score

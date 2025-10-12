@@ -146,7 +146,7 @@ void handleIOCommands() {
     scoringBar.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(-127);
+    scoringRoller.move(-60);
     return;
   }
 
