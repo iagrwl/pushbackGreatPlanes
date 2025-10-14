@@ -7,6 +7,11 @@
 #include "robodash/api.h" 
 #include "setup.hpp"
 
+bool tuneMode = false; // true for selector, false for tuning screen
+bool shouldLift = false; // internal bool for program to verify if ball in prime position
+bool defaultDrive = true; //true for arcade default and false for tank default
+int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
+int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 
 void positionTracker() {
     while (true) {
@@ -14,6 +19,9 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
+    //FREE LINES
+    pros::lcd::print(3, "eternity 42824A");
+    pros::lcd::print(4, "tuning screen");
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -71,8 +79,6 @@ void wallDistanceTask(void* param) {
     }
 }
 
-
-
 void stall_check(void*){
     while(true){
         stall_checker();
@@ -92,8 +98,11 @@ rd::Selector selector({
 rd::Console console;
 
 void initialize() {
-	//pros::lcd::initialize(); // comment both lines for selector
-    //pros::Task pos(&positionTracker);
+    if (tuneMode == true){
+        pros::lcd::initialize(); // comment both lines for selector
+        pros::Task pos(&positionTracker);
+    }
+
 
     //task caller
     pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
@@ -140,22 +149,17 @@ void autonomous() {
  }
 
 void opcontrol() {
-  bool shouldLift = false; 
-  bool defaultDrive = true; //true for arcade default and false for tank default
-  int holdTime = 0; // counter for the seconds button is held
-  int ParkHoldTime = 0; // counter for the seconds button is held
-  
   while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-            holdTime += 20; // loop delay is 20ms
-            if (holdTime >= 2000) { // hold delay
+            DHoldTime += 20; // loop delay is 20ms
+            if (DHoldTime >= 2000) { // hold delay
                 defaultDrive = !defaultDrive; // toggle mode
                 controller.rumble(".."); // give feedback
-                holdTime = 0; // reset so it doesn’t keep toggling
+                DHoldTime = 0; // reset so it doesn’t keep toggling
             }
         } else {
-            holdTime = 0; // reset if released early
+            DHoldTime = 0; // reset if released early
         }
 
         //double park macro
