@@ -7,12 +7,18 @@
 #include "robodash/api.h" 
 #include "setup.hpp"
 
+/*
+Sets variables - some are settings for the primary driver, some are holding times for controls.
+*/
 bool tuneMode = false; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //true for arcade default and false for tank default
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 
+/*
+A tuning screen that shows x,y, theta and helps for tuning
+*/
 void positionTracker() {
     while (true) {
     //XY THETA DISPLAY
@@ -25,7 +31,9 @@ void positionTracker() {
     pros::delay(10); // delay to avoid overloading the system
     }
 }
-
+/*
+TODO: idek what this is bhargav do it
+*/
 float wallDistance(bool shouldPrint = false) {
     //This accounts for the sensor turning off of the center of the bot
     //X means offset from the center along the width of the bot, Y means along the length
@@ -71,7 +79,10 @@ float wallDistance(bool shouldPrint = false) {
     return correctedDist;
 }
 
-
+/*
+Define tasks to be run in parallel here
+Use the below format.
+*/
 void wallDistanceTask(void* param) {
     while (true) {
         wallDistance(true); 
@@ -86,6 +97,7 @@ void stall_check(void*){
     }
 }
 
+//2D array for RD auton selector
 rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
@@ -96,7 +108,14 @@ rd::Selector selector({
 
 
 rd::Console console;
-
+/*
+Occurs when bot goes into init phase.
+1. Checks if user wants tune screen and runs lines for it
+2. Calls tasks to be run in parallel
+3. Calibrates the drivetrain
+4. Sets the braking mode(idle mode) to coast
+5. Robodash code - dont mess w it prolly
+*/
 void initialize() {
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
@@ -131,14 +150,29 @@ void initialize() {
     });
 }
 
+/*
+Occurs when bot is in disable phase - when the autonomous and driving period are over.
+1. Sets the scoring hood to lift to let blocks pass using inertia even when auton period is over.
+*/
+
 void disabled() {
     scoringBar.set_value(true);
   }
 
+/*
+Occurs when the bot is running the program
+1. Shows the auton selector on the screen.
+*/
+//NOTE: the selected program is stored on the brains SD card for future runs
 void competition_initialize() {
   selector.focus();
 }
 
+/*
+Occurs when the 15s auton period is happening
+1. Runs the auton selected by the selector.
+*/
+//NOTE: uncomment lines to force run a strat
 void autonomous() {
   // runs selected auton
   selector.run_auton();
@@ -183,6 +217,7 @@ void opcontrol() {
                                 frontIntake.move(0);
                                 wingMech.set_value(true);
                                 pros::delay(100);
+                                console.print("LIFTING BOT");
                                 middleRollers.move(0);
                                 scoringRoller.move(0);
                                 shouldLift = true;
