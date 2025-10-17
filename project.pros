@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "eternity 42824A",
+    "project_name": "eternity LOCAL",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -325,7 +325,7 @@
     "upload_options": {
       "slot": 1,
       "description": "tc at gp",
-      "icon": "pizza"
+      "icon": "planet"
     },
     "use_early_access": false
   }

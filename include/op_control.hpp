@@ -10,7 +10,7 @@ void stall_checker();
 //drive
 void handleArcade();
 void handleTank();
-void handleDriveMode(bool isArcade);
+void handleDriveMode(bool driveMode);
 
 
 //handlers
@@ -19,5 +19,5 @@ void handleIOCommands();
 void handleScoringBarCommands();
 void handleLoaderMechCommands();
 void handleWingMechCommands();
-void handleParkMechCommands();
+void handleParkCommands();
 void rumble();
