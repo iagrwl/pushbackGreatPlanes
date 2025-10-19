@@ -323,9 +323,15 @@
       }
     },
     "upload_options": {
+<<<<<<< Updated upstream
       "slot": 1,
       "description": "tc at gp",
       "icon": "planet"
+=======
+      "slot": 3,
+      "description": "awp",
+      "icon": "robot"
+>>>>>>> Stashed changes
     },
     "use_early_access": false
   }
