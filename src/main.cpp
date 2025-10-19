@@ -10,7 +10,7 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = false; // true for selector, false for tuning screen
+bool tuneMode = true; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //true for arcade default and false for tank default
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
@@ -71,9 +71,11 @@ float wallDistance(bool shouldPrint = false) {
     }
 
     if (shouldPrint) {
-        // pros::lcd::print(4, "Raw Distance: %f", distancemm);
-        // pros::lcd::print(5, "Distance: %f", distanceIn);
-        // pros::lcd::print(6, "Corrected: %f", correctedDist);
+        /*
+         pros::console::print(4, "Raw Distance: %f", distancemm);
+         pros::console::print(5, "Distance: %f", distanceIn);
+         pros::console::print(6, "Corrected: %f", correctedDist);
+         */
     }
 
     return correctedDist;
@@ -180,6 +182,7 @@ void autonomous() {
   //one_goal_right();
   //two_goal_LEFT();
   //autonSkills();
+  //driveTesting(true);
  }
 
 void opcontrol() {
