@@ -28,6 +28,7 @@ void positionTracker() {
     //FREE LINES
     pros::lcd::print(3, "eternity 42824A");
     pros::lcd::print(4, "tuning screen");
+    pros::lcd::print(5, "Hue: %.2f", topOptical.get_hue());
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -79,6 +80,30 @@ float wallDistance(bool shouldPrint = false) {
     return correctedDist;
 }
 
+int BLUE_MAX = 230;
+int BLUE_MIN = 150;
+int RED_MAX = 50;
+int RED_MIN = 0;
+bool isRed = true;
+
+bool isWrongColor(float currHue, bool allianceRed = true) {
+    if (allianceRed) {
+        return currHue <= BLUE_MAX && currHue >= BLUE_MIN; 
+    } else {
+        return currHue <= RED_MAX && currHue >= RED_MIN;
+    }
+}
+void scoreCorrectColor() {
+    float currHue;
+    while (true) {
+    currHue = topOptical.get_hue();
+    if (isWrongColor(currHue, isRed)) {
+        scoringBar.set_value(false);
+    }
+    }
+    
+}
+
 /*
 Define tasks to be run in parallel here
 Use the below format.
@@ -122,6 +147,7 @@ void initialize() {
         pros::Task pos(&positionTracker);
     }
 
+    topOptical.set_led_pwm(100);
 
     //task caller
     pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
@@ -176,6 +202,13 @@ Occurs when the 15s auton period is happening
 void autonomous() {
   // runs selected auton
   selector.run_auton();
+  /*scoringBar.set_value(true);
+  frontIntake.move(127);
+  middleRollers.move(127);
+  scoringRoller.move(127);
+  pros::Task scoreRightColor(&scoreCorrectColor);*/
+
+  
   //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();

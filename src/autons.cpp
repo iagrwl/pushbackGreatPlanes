@@ -386,23 +386,23 @@ void one_goal_left() {
     {.forwards = false, .minSpeed = 30, .earlyExitRange = 10});
     chassis.turnToPoint(-31.21, -3.95, 800);
     chassis.moveToPoint(-32.21, -3.95, 1500);
-    chassis.turnToPoint(-31.51, 20.44, 800, {.forwards = false});
-    chassis.moveToPoint(-31.51, 20.44, 1500, {.forwards = false});
+    chassis.turnToPoint(-32.51, 20.44, 800, {.forwards = false});
+    chassis.moveToPoint(-32.51, 20.44, 1500, {.forwards = false});
     pros::delay(700);
     // score first set of blocks
     scoringBar.set_value(true);
     pros::delay(1300);
     // get blocks from loader
-    chassis.moveToPoint(-31.51, -17.41, 2000, {.minSpeed = 40});
+    chassis.moveToPoint(-31.51, -16.91, 2000, {.minSpeed = 40});
     pros::delay(200);
     scoringBar.set_value(false);
-    chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
+    //chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
     //pros::delay(100);
-    chassis.moveToPoint(-31.51, 22.44, 1500, {.forwards = false});
+    chassis.moveToPoint(-32.51, 22.44, 1500, {.forwards = false});
     pros::delay(1000);
     // score last set of blocks
     scoringBar.set_value(true);
-    pros::delay(700);
+    pros::delay(750);
     chassis.moveToPoint(-31.51, 13.44, 1000, {});
     scoringBar.set_value(false);
     chassis.moveToPoint(-31.51, 30.44, 2000, {.forwards = false});
@@ -434,12 +434,12 @@ void one_goal_right() {
     pros::delay(700);
     scoringBar.set_value(true);
     pros::delay(1300);
-    chassis.moveToPoint(34.51, -12.41, 2000, {.minSpeed = 40});
+    chassis.moveToPoint(35.51, -12.41, 2000, {.minSpeed = 40});
     pros::delay(200);
     scoringBar.set_value(false);
-    chassis.moveToPoint(34.51, -10.41, 2000, {.forwards = false}, false);
+    //chassis.moveToPoint(34.51, -10.41, 2000, {.forwards = false}, false);
     //pros::delay(100);
-    chassis.moveToPoint(34.51, 26.44, 1500, {.forwards = false});
+    chassis.moveToPoint(35.51, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
     pros::delay(600);
