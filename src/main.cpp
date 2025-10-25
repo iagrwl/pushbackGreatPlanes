@@ -10,7 +10,7 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = false; // true for selector, false for tuning screen
+bool tuneMode = true; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //true for arcade default and false for tank default
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
@@ -26,7 +26,7 @@ void positionTracker() {
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
     //FREE LINES
-    pros::lcd::print(3, "eternity 42824A");
+    pros::lcd::print(3, "ETERNITY 42824A");
     pros::lcd::print(4, "tuning screen");
     pros::lcd::print(5, "Hue: %.2f", topOptical.get_hue());
     pros::delay(10); // delay to avoid overloading the system
