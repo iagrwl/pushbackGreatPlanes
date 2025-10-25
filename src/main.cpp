@@ -247,6 +247,7 @@ void opcontrol() {
                             scoringRoller.move(-127);
 
                             if (bottomDistance.get_distance() >= 40 && bottomDistance.get_distance() <=70){
+                                pros::delay(150);//manipulates if bar comes early or late
                                 frontIntake.move(0);
                                 wingMech.set_value(true);
                                 pros::delay(100);
