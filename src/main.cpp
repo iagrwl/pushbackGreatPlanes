@@ -10,7 +10,7 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = true; // true for selector, false for tuning screen
+bool tuneMode = false; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //true for arcade default and false for tank default
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
@@ -28,7 +28,7 @@ void positionTracker() {
     //FREE LINES
     pros::lcd::print(3, "ETERNITY 42824A");
     pros::lcd::print(4, "tuning screen");
-    pros::lcd::print(5, "Hue: %.2f", topOptical.get_hue());
+    
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -194,6 +194,15 @@ void competition_initialize() {
   selector.focus();
 }
 
+void stopIntake() {
+    frontIntake.move(50);
+    middleRollers.move(50);
+    scoringRoller.move(-127);
+    pros::delay(1000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+}
 /*
 Occurs when the 15s auton period is happening
 1. Runs the auton selected by the selector.
@@ -202,6 +211,17 @@ Occurs when the 15s auton period is happening
 void autonomous() {
   // runs selected auton
   selector.run_auton();
+  float currHue;
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    while(true) {
+        currHue = topOptical.get_hue();
+        pros::lcd::print(5, "Hue: %.2f", topOptical.get_hue());
+        if (currHue > 120 && currHue < 250) {
+            pros::Task stop(&stopIntake);
+        }
+    }
   /*scoringBar.set_value(true);
   frontIntake.move(127);
   middleRollers.move(127);
@@ -215,8 +235,10 @@ void autonomous() {
   //autonSkills();
  }
 
+
 void opcontrol() {
-  while (true) {
+
+    while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             DHoldTime += 20; // loop delay is 20ms

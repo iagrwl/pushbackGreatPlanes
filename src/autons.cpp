@@ -361,6 +361,7 @@ void one_goal_left() {
     colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    wingMech.set_value(true);
     // collect 3 clump
     chassis.moveToPoint(0,4,500);
     chassis.turnToHeading(-17.5,1000);
@@ -390,7 +391,7 @@ void one_goal_left() {
     scoringBar.set_value(true);
     pros::delay(1300);
     // get blocks from loader
-    chassis.moveToPoint(-31.51, -16.91, 2000, {.minSpeed = 40});
+    chassis.moveToPoint(-31.51, -16.91, 2000, {.maxSpeed = 80});
     pros::delay(200);
     scoringBar.set_value(false);
     //chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
@@ -410,6 +411,7 @@ void one_goal_right() {
     colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    wingMech.set_value(true);
     chassis.moveToPoint(0,4,500);
     chassis.turnToHeading(17.5,1000);
     chassis.moveToPoint(8, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
@@ -425,13 +427,13 @@ void one_goal_right() {
     chassis.moveToPoint(14.27, 27.05, 1500, {.forwards = false/*.minSpeed = 30, .earlyExitRange = 10*/});
     chassis.turnToPoint(33.21, 3, 800);
     chassis.moveToPoint(33.21, 3, 1500);
-    chassis.turnToPoint(34.51, 26.44, 800, {.forwards = false});
-    chassis.moveToPoint(34.51, 26.44, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 5});
+    chassis.turnToPoint(33.51, 26.44, 800, {.forwards = false});
+    chassis.moveToPoint(33.51, 26.44, 1500, {.forwards = false});
     //chassis.turnToHeading(180, 800);
     pros::delay(700);
     scoringBar.set_value(true);
     pros::delay(1300);
-    chassis.moveToPoint(35.51, -12.41, 2000, {.minSpeed = 40});
+    chassis.moveToPoint(34.51, -12.41, 2000, {.maxSpeed = 100});
     pros::delay(200);
     scoringBar.set_value(false);
     //chassis.moveToPoint(34.51, -10.41, 2000, {.forwards = false}, false);
