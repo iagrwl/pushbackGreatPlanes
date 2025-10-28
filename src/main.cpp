@@ -10,7 +10,7 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = true; // true for tuning screen, false for selector
+bool tuneMode = false; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //true for arcade default and false for tank default
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
@@ -269,7 +269,7 @@ void opcontrol() {
                             scoringRoller.move(-127);
 
                             if (bottomDistance.get_distance() >= 50 && bottomDistance.get_distance() <=80){
-                                pros::delay(150);//manipulates if bar comes early or late
+                                pros::delay(25);
                                 frontIntake.move(0);
                                 parkMech.set_value(true);
                                 pros::delay(100);
@@ -294,7 +294,7 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
-    handleParkCommands();
+    //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
 	}
