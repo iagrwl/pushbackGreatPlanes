@@ -26,8 +26,8 @@ void positionTracker() {
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
     //FREE LINES
-    pros::lcd::print(3, "ETERNITY 42824A");
-    pros::lcd::print(4, "tuning screen");
+    pros::lcd::print(4, "ETERNITY 42824A");
+    pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
     
     pros::delay(10); // delay to avoid overloading the system
     }
