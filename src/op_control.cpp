@@ -229,11 +229,5 @@ void handleWingMechCommands() { //toggle button wing mech
   }
 }
 
-void handleParkCommands() { //toggle button for park mech
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) { //if the controller recognizes a new press from the down arrow button
-    isParkDown = !isParkDown; //flips the condition of the current state of the park bool
-    parkMech.set_value(isParkDown); //sets the physical state to the bool condition of the park sys
-  }
-}
 
 

@@ -30,8 +30,7 @@ inline lemlib::Drivetrain drivetrain(&left_dt,
 
 inline pros::Imu imu(20);
 // declare sensors needed for odom setup
-/*inline pros::Rotation horizontalEnc(17);
-inline pros::Rotation verticalEnc(18);
+
 
 
 // configure tracking wheels

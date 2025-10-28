@@ -12,7 +12,7 @@ Sets variables - some are settings for the primary driver, some are holding time
 */
 bool tuneMode = true; // true for tuning screen, false for selector
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
-bool defaultDrive = true; //true for arcade default and false for tank default
+bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 
@@ -222,13 +222,6 @@ void autonomous() {
             pros::Task stop(&stopIntake);
         }
     }
-  /*scoringBar.set_value(true);
-  frontIntake.move(127);
-  middleRollers.move(127);
-  scoringRoller.move(127);
-  pros::Task scoreRightColor(&scoreCorrectColor);*/
-
-  
   //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
@@ -237,7 +230,6 @@ void autonomous() {
 
 
 void opcontrol() {
-
     while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
