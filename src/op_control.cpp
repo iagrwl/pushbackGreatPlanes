@@ -17,14 +17,10 @@ bool scoringRollerStall = false;
 bool isScoringBarUp = false;
 bool isLoaderExtended = false;
 bool isWingsOut = false;
-bool isParkDown = false;
 //core func
 bool isIntakeOn = false;
 bool shouldSC = false;
-//other
-bool isBlockDetected = true;
-bool isHighSpeed = false;
-bool checkpark = false;
+
 
 //amp rpm vars
 double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
@@ -127,7 +123,7 @@ void handleIOCommands() {
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
-    return;
+    return; // return bc its a hold
   }
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
@@ -136,7 +132,7 @@ void handleIOCommands() {
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    return;
+    return; // return bc its a hold
   } else { // what happens when the R1 is let go off
     scoringBar.set_value(false);
   }
@@ -145,9 +141,9 @@ void handleIOCommands() {
     shouldSC = false;
     scoringBar.set_value(false);
     frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(-60);
-    return;
+    middleRollers.move(100);
+    scoringRoller.move(-50);
+    return; // return bc its a hold
   }
 
   if (isIntakeOn) { // if the L1 is toggled on then this passes
