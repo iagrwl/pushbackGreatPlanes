@@ -227,6 +227,7 @@ void Q4() {
 }
 
 void solo_awp(){
+    wingMech.set_value(true);
    //turn on intake 
     frontIntake.move(127);
     middleRollers.move(127);
@@ -241,7 +242,7 @@ void solo_awp(){
     //fix lat alignment
     chassis.turnToHeading(90,200,{.maxSpeed=70});
     //go to long goal
-    chassis.moveToPoint(-19,34.5,1300,{.forwards=false},false);
+    chassis.moveToPoint(-20,32.5,1400,{.forwards=false},false);
     //let balls score
     scoringBar.set_value(true);
     //retract loader mech
@@ -251,30 +252,29 @@ void solo_awp(){
     //swing w 450ms turn
     left_dt.move(127);
     right_dt.move(-127); 
-    pros::delay(650);
+    pros::delay(700);
     left_dt.move(0);
     right_dt.move(0); 
     //correctional swing turn
-    chassis.turnToHeading(207,250);//300
+    chassis.turnToHeading(215,250);//300
     //retract bar once swung
     scoringBar.set_value(false);
     //go to first 3 stack
-    chassis.moveToPoint(-7.5,1,1200,{.maxSpeed=55});
-    pros::delay(300);//100
+    chassis.moveToPoint(-8.5,1,1200,{.maxSpeed=55});
+    pros::delay(400);//100
     loaderMech.set_value(true);
     //correctional turn
     chassis.turnToHeading(180,100);
     loaderMech.set_value(false);
     //go to second 3 stack
-    chassis.moveToPoint(-7,-29,1000,{.maxSpeed=80});
-    chassis.moveToPoint(-7.5,-44,1000,{.maxSpeed=60});//1200s
-    pros::delay(100);
+    chassis.moveToPoint(-8,-29,1000,{.maxSpeed=80});
+    chassis.moveToPoint(-8,-44,1000,{.maxSpeed=60});//1200s
+    pros::delay(200);
     loaderMech.set_value(true);
-    
     //turn opposite of mid goal
-    chassis.turnToHeading(132,500);
+    chassis.turnToHeading(130,500);
     //ram mid goal
-    chassis.moveToPoint(-22,-26,1100,{.forwards=false,.maxSpeed=80},false);
+    chassis.moveToPoint(-21,-24.5,1100,{.forwards=false,.maxSpeed=80},false);
     loaderMech.set_value(false);
     //reverse 300ms then push forward to prevent clogging
     middleRollers.move(-127);
@@ -290,16 +290,19 @@ void solo_awp(){
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(10);
+    chassis.turnToHeading(150,200);
     //moves parallel to long goal
-    chassis.moveToPoint(15,-65,1300);
+    chassis.moveToPoint(15,-66,1000);
+    
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-65,1000,{.forwards=false,.maxSpeed=100});
+    chassis.moveToPoint(-18,-67,1200,{.forwards=false,.maxSpeed=100});
     //lets pid settle
     pros::delay(500);
     //lets blocks score
     scoringBar.set_value(true);
+    wingMech.set_value(false);
 }
 void two_goal_LEFT() {
     //turn on intake
