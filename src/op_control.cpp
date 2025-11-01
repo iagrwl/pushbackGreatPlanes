@@ -17,6 +17,7 @@ bool scoringRollerStall = false;
 bool isScoringBarUp = false;
 bool isLoaderExtended = false;
 bool isWingsOut = false;
+
 //core func
 bool isIntakeOn = false;
 bool shouldSC = false;

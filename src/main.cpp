@@ -15,7 +15,8 @@ bool shouldLift = false; // internal bool for program to verify if ball in prime
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-
+int POHoldTime = 0;
+bool isParkDown = false;
 /*
 A tuning screen that shows x,y, theta and helps for tuning
 */
@@ -126,8 +127,7 @@ rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo AWP RED", &solo_awpRED},
-  {"solo AWP BLUE", &solo_awpBLUE},
+  {"solo AWP", &solo_awp},
   {"auton skills", &autonSkills}
 });
 
@@ -212,20 +212,6 @@ void autonomous() {
   // runs selected auton
   selector.run_auton();
 
-
-//   float currHue;
-//     frontIntake.move(127);
-//     middleRollers.move(127);
-//     scoringRoller.move(127);
-//     while(true) {
-//         currHue = topOptical.get_hue();
-//         pros::lcd::print(5, "Hue: %.2f", topOptical.get_hue());
-//         if (currHue > 120 && currHue < 250) {
-//             pros::Task stop(&stopIntake);
-//         }
-//     }
-
-
  }
 
 
@@ -243,6 +229,17 @@ void opcontrol() {
             DHoldTime = 0; // reset if released early
         }
 
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            POHoldTime += 10; // loop delay is 20ms
+            if (POHoldTime >= 300) { // must hold for 2000 ms for statement to pass
+                isParkDown = !isParkDown; // toggle mode
+                controller.rumble("--"); // give feedback
+                POHoldTime = 0; // reset so it doesn’t keep toggling
+                parkMech.set_value(isParkDown);
+            }
+        } else {
+            POHoldTime = 0; // reset if released early
+        }
         //double park macro
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
                     ParkHoldTime += 10; // loop increments in 10ms
@@ -261,7 +258,7 @@ void opcontrol() {
                             scoringRoller.move(-127);
 
                             if (bottomDistance.get_distance() >= 50 && bottomDistance.get_distance() <=80){
-                                pros::delay(25);
+                                pros::delay(80);
                                 frontIntake.move(0);
                                 parkMech.set_value(true);
                                 pros::delay(100);
