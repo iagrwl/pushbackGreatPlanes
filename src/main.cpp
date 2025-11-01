@@ -177,11 +177,11 @@ Occurs when the 15s auton period is happening
 //NOTE: uncomment lines to force run a strat
 void autonomous() {
   // runs selected auton
-  selector.run_auton();
+  //selector.run_auton();
   //solo_awp();
   //one_goal_right();
   //two_goal_LEFT();
-  //autonSkills();
+  autonSkills();
   //driveTesting(true);
  }
 
