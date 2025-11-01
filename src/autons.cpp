@@ -475,7 +475,7 @@ void one_goal_left() {
     pros::delay(1000);
     // score last set of blocks
     scoringBar.set_value(true);
-    pros::delay(750);
+    pros::delay(450);
     chassis.moveToPoint(-31.51, 13.44, 1000, {});
     scoringBar.set_value(false);
     chassis.moveToPoint(-31.51, 30.44, 2000, {.forwards = false});
@@ -516,7 +516,7 @@ void one_goal_right() {
     chassis.moveToPoint(35.51, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
-    pros::delay(500);
+    pros::delay(300);
     chassis.moveToPoint(34.51, 13.44, 1000, {});
     scoringBar.set_value(false);
     chassis.moveToPoint(34.51, 30.44, 2000, {.forwards = false});
