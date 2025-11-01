@@ -330,7 +330,7 @@ void two_goal_LEFT() {
     chassis.moveToPoint(-33,-25,1200,{.maxSpeed= 70},false);
     chassis.moveToPoint(-33,20,2000,{.forwards = false, .maxSpeed= 70},false);
     scoringBar.set_value(true);
-    pros::delay(500);
+    pros::delay(400);
     scoringRoller.move(0);
     scoringBar.set_value(false);
     pros::delay(200);
@@ -441,7 +441,7 @@ void one_goal_right() {
     chassis.moveToPoint(35.51, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
     scoringBar.set_value(true);
-    pros::delay(600);
+    pros::delay(500);
     chassis.moveToPoint(34.51, 13.44, 1000, {});
     scoringBar.set_value(false);
     chassis.moveToPoint(34.51, 30.44, 2000, {.forwards = false});
