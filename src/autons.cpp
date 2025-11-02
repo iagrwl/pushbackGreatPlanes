@@ -331,14 +331,15 @@ void two_goal_LEFT() {
     scoringRoller.move(127);
     chassis.turnToHeading(180,1000,{});
     loaderMech.set_value(true);
-    chassis.moveToPoint(-33,-25,1200,{.maxSpeed= 70},false);
-    chassis.moveToPoint(-33,20,2000,{.forwards = false, .maxSpeed= 70},false);
+    chassis.moveToPoint(-33,-25,1200,{.maxSpeed= 60},false);
+    chassis.moveToPoint(-33,20,1700,{.forwards = false, .maxSpeed= 70},false);
     scoringBar.set_value(true);
-    pros::delay(400);
-    scoringRoller.move(0);
+    pros::delay(700);
+    chassis.moveToPoint(-33,-25,2000,{.maxSpeed=80},false);
+    scoringBar.set_value(true);
+    pros::delay (300);
     scoringBar.set_value(false);
-    pros::delay(200);
-    chassis.moveToPoint(-33,10,2000,{},false);
+    chassis.moveToPoint(-33,10,2000,{.forwards=false,.minSpeed=100},false);
     /*
     chassis.moveToPose(6,32,-134,2000,{.forwards=false,.maxSpeed = 70},false);
     //reverses intake
@@ -386,10 +387,10 @@ void one_goal_left() {
     // go to goal
     chassis.moveToPoint(-16.27, 27.05, 1500, 
     {.forwards = false, .minSpeed = 30, .earlyExitRange = 10});
-    chassis.turnToPoint(-31.21, -3.95, 800);
-    chassis.moveToPoint(-32.21, -3.95, 1500);
-    chassis.turnToPoint(-32.51, 20.44, 800, {.forwards = false});
-    chassis.moveToPoint(-32.51, 20.44, 1500, {.forwards = false});
+    chassis.turnToPoint(-30.21, -3.95, 800);
+    chassis.moveToPoint(-31.21, -3.95, 1500);
+    chassis.turnToPoint(-31.51, 20.44, 800, {.forwards = false});
+    chassis.moveToPoint(-31.51, 20.44, 1500, {.forwards = false});
     pros::delay(700);
     // score first set of blocks
     scoringBar.set_value(true);
