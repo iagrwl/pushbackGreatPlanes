@@ -10,7 +10,7 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = false; 
+bool tuneMode = false; // true for green screen, false for the selector (competition mode)
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
@@ -26,7 +26,7 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
-    //FREE LINES
+    //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
     
     pros::delay(10); // delay to avoid overloading the system
@@ -104,6 +104,16 @@ void scoreCorrectColor() {
     
 }
 
+void stopIntake() {
+    frontIntake.move(50);
+    middleRollers.move(50);
+    scoringRoller.move(-127);
+    pros::delay(1000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+}
+
 /*
 Define tasks to be run in parallel here
 Use the below format.
@@ -115,9 +125,9 @@ void wallDistanceTask(void* param) {
     }
 }
 
-void stall_check(void*){
+void telemetryTask(void*){
     while(true){
-        stall_checker();
+        telemetry();
         pros::delay(100);
     }
 }
@@ -153,7 +163,7 @@ void initialize() {
     //task caller
     pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
 
-    pros::Task checkforstall(stall_check);
+    pros::Task telemetryTask(telemetry);
 
     //calibrates drivetrain
     chassis.calibrate();
@@ -195,15 +205,6 @@ void competition_initialize() {
   selector.focus();
 }
 
-void stopIntake() {
-    frontIntake.move(50);
-    middleRollers.move(50);
-    scoringRoller.move(-127);
-    pros::delay(1000);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-}
 /*
 Occurs when the 15s auton period is happening
 1. Runs the auton selected by the selector.

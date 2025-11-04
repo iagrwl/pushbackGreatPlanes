@@ -170,7 +170,7 @@ void handleIOCommands() {
   }
 }
 
-void stall_checker() {
+void telemetry() {
   initLog(); //initalizes the sd card for data input
   //updates variables every time the function is called
   colorSortRoller_rpm = colorSortRoller.get_actual_velocity();

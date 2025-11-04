@@ -5,7 +5,7 @@
 
 
 //other
-void stall_checker();
+void telemetry();
 
 //drive
 void handleArcade();
