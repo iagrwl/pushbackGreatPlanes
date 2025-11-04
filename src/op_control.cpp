@@ -21,16 +21,16 @@ bool isWingsOut = false;
 bool isIntakeOn = false;
 bool shouldSC = false;
 //# of extensions
-int LE = 0;
-int DE = 0;
-int WE = 0;
-//amount of PSI
-int LP = 2;
-int DP = 2;
-int WP = 2;
+int LE = 0; // loader
+int DE = 0; // descore mech
+int WE = 0; // wing mech
+//amount of PSI used for each system
+int LP = 2; // loader
+int DP = 2; // descore mech
+int WP = 2; // wing mech
 
-int usedPSI = 0;
-int PSI = 100;
+int usedPSI = 0; // the amount of psi used by the robot
+int PSI = 100; // the amount of psi left over for the double park mechanism to use
 
 //amp rpm vars
 double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
@@ -180,7 +180,7 @@ void handleIOCommands() {
   }
 }
 
-void stall_checker() {
+void telemetry() {
   initLog(); //initalizes the sd card for data input
   //updates variables every time the function is called
   colorSortRoller_rpm = colorSortRoller.get_actual_velocity();

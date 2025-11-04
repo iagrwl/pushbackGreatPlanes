@@ -7,24 +7,28 @@
 #include "robodash/api.h" 
 #include "setup.hpp"
 
-/*
-Sets variables - some are settings for the primary driver, some are holding times for controls.
-*/
-bool tuneMode = true; 
+bool tuneMode = true; // set true for green screen set false for competition
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
+
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-int POHoldTime = 0;//park override
-bool isParkDown = false;
-float DPDcurveMultiplier = 0.0;
-int FDPV = 120;
-int LDPV = 40;
+int POHoldTime = 0;// counter for the park override button
+bool isParkDown = false; // marks if the park bar is down
 
+float DPDcurveMultiplier = 0.0; // changes the amount of curve the delay has
+int FDPV = 120; // enter at 100 psi what the delay is
+int LDPV = 40; // enter the lowest functioning psi is
+
+int BLUE_MAX = 230;
+int BLUE_MIN = 150;
+int RED_MAX = 50;
+int RED_MIN = 0;
+bool isRed = true;
 
 
 /*
-A tuning screen that shows x,y, theta and helps for tuning
+A tuning screen that shows x,y, theta and helps for tuning. only runs when the tunemode is set to true
 */
 void positionTracker() {
     while (true) {
@@ -86,12 +90,6 @@ float wallDistance(bool shouldPrint = false) {
     return correctedDist;
 }
 
-int BLUE_MAX = 230;
-int BLUE_MIN = 150;
-int RED_MAX = 50;
-int RED_MIN = 0;
-bool isRed = true;
-
 bool isWrongColor(float currHue, bool allianceRed = true) {
     if (allianceRed) {
         return currHue <= BLUE_MAX && currHue >= BLUE_MIN; 
@@ -110,6 +108,16 @@ void scoreCorrectColor() {
     
 }
 
+void stopIntake() {
+    frontIntake.move(50);
+    middleRollers.move(50);
+    scoringRoller.move(-127);
+    pros::delay(1000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+}
+
 /*
 Define tasks to be run in parallel here
 Use the below format.
@@ -121,24 +129,22 @@ void wallDistanceTask(void* param) {
     }
 }
 
-void stall_check(void*){
+void telemetryTask(void*){
     while(true){
-        stall_checker();
+        telemetry();
         pros::delay(100);
     }
 }
 
 //2D array for RD auton selector
 rd::Selector selector({
+  {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo AWP", &solo_awp},
   {"auton skills", &autonSkills}
 });
 
-
-rd::Console console;
 /*
 Occurs when bot goes into init phase.
 1. Checks if user wants tune screen and runs lines for it
@@ -148,22 +154,19 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-    
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
     }
 
     topOptical.set_led_pwm(100);
-
+    controller.set_text(0, 0, "imu ready");
     //task caller
     pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
-
-    pros::Task checkforstall(stall_check);
+    pros::Task telemetryTask(telemetry);
 
     //calibrates drivetrain
     chassis.calibrate();
-    controller.set_text(0, 0, "imu ready - goodluck!");
 
     //SETS DRIVETRAIN IDLE MODE
     left_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -201,15 +204,6 @@ void competition_initialize() {
   selector.focus();
 }
 
-void stopIntake() {
-    frontIntake.move(50);
-    middleRollers.move(50);
-    scoringRoller.move(-127);
-    pros::delay(1000);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-}
 /*
 Occurs when the 15s auton period is happening
 1. Runs the auton selected by the selector.

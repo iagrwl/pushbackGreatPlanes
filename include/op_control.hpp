@@ -6,9 +6,10 @@
 
 
 //other
-void stall_checker();
+void telemetry();
 void updatePSI();
 extern int PSI;
+
 //drive
 void handleArcade();
 void handleTank();
