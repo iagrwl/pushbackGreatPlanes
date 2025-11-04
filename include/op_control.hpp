@@ -4,9 +4,11 @@
 // so that they can be referenced in different files.
 
 
+
 //other
 void stall_checker();
-
+void updatePSI();
+extern int PSI;
 //drive
 void handleArcade();
 void handleTank();

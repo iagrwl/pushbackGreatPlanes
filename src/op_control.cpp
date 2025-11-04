@@ -17,11 +17,20 @@ bool scoringRollerStall = false;
 bool isScoringBarUp = false;
 bool isLoaderExtended = false;
 bool isWingsOut = false;
-
 //core func
 bool isIntakeOn = false;
 bool shouldSC = false;
+//# of extensions
+int LE = 0;
+int DE = 0;
+int WE = 0;
+//amount of PSI
+int LP = 2;
+int DP = 2;
+int WP = 2;
 
+int usedPSI = 0;
+int PSI = 100;
 
 //amp rpm vars
 double colorSortRoller_rpm = 0.0, colorSortRoller_current = 0.0;
@@ -133,6 +142,7 @@ void handleIOCommands() {
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    DE++;
     return; // return bc its a hold
   } else { // what happens when the R1 is let go off
     scoringBar.set_value(false);
@@ -216,6 +226,9 @@ void handleLoaderMechCommands() { //toggle button for loader mech
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) { //if the controller recognizes a new press from the left arrow button
     isLoaderExtended = !isLoaderExtended; //flips the condition of the current state of the loader
     loaderMech.set_value(isLoaderExtended); //sets the physical state to the bool condition of the loader
+    if (isLoaderExtended == false){
+      LE++;
+    }
   } 
 }
 
@@ -223,7 +236,15 @@ void handleWingMechCommands() { //toggle button wing mech
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { //if the controller recognizes a new press from the B button
     isWingsOut = !isWingsOut; //flips the condition of the current state of the wings
     wingMech.set_value(isWingsOut); //sets the physical state to the bool condition of the wings
+    if (isWingsOut == false){
+      WE++;
+    }
   }
+}
+
+void updatePSI(){
+  usedPSI = (LE*LP)*(DE*DP)*(WE*WP);
+  PSI = 100-usedPSI;
 }
 
 

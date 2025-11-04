@@ -10,13 +10,19 @@
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = false; 
+bool tuneMode = true; 
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-int POHoldTime = 0;
+int POHoldTime = 0;//park override
 bool isParkDown = false;
+float DPDcurveMultiplier = 0.0;
+int FDPV = 120;
+int LDPV = 40;
+
+
+
 /*
 A tuning screen that shows x,y, theta and helps for tuning
 */
@@ -26,9 +32,9 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
-    //FREE LINES
+    //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
-    
+    pros::lcd::print(4, "PSI: %d", PSI);
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -261,8 +267,16 @@ void opcontrol() {
                                 pros::delay(80);
                                 frontIntake.move(0);
                                 parkMech.set_value(true);
-                                pros::delay(100);
-                                controller.set_text(0, 0, "lifting le bot");
+                                isParkDown = true;
+                                float o = LDPV;
+                                float t = FDPV;
+                                float p = PSI;
+                                float c = DPDcurveMultiplier;
+                                float ratio = (100 - o != 0) ? (p - o) / (100.0 - o) : 0;
+                                if (ratio < 0) ratio = 0;
+                                float DPdelay = t * pow(ratio, c);
+                                pros::delay(DPdelay);
+                                controller.set_text(0, 0, "lifting bot");
                                 middleRollers.move(0);
                                 scoringRoller.move(0);
                                 shouldLift = true;
@@ -283,6 +297,7 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
+    updatePSI();
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
