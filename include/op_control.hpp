@@ -4,8 +4,11 @@
 // so that they can be referenced in different files.
 
 
+
 //other
 void telemetry();
+void updatePSI();
+extern int PSI;
 
 //drive
 void handleArcade();

@@ -7,18 +7,31 @@
 #include "robodash/api.h" 
 #include "setup.hpp"
 
+bool tuneMode = true; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
-bool tuneMode = true; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
+
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-int POHoldTime = 0;
-bool isParkDown = false;
+int POHoldTime = 0;// counter for the park override button
+bool isParkDown = false; // marks if the park bar is down
+
+float DPDcurveMultiplier = 0.0; // changes the amount of curve the delay has
+int FDPV = 120; // enter at 100 psi what the delay is
+int LDPV = 40; // enter the lowest functioning psi is
+
+int BLUE_MAX = 230;
+int BLUE_MIN = 150;
+int RED_MAX = 50;
+int RED_MIN = 0;
+bool isRed = true;
+
+
 /*
-A tuning screen that shows x,y, theta and helps for tuning
+A tuning screen that shows x,y, theta and helps for tuning. only runs when the tunemode is set to true
 */
 void positionTracker() {
     while (true) {
@@ -28,7 +41,7 @@ void positionTracker() {
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
-    
+    pros::lcd::print(4, "PSI: %d", PSI);
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -53,15 +66,13 @@ void telemetryTask(void*){
 
 //2D array for RD auton selector
 rd::Selector selector({
+  {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"solo AWP", &solo_awp},
   {"auton skills", &autonSkills}
 });
 
-
-rd::Console console;
 /*
 Occurs when bot goes into init phase.
 1. Checks if user wants tune screen and runs lines for it
@@ -71,14 +82,13 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-    
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
     }
 
     topOptical.set_led_pwm(100);
-
+    controller.set_text(0, 0, "imu ready");
     //task caller
     //pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
 
@@ -86,7 +96,6 @@ void initialize() {
 
     //calibrates drivetrain
     chassis.calibrate();
-    controller.set_text(0, 0, "imu ready - goodluck!");
 
     //SETS DRIVETRAIN IDLE MODE
     left_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -182,8 +191,16 @@ void opcontrol() {
                                 pros::delay(80);
                                 frontIntake.move(0);
                                 parkMech.set_value(true);
-                                pros::delay(100);
-                                controller.set_text(0, 0, "lifting le bot");
+                                isParkDown = true;
+                                float o = LDPV;
+                                float t = FDPV;
+                                float p = PSI;
+                                float c = DPDcurveMultiplier;
+                                float ratio = (100 - o != 0) ? (p - o) / (100.0 - o) : 0;
+                                if (ratio < 0) ratio = 0;
+                                float DPdelay = t * pow(ratio, c);
+                                pros::delay(DPdelay);
+                                controller.set_text(0, 0, "lifting bot");
                                 middleRollers.move(0);
                                 scoringRoller.move(0);
                                 shouldLift = true;
@@ -204,6 +221,7 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
+    updatePSI();
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
