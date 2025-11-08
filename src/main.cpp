@@ -12,10 +12,11 @@ Sets variables - some are settings for the primary driver, some are holding time
 */
 bool tuneMode = true; // true for selector, false for tuning screen
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
-bool defaultDrive = true; //true for arcade default and false for tank default
+bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-
+int POHoldTime = 0;
+bool isParkDown = false;
 /*
 A tuning screen that shows x,y, theta and helps for tuning
 */
@@ -26,8 +27,8 @@ void positionTracker() {
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
     //FREE LINES
-    pros::lcd::print(3, "eternity 42824A");
-    pros::lcd::print(4, "tuning screen");
+    pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
+    
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -70,11 +71,13 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
+    
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
     }
 
+    topOptical.set_led_pwm(100);
 
     //task caller
     //pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
@@ -83,7 +86,7 @@ void initialize() {
 
     //calibrates drivetrain
     chassis.calibrate();
-
+    controller.set_text(0, 0, "imu ready - goodluck!");
 
     //SETS DRIVETRAIN IDLE MODE
     left_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -93,11 +96,11 @@ void initialize() {
     selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
         if (routine == std::nullopt) {
             std::cout << "No routine selected" << std::endl;
-        controller.print(2, 0, "No routine selected!!");
+        controller.print(2, 0, "select route");
 
         } else {
             std::cout << "Selected Routine: " << routine.value().name << std::endl;
-        controller.print(2, 0, "Selected: %s", routine.value().name.c_str());
+        controller.print(2, 0, "run: %s", routine.value().name.c_str());
 
         }
     });
@@ -121,21 +124,25 @@ void competition_initialize() {
   selector.focus();
 }
 
+void stopIntake() {
+    frontIntake.move(50);
+    middleRollers.move(50);
+    scoringRoller.move(-127);
+    pros::delay(1000);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+}
 /*
 Occurs when the 15s auton period is happening
 1. Runs the auton selected by the selector.
 */
-//NOTE: uncomment lines to force run a strat
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
-  //solo_awp();
-  //one_goal_right();
-  //two_goal_LEFT();
-  autonSkills();
-  //driveTesting(true);
-  //chassis.moveToPoint(0, 100, 4500,{.maxSpeed=80});
+  selector.run_auton();
+
  }
+
 
 void opcontrol() {
     chassis.setPose(15,-48,90);
@@ -143,7 +150,7 @@ void opcontrol() {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             DHoldTime += 20; // loop delay is 20ms
-            if (DHoldTime >= 2000) { // hold delay
+            if (DHoldTime >= 2000) { // must hold for 2000 ms for statement to pass
                 defaultDrive = !defaultDrive; // toggle mode
                 controller.rumble(".."); // give feedback
                 DHoldTime = 0; // reset so it doesn’t keep toggling
@@ -152,6 +159,17 @@ void opcontrol() {
             DHoldTime = 0; // reset if released early
         }
 
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            POHoldTime += 10; // loop delay is 20ms
+            if (POHoldTime >= 300) { // must hold for 2000 ms for statement to pass
+                isParkDown = !isParkDown; // toggle mode
+                controller.rumble("--"); // give feedback
+                POHoldTime = 0; // reset so it doesn’t keep toggling
+                parkMech.set_value(isParkDown);
+            }
+        } else {
+            POHoldTime = 0; // reset if released early
+        }
         //double park macro
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
                     ParkHoldTime += 10; // loop increments in 10ms
@@ -169,11 +187,12 @@ void opcontrol() {
                             middleRollers.move(-100);
                             scoringRoller.move(-127);
 
-                            if (bottomDistance.get_distance() >= 40 && bottomDistance.get_distance() <=70){
+                            if (bottomDistance.get_distance() >= 50 && bottomDistance.get_distance() <=80){
+                                pros::delay(80);
                                 frontIntake.move(0);
-                                wingMech.set_value(true);
+                                parkMech.set_value(true);
                                 pros::delay(100);
-                                console.print("LIFTING BOT");
+                                controller.set_text(0, 0, "lifting le bot");
                                 middleRollers.move(0);
                                 scoringRoller.move(0);
                                 shouldLift = true;
@@ -194,7 +213,7 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
-    handleParkCommands();
+    //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
 	}
