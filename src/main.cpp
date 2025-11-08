@@ -8,6 +8,9 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
+/*
+Sets variables - some are settings for the primary driver, some are holding times for controls.
+*/
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
 
@@ -43,85 +46,10 @@ void positionTracker() {
     }
 }
 /*
-TODO: idek what this is bhargav do it
-*/
-float wallDistance(bool shouldPrint = false) {
-    //This accounts for the sensor turning off of the center of the bot
-    //X means offset from the center along the width of the bot, Y means along the length
-    float offsetX = 6.0; 
-    float offsetY = 0; 
-
-    float distancemm = sideDistance.get();
-    float distanceIn = distancemm / 25.4 + offsetX;
-
-    float angDeg = chassis.getPose().theta;
-    float angRad = angDeg * M_PI / 180.0;
-
-    //It was buggy so now if the angle is like 400 it'll turn to 40
-    float angle = fmod(angDeg, 360.0);
-    //Mod doesn't work on negatives for some reason
-    if (angle < 0) angle += 360.0;
-
-    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
-    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
-
-    float correctedDist = 0;
-
-    //Left Wall
-    if (angle >= 315 || angle < 45) {
-        correctedDist = distanceIn * cos(angRad) + rotatedX;
-    //Back Wall
-    } else if (angle >= 45 && angle < 135) {
-        correctedDist = distanceIn * sin(angRad) + rotatedY;
-    //Right Wall
-    } else if (angle >= 135 && angle < 225) {
-        correctedDist = -distanceIn * cos(angRad) - rotatedX;
-    //Close Wall
-    } else {
-        correctedDist = -distanceIn * sin(angRad) - rotatedY;
-    }
-
-    if (shouldPrint) {
-        // pros::lcd::print(4, "Raw Distance: %f", distancemm);
-        // pros::lcd::print(5, "Distance: %f", distanceIn);
-        // pros::lcd::print(6, "Corrected: %f", correctedDist);
-    }
-
-    return correctedDist;
-}
-
-bool isWrongColor(float currHue, bool allianceRed = true) {
-    if (allianceRed) {
-        return currHue <= BLUE_MAX && currHue >= BLUE_MIN; 
-    } else {
-        return currHue <= RED_MAX && currHue >= RED_MIN;
-    }
-}
-void scoreCorrectColor() {
-    float currHue;
-    while (true) {
-    currHue = topOptical.get_hue();
-    if (isWrongColor(currHue, isRed)) {
-        scoringBar.set_value(false);
-    }
-    }
-    
-}
-
-void stopIntake() {
-    frontIntake.move(50);
-    middleRollers.move(50);
-    scoringRoller.move(-127);
-    pros::delay(1000);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-}
-
-/*
 Define tasks to be run in parallel here
 Use the below format.
 */
+/*
 void wallDistanceTask(void* param) {
     while (true) {
         wallDistance(true); 
@@ -162,7 +90,8 @@ void initialize() {
     topOptical.set_led_pwm(100);
     controller.set_text(0, 0, "imu ready");
     //task caller
-    pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
+    //pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
+
     pros::Task telemetryTask(telemetry);
 
     //calibrates drivetrain
@@ -216,7 +145,8 @@ void autonomous() {
 
 
 void opcontrol() {
-    while (true) {
+    chassis.setPose(15,-48,90);
+  while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             DHoldTime += 20; // loop delay is 20ms
