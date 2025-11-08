@@ -209,9 +209,11 @@ void stall_checker() {
     } 
   }                                                                                                                   
   //displays the rpm and the stall state of each roller section on the brains 5,SIX, SEVENNN lines of the screen (o)(o)
+  /*
   pros::lcd::print(5, "F RPM: %.2f %s", frontIntake_rpm, frontIntakeStall ? "FRONT FULL" : "");
   pros::lcd::print(6, "M RPM: %.2f %s", middleRollers_rpm, middleRollersStall ? "MIDDLE FULL" : "");
   pros::lcd::print(7, "S RPM: %.2f %s", scoringRoller_rpm, scoringRollerStall ? "TOP FULL" : "");
+  */
   logData(); //logs the data onto the sd card for data analysis
 }
 
