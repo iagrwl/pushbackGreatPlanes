@@ -49,13 +49,7 @@ void positionTracker() {
 Define tasks to be run in parallel here
 Use the below format.
 */
-/*
-void wallDistanceTask(void* param) {
-    while (true) {
-        wallDistance(true); 
-        pros::delay(50);    
-    }
-}
+
 
 void telemetryTask(void*){
     while(true){
