@@ -7,7 +7,7 @@
 #include "robodash/api.h" 
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -139,7 +139,7 @@ void autonomous() {
 
 
 void opcontrol() {
-    chassis.setPose(15,-48,90);
+    //chassis.setPose(15,-48,90);
   while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
