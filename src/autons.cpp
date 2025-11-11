@@ -4,7 +4,7 @@
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 #include "op_control.hpp"
-
+/*
 float wallDistance(bool shouldPrint = false) {
     //This accounts for the sensor turning off of the center of the bot
     //X means offset from the center along the width of the bot, Y means along the length
@@ -54,17 +54,108 @@ float wallDistance(bool shouldPrint = false) {
 
     return finalPos;
 }
+*/
+
+void wallDistance(bool shouldPrint = false) {
+    float robotX = chassis.getPosition().x;
+    float robotY = chassis.getPosition().y;
+    float angDeg = chassis.getPose().theta;
+    float angRad = angDeg * M_PI / 180.0;
+
+    // Sensor offsets
+    float rightOffsetX = 1.0, rightOffsetY = 2.0;
+    float leftOffsetX  = 2.0, leftOffsetY  = 0.0;
+
+    //Finds the sensor's coordinates using fancy math
+    //Basically we measure the robot's coordinate's from it's center but the distance sensors are offset from the center of the robot
+    //We take the robot's coordinates and angle and the distance sensor's offset and find out where the distance sensors are in the field
+    //If you want me to like fully explain it call me
+    auto getSensorCoords = [&](float offsetX, float offsetY) {
+        return std::pair<float,float>(
+            robotX + offsetX * cos(angRad) - offsetY * sin(angRad),
+            robotY + offsetX * sin(angRad) + offsetY * cos(angRad)
+        );
+    };
+    auto [rightSensorX, rightSensorY] = getSensorCoords(rightOffsetX, rightOffsetY);
+    auto [leftSensorX,  leftSensorY ] = getSensorCoords(leftOffsetX,  leftOffsetY);
+
+    //So like before we had these ranges in degrees that measured the robot's angle to determine which wall it was facing
+    //smth like if (angle >= 315 || angle < 45) {
+    //But I realized that was dumb since we already use radians for other stuff 
+    //So now we use vectors and all thats important is the sign of the numbers
+    //So like if the x is positive and the y is 0 we know its facing the right wall
+    //Basically all you need to know is that plugging in the angle gets you a coordinate that points in the direction the sensor is facing
+    //If you want me to like fully explain it call me
+    float rightVecX =  cos(angRad), rightVecY =  sin(angRad);
+    float leftVecX  = -cos(angRad), leftVecY  = -sin(angRad);
+
+    //I decided to use the ray formula for this just because theres a formula for it and I didn't know how to do it with trig
+    //The formula Position(t) = Start + t * Direction
+    //t just tells you far along the ray you are so like t=0 is the start and t=1 is one unit along the ray etc
+    //sx and sy are the sensor's position and dx and dy are the sensor direction vectors
+    //The 71 are the walls x and y coordinates
+    //Basically we solve for the t where the ray intersects each wall and take the smallest positive t to find the closest wall
+    //It seems kinda complicated but its actually simple and this is lowkey what frc does 
+    //We probably didn't need to all ts but like if it's good we can reset our position without lining up
+    auto getWallDistance = [&](float sx, float sy, float dx, float dy) {
+        float t = INFINITY;
+        float toLeft  = (-71 - sx) / dx;
+        float toRight = ( 71 - sx) / dx;
+        float toBack  = (-71 - sy) / dy;
+        float toFront = ( 71 - sy) / dy;
+        if (toLeft  > 0) t = fmin(t, toLeft);
+        if (toRight > 0) t = fmin(t, toRight);
+        if (toBack  > 0) t = fmin(t, toBack);
+        if (toFront > 0) t = fmin(t, toFront);
+        return t;
+    };
+
+    //ts just calls the function
+    float rightDist = getWallDistance(rightSensorX, rightSensorY, rightVecX, rightVecY);
+    float leftDist  = getWallDistance(leftSensorX,  leftSensorY,  leftVecX,  leftVecY);
+
+    //ts js picks the sensor with the closest wall
+    //it uses the right sensor if the right t is smaller than the left t
+    bool useRight = (rightDist < leftDist);
+    float chosenDist = useRight ? rightDist : leftDist;
+    float sensorX = useRight ? rightSensorX : leftSensorX;
+    float sensorY = useRight ? rightSensorY : leftSensorY;
+    float vecX    = useRight ? rightVecX : leftVecX;
+    float vecY    = useRight ? rightVecY : leftVecY;
+
+    //Ts just like the distance it hits at
+    float hitX = sensorX + chosenDist * vecX;
+    float hitY = sensorY + chosenDist * vecY;
+
+    //sets the pose but only updates the coordinate that was corrected
+    //it takes the absolute value of wherever the sensor hit the wall and checks if it's 71
+    float correctedX = robotX;
+    float correctedY = robotY;
+    float errorMargin = 1.0; 
+    if (fabs(fabs(hitX) - 71) < errorMargin) correctedX = hitX;
+    if (fabs(fabs(hitY) - 71) < errorMargin) correctedY = hitY;
+
+    if (shouldPrint) {
+        pros::lcd::print(5, "Chosen Sensor: %s", useRight ? "Right" : "Left");
+        pros::lcd::print(6, "Robot Pos: (%.2f, %.2f)", robotX, robotY);
+        pros::lcd::print(7, "Hit Pos:   (%.2f, %.2f)", hitX, hitY);
+        pros::lcd::print(8, "Corrected: (%.2f, %.2f, %.2f)", correctedX, correctedY, angDeg);
+    }
+    //I haven't tested if it'll let you call it and it just sets it or if I needa return something
+    chassis.setPose({correctedX, correctedY, angDeg});
+}
 
 void autonSkills() {
-    /*
+    
     //SETUP
-    chassis.setPose(15,-48,90);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
+    /*
     //Q1
+    chassis.setPose(15,-48,90);
     chassis.moveToPoint(47,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     chassis.turnToHeading(180,2000,{.maxSpeed=50},false);
     loaderMech.set_value(true);
@@ -116,16 +207,20 @@ void autonSkills() {
     chassis.turnToHeading(-75,500,{.earlyExitRange=5},false);
     right_dt.move(90);
     left_dt.move(90);
-    pros::delay(1700);
+    pros::delay(1600);
     left_dt.move(0);
     right_dt.move(0);
     chassis.turnToHeading(-105,1500,{.earlyExitRange=5},false);
-    right_dt.move(-20);
-    left_dt.move(-20);
-    pros::delay(1700);
+    right_dt.move(-25);
+    left_dt.move(-25);
+    pros::delay(500);
+    loaderMech.set_value(true);
+    pros::delay(1200);
+    loaderMech.set_value(false);
     left_dt.move(0);
     right_dt.move(0);
     chassis.turnToHeading(-90,1500);
+    wallDistance(false);
     /*
         frontIntake.move(127);iop[poio]iu
     middleRollers.move(127);
@@ -376,86 +471,104 @@ void Q4() {
 }
 
 void solo_awp(){
-    //SETUP
-    chassis.setPose(15,-48,90);
+    /*wingMech.set_value(true);
+    //turn on intake 
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    left_dt.set_brake_mode(pros::MotorBrake::brake);
-    right_dt.set_brake_mode(pros::MotorBrake::brake);
-    chassis.moveToPoint(48,-48,1500,{.minSpeed=60,.earlyExitRange=8});
-    chassis.turnToHeading(180,700,{.maxSpeed=50},false);
+    //go perpendicular to loader
+    chassis.moveToPoint(0,31.5,1400,{.maxSpeed=85});
+    chassis.turnToHeading(90,800,{.maxSpeed=70});
+    //drop loader mech
     loaderMech.set_value(true);
-    pros::delay(100);
-    chassis.moveToPoint(48,-65,675,{.maxSpeed=60},false);
-    chassis.turnToHeading(180,750,{.maxSpeed=80});
-    chassis.moveToPoint(48,-22,2000,{.forwards=false,.minSpeed=75});
-    pros::delay(900);
+    //ram loader 
+    chassis.moveToPoint(15,33.25,1050,{.maxSpeed=100},false);
+    //fix lat alignment
+    chassis.turnToHeading(90,400,{.maxSpeed=80});
+    //retract loader mech
+    loaderMech.set_value(false);
+    //go to long goal
+    chassis.moveToPoint(-20,34,1000,{.forwards=false},false);
+    //let balls score
     scoringBar.set_value(true);
-    loaderMech.set_value(false);
-    pros::delay(1500);
+    //wait for blocks to be scored
+    pros::delay(1100);
+    //swing w 450ms turn
+    left_dt.move(127);
+    right_dt.move(-127); 
+    pros::delay(450);
+    left_dt.move(0);
+    right_dt.move(0); 
+    //retract bar once swung
     scoringBar.set_value(false);
-    chassis.moveToPoint(48,-40,800,{.maxSpeed=60});
-    chassis.turnToPoint(24,-24,1000,{.minSpeed=60,.earlyExitRange=5});
-    chassis.moveToPoint(24,-24,1500,{.maxSpeed=70,.earlyExitRange=3});
-    pros::delay(800);
-    loaderMech.set_value(true);
-    loaderMech.set_value(false);
-    chassis.moveToPoint(-24.5,-25,2000,{.minSpeed=70,.earlyExitRange=3});
-    pros::delay(1000);
-    loaderMech.set_value(true);
-    chassis.turnToHeading(-135,700,{},false);
-    pros::delay(400);
-    chassis.moveToPoint(-12,-12,1500,{.forwards=false,.maxSpeed=80});
-    pros::delay(500);
+    //correctional swing turn
+    chassis.turnToHeading(190,400);
+    //go to first 3 stack
+    chassis.moveToPoint(-11,1,1200,{.maxSpeed=55});
+    //correctional turn
+    chassis.turnToHeading(180,500);
+    //go to second 3 stack
+    chassis.moveToPoint(-10,-27,1200,{.maxSpeed=67});
+    //give initial delay before slow entry
+    pros::delay(100);
+    //slow entry into 3 stack without loader mech for psi retention
+    chassis.moveToPoint(-10,-35,1200,{.maxSpeed=50});
+    //turn opposite of mid goal
+    chassis.turnToHeading(133,500);
+    //ram mid goal
+    chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
+    //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
     scoringRoller.move(-127);
     frontIntake.move(-127);
-    pros::delay(50);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    frontIntake.move(127);
-    pros::delay(50);
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-    frontIntake.move(-127);
-    pros::delay(50);
-    scoringRoller.move(-127);
-    middleRollers.move(100);   
-    frontIntake.move(127); 
-    pros::delay(460);
-    scoringRoller.move(127);
+    pros::delay(150);
     middleRollers.move(127);   
     frontIntake.move(127); 
-    chassis.moveToPoint(-48,-48,2500,{.maxSpeed=90});
-    chassis.turnToPoint(-48,-60,800);
+    pros::delay(460);
+    //scoring recovery 
+    middleRollers.move(-127);
+    pros::delay(110);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(10);
+    //moves parallel to long goal
+    chassis.moveToPoint(17,-59,1300);
+    //correctional parallel with goal
+    chassis.turnToHeading(90,400);
+    //rams goal
+    chassis.moveToPoint(-18,-59,1000,{.forwards=false});
+    //lets pid settle
+    pros::delay(500);
+    //lets blocks score
+    scoringBar.set_value(true);
+    wingMech.set_value(false);*/
+    wingMech.set_value(true);
+    //turn on intake 
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    chassis.moveToPoint(0,32, 1500, {.maxSpeed = 80});
+    chassis.turnToPoint(12,39,800);
     loaderMech.set_value(true);
-    chassis.moveToPoint(-46,-60,1500,{.minSpeed=80});
-    chassis.moveToPoint(-48,-30,2000,{.forwards=false});
-
-    // wingMech.set_value(true);
-    // //turn on intake 
-    // frontIntake.move(127);
-    // middleRollers.move(127);
-    // scoringRoller.move(127);
-    // chassis.moveToPoint(0,32, 1500, {.maxSpeed = 80});
-    // chassis.turnToPoint(12,39,800);
-    // loaderMech.set_value(true);
-    // chassis.moveToPoint(16,40,1000, {.minSpeed = 60});
-    // chassis.moveToPoint(-24,40,1800, {.forwards = false, .maxSpeed = 90});
-    // pros::delay(600);
-    // scoringBar.set_value(true);
-    // pros::delay(1200);
-    // loaderMech.set_value(false);
-    // scoringBar.set_value(false);
-    // chassis.turnToHeading(200, 800);
-    // chassis.moveToPoint(-6, 9, 1000, {.maxSpeed = 60, .minSpeed = 30, .earlyExitRange = 2});
-    // chassis.moveToPoint(-4, -32, 1500, {.maxSpeed = 90});
-    // chassis.turnToPoint(-16, -19.5, 800, {.forwards = false});
-    // pros::delay(100);
-    // loaderMech.set_value(true);
-    // chassis.moveToPoint(-16,-19.5, 1000, {.forwards = false, .maxSpeed = 80});
-    
+    chassis.moveToPoint(16,39,1000, {.minSpeed = 60});
+    chassis.moveToPoint(-24,40,1800, {.forwards = false, .maxSpeed = 90});
+    pros::delay(600);
+    scoringBar.set_value(true);
+    pros::delay(1200);
+    loaderMech.set_value(false);
+    scoringBar.set_value(false);
+    chassis.turnToHeading(200, 800);
+    chassis.moveToPoint(-6, 9, 1000, {.maxSpeed = 60, .minSpeed = 30, .earlyExitRange = 2});
+    chassis.moveToPoint(-4, -32, 1500, {.maxSpeed = 90});
+    chassis.turnToPoint(-16, -19.5, 800, {.forwards = false});
+    chassis.moveToPoint(-16,-19.5, 1000, {.forwards = false, .maxSpeed = 80});
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    frontIntake.move(-127);
+    pros::delay(150);
+    middleRollers.move(100);   
+    frontIntake.move(100); 
+    pros::delay(460);
 
 }
 void two_goal_LEFT() {
