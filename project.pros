@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Skills!",
+    "project_name": "parth!",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,7 +324,7 @@
     },
     "upload_options": {
       "slot": 2,
-      "description": "Skills!!",
+      "description": " no",
       "icon": "alien"
     },
     "use_early_access": false
