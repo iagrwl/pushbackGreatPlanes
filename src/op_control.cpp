@@ -59,16 +59,22 @@ void handleIOCommands() {
     return; // return bc its a hold
   }
 
+  // detect a new R1 press
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+    DE++;
+  }
+
+  // hold behavior while R1 is held
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
     scoringBar.set_value(true);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    DE++;
-    return; // return bc its a hold
   } else { // what happens when the R1 is let go off
     scoringBar.set_value(false);
+    
   }
+
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
     scoringBar.set_value(false);
@@ -130,7 +136,7 @@ void handleWingMechCommands() { //toggle button wing mech
 }
 
 void updatePSI(){
-  usedPSI = (LE*LP)*(DE*DP)*(WE*WP);
+  usedPSI = (LE*LP)+(DE*DP)+(WE*WP);
   PSI = 100-usedPSI;
 }
 

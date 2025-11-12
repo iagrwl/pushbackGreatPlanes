@@ -114,4 +114,4 @@ inline pros::adi::DigitalOut parkMech('D');
 // clog sensors
 inline pros::Optical topOptical(18);
 inline pros::Distance bottomDistance(8);
-inline pros::Distance sideDistance(17);
+inline pros::Distance leftDistance(17);

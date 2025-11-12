@@ -19,9 +19,10 @@ int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
 
-float DPDcurveMultiplier = 0.0; // changes the amount of curve the delay has
+float DPDcurveMultiplier = 0.63; // changes the amount of curve the delay has
 int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
+float DPdelay = 0;
 
 int BLUE_MAX = 230;
 int BLUE_MIN = 150;
@@ -38,9 +39,9 @@ void positionTracker() {
     //XY THETA DISPLAY
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
-    pros::lcd::print(2, "BSD: %d", bottomDistance.get_distance());
+    pros::lcd::print(2, "left: %d", leftDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
-    pros::lcd::print(3, "TCS: %d", topOptical.get_hue());
+    pros::lcd::print(3, "DPDelay: %.2f", DPdelay);
     pros::lcd::print(4, "PSI: %d", PSI);
     pros::delay(10); // delay to avoid overloading the system
     }
@@ -140,7 +141,7 @@ void autonomous() {
 
 
 void opcontrol() {
-    chassis.setPose(15,-48,90);
+    //chassis.setPose(15,-48,90);
   while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -193,7 +194,8 @@ void opcontrol() {
                                 float c = DPDcurveMultiplier;
                                 float ratio = (100 - o != 0) ? (p - o) / (100.0 - o) : 0;
                                 if (ratio < 0) ratio = 0;
-                                float DPdelay = t * pow(ratio, c);
+                                DPdelay = t * pow(ratio, c);
+                                pros::lcd::print(3, "DPDelay: %.2f", DPdelay);
                                 pros::delay(DPdelay);
                                 controller.set_text(0, 0, "lifting bot");
                                 middleRollers.move(0);
