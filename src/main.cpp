@@ -4,7 +4,7 @@
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
 #include "pros/motors.h"
-#include "robodash/api.h" 
+#include "robodash/api.h"
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
@@ -24,11 +24,16 @@ int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
+float currentColor;
 int BLUE_MAX = 230;
 int BLUE_MIN = 150;
 int RED_MAX = 50;
 int RED_MIN = 0;
 bool isRed = true;
+int OPP_MIN;
+int OPP_MAX;
+
+
 
 
 /*
@@ -41,8 +46,9 @@ void positionTracker() {
     //BOTTOM DIST SENSOR DISPLAY
     pros::lcd::print(2, "left: %d", leftDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
-    pros::lcd::print(3, "DPDelay: %.2f", DPdelay);
-    pros::lcd::print(4, "PSI: %d", PSI);
+    pros::lcd::print(3, "calced delay %.2f", DPdelay);
+    pros::lcd::print(4, "est. psi: %d", PSI);
+    pros::lcd::print(45, "color val: %d", topOptical.get_hue());
     pros::delay(10); // delay to avoid overloading the system
     }
 }
@@ -52,20 +58,23 @@ Use the below format.
 */
 
 
-void telemetryTask(void*){
-    while(true){
-        telemetry();
-        pros::delay(100);
+void colorSort(void*){
+    while (true) {
+        currentColor=topOptical.get_hue();
+        if (currentColor > OPP_MIN && currentColor < OPP_MAX){
+            scoringRoller.move(-127);
+            pros::delay(50);
+            scoringRoller.move(127);
+        }
     }
 }
-
 //2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
-  {"auton skills", &autonSkills}
+  {"skilly", &autonSkills}
 });
 
 /*
@@ -77,6 +86,14 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
+    if (isRed){
+        OPP_MIN = BLUE_MIN;
+        OPP_MAX = BLUE_MAX;
+    }
+    else{
+        OPP_MIN = RED_MIN;
+        OPP_MAX = RED_MAX;
+    }
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
@@ -85,9 +102,10 @@ void initialize() {
     topOptical.set_led_pwm(100);
     controller.set_text(0, 0, "imu ready");
     //task caller
-    //pros::Task dis(wallDistanceTask, (void*)nullptr, "Wall Distance Task");
 
     pros::Task telemetryTask(telemetry);
+
+
 
     //calibrates drivetrain
     chassis.calibrate();
@@ -135,7 +153,9 @@ Occurs when the 15s auton period is happening
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
+  pros::Task colorSortTask(colorSort);
   solo_awp();
+  colorSortTask.suspend();
 
  }
 
@@ -143,6 +163,7 @@ void autonomous() {
 void opcontrol() {
     //chassis.setPose(15,-48,90);
   while (true) {
+
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             DHoldTime += 20; // loop delay is 20ms
@@ -182,7 +203,7 @@ void opcontrol() {
                             frontIntake.move(-60);
                             middleRollers.move(-100);
                             scoringRoller.move(-127);
-
+                            controller.set_text(0, 0, "lifting bot");
                             if (bottomDistance.get_distance() >= 50 && bottomDistance.get_distance() <=80){
                                 pros::delay(80);
                                 frontIntake.move(0);
@@ -197,7 +218,7 @@ void opcontrol() {
                                 DPdelay = t * pow(ratio, c);
                                 pros::lcd::print(3, "DPDelay: %.2f", DPdelay);
                                 pros::delay(DPdelay);
-                                controller.set_text(0, 0, "lifting bot");
+
                                 middleRollers.move(0);
                                 scoringRoller.move(0);
                                 shouldLift = true;
@@ -206,9 +227,9 @@ void opcontrol() {
                         }
 
                         ParkHoldTime = 0; // reset so it doesn’t keep toggling
-                    }  
+                    }
 
-                } 
+                }
                 else {
                     ParkHoldTime = 0; // reset if released early
                 }
