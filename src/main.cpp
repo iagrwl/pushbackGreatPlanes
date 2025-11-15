@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -44,7 +44,7 @@ void positionTracker() {
     //XY THETA DISPLAY
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
-    pros::lcd::print(2, "left: %d", leftDistance.get_distance());
+    pros::lcd::print(2, "left: %d", sideDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "calced delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
@@ -97,7 +97,6 @@ void initialize() {
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
-        pros::Task wall(&wallDistanceTask);
     }
 
     topOptical.set_led_pwm(100);
@@ -153,9 +152,10 @@ Occurs when the 15s auton period is happening
 */
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
+  selector.run_auton();
   //pros::Task colorSortTask(colorSort);
-  autonSkills();
+  //autonSkills();
+  //one_goal_right();
   //colorSortTask.suspend();
 
  }
