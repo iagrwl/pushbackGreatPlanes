@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -58,24 +58,16 @@ Use the below format.
 */
 
 
-void colorSort(void*){
-    while (true) {
-        currentColor=topOptical.get_hue();
-        if (currentColor > OPP_MIN && currentColor < OPP_MAX){
-            scoringRoller.move(-127);
-            pros::delay(50);
-            scoringRoller.move(127);
-        }
-    }
-}
-
-void wallDistanceTask(void*){
-    while(true){
-        wallDistance(true, true);
-        pros::delay(500);
-    }
-}
-
+// void colorSort(void*){
+//     while (true) {
+//         currentColor=topOptical.get_hue();
+//         if (currentColor > OPP_MIN && currentColor < OPP_MAX){
+//             scoringRoller.move(-127);
+//             pros::delay(50);
+//             scoringRoller.move(127);
+//         }
+//     }
+// }
 //2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
@@ -105,7 +97,6 @@ void initialize() {
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
-        pros::Task wall(&wallDistanceTask);
     }
 
     topOptical.set_led_pwm(100);
@@ -161,9 +152,12 @@ Occurs when the 15s auton period is happening
 */
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
-  //solo_awp();
-    autonSkills();
+  selector.run_auton();
+  //pros::Task colorSortTask(colorSort);
+  //autonSkills();
+  //one_goal_right();
+  //colorSortTask.suspend();
+
  }
 
 
