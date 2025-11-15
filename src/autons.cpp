@@ -8,10 +8,10 @@
 float wallDistance(bool shouldPrint = false) {
     //This accounts for the sensor turning off of the center of the bot
     //X means offset from the center along the width of the bot, Y means along the length
-    float offsetX = 2; 
-    float offsetY = 0; 
+    float offsetX = 2;
+    float offsetY = 0;
 
-    float distancemm = sideDistance.get();
+    float distancemm = leftDistance.get();
     float distanceIn = distancemm / 25.4 + offsetX;
 
     float angDeg = chassis.getPose().theta;
@@ -46,7 +46,7 @@ float wallDistance(bool shouldPrint = false) {
     }
 
     if (shouldPrint) {
-        
+
          pros::lcd::print(5, "Distance: %f", distanceIn);
          pros::lcd::print(6, "Corrected: %f", correctedDist);
          pros::lcd::print(7, "Final Pos: %f", finalPos);
@@ -335,11 +335,11 @@ void autonSkills() {
     pros::delay(200);
     loaderMech.set_value(false);
     chassis.moveToPoint(-77,102,3000,{.maxSpeed=60},false);
-    chassis.turnToPoint(-92,83,1500); 
+    chassis.turnToPoint(-92,83,1500);
     chassis.moveToPoint(-92,83,1500,{.maxSpeed=60});
     chassis.turnToHeading(180,1500);
     chassis.moveToPoint(-90,15,3000,{.maxSpeed=60},false);
-    chassis.turnToPoint(-76,0,1500); 
+    chassis.turnToPoint(-76,0,1500);
     chassis.moveToPoint(-76,0,2500,{.maxSpeed=60});
     chassis.turnToHeading(180,1500);
     frontIntake.move(127);
@@ -497,7 +497,7 @@ void Q4() {
     chassis.setPose(0,0,90);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(127);   
+    scoringRoller.move(127);
     chassis.moveToPoint(34, 90,5000,{.maxSpeed=80});
     chassis.turnToHeading(0,1000);
     loaderMech.set_value(true);
@@ -659,7 +659,7 @@ void two_goal_LEFT() {
     pros::delay(2000);
     //back out and turn towards destin.
     frontIntake.move(127);
-    middleRollers.move(127);   
+    middleRollers.move(127);
     scoringRoller.move(127);
 
     chassis.moveToPoint(-32, 0, 2000,{});
@@ -694,7 +694,7 @@ void one_goal_left() {
     // extend loader to prevent blocks from scattering
     loaderMech.set_value(true);
     // go to goal
-    chassis.moveToPoint(-16.27, 27.05, 1500, 
+    chassis.moveToPoint(-16.27, 27.05, 1500,
     {.forwards = false, .minSpeed = 30, .earlyExitRange = 10});
     chassis.turnToPoint(-30.21, -3.95, 800);
     chassis.moveToPoint(-31.21, -3.95, 1500);
@@ -788,8 +788,8 @@ void turnTesting(bool isCW) {
         pros::lcd::print(i+2, "%d: %.2f", currTurn, chassis.getPose().theta);
 
         chassis.turnToHeading(0, 2000);
-        
-        
+
+
 
     }
 }
@@ -813,8 +813,8 @@ void driveTesting(bool isForward) {
         pros::lcd::print(i+4, "%d: %.2f", currDist, chassis.getPose().y);
 
         chassis.moveToPoint(0, 0, 3000, {.forwards = false});
-        
-        
+
+
 
     }
 }
