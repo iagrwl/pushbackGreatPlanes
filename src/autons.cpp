@@ -387,17 +387,17 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(15,34.5,1050,{.maxSpeed=100},false);
+    chassis.moveToPoint(16,34.5,925,{.maxSpeed=100},false);
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
-    //retract loader mech
-    loaderMech.set_value(false);
     //go to long goal
     chassis.moveToPoint(-20,34,1000,{.forwards=false},false);
     //let balls score
     scoringBar.set_value(true);
+    //retract loader mech
+    loaderMech.set_value(false);
     //wait for blocks to be scored
-    pros::delay(1100);
+    pros::delay(1200);
     //swing w 450ms turn
     left_dt.move(127);
     right_dt.move(-127);
@@ -411,7 +411,7 @@ void solo_awp(){
     //go to first 3 stack
     chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
     //go to second 3 stack
-    chassis.moveToPoint(-8,-35,1500,{.minSpeed=60},false);
+    chassis.moveToPoint(-10,-35,1500,{.minSpeed=60},false);
     //turn opposite of mid goal
     chassis.turnToHeading(133,500);
     //ram mid goal
@@ -435,7 +435,7 @@ void solo_awp(){
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-61,1100,{.forwards=false});
+    chassis.moveToPoint(-18,-60,1100,{.forwards=false});
     //lets pid settle
     pros::delay(500);
     //lets blocks score

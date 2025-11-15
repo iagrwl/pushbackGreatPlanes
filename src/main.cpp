@@ -58,16 +58,16 @@ Use the below format.
 */
 
 
-void colorSort(void*){
-    while (true) {
-        currentColor=topOptical.get_hue();
-        if (currentColor > OPP_MIN && currentColor < OPP_MAX){
-            scoringRoller.move(-127);
-            pros::delay(50);
-            scoringRoller.move(127);
-        }
-    }
-}
+// void colorSort(void*){
+//     while (true) {
+//         currentColor=topOptical.get_hue();
+//         if (currentColor > OPP_MIN && currentColor < OPP_MAX){
+//             scoringRoller.move(-127);
+//             pros::delay(50);
+//             scoringRoller.move(127);
+//         }
+//     }
+// }
 //2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
@@ -153,9 +153,9 @@ Occurs when the 15s auton period is happening
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  pros::Task colorSortTask(colorSort);
-  solo_awp();
-  colorSortTask.suspend();
+  //pros::Task colorSortTask(colorSort);
+  autonSkills();
+  //colorSortTask.suspend();
 
  }
 
