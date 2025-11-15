@@ -524,7 +524,7 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(15,34.5,1050,{.maxSpeed=100},false);
+    chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
     
@@ -549,16 +549,17 @@ void solo_awp(){
     //go to first 3 stack
     chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
     //go to second 3 stack
-    chassis.moveToPoint(-8,-35,1900,{.minSpeed=50},false);
-    
+    chassis.moveToPoint(-9,-35,1900,{.minSpeed=50},false);
+    loaderMech.set_value(true);
     //turn opposite of mid goal
     chassis.turnToHeading(133,500);
     //ram mid goal
     chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
     //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
-    scoringRoller.move(-127);
+    scoringRoller.move(-100);
     frontIntake.move(-127);
+    loaderMech.set_value(false);
     pros::delay(200);
     middleRollers.move(127);
     frontIntake.move(127);
