@@ -44,7 +44,7 @@ void positionTracker() {
     //XY THETA DISPLAY
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
-    pros::lcd::print(2, "left: %d", leftDistance.get_distance());
+    //pros::lcd::print(2, "left: %d", leftDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "calced delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);

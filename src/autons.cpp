@@ -56,6 +56,7 @@ float wallDistance(bool shouldPrint = false) {
 }
 */
 
+
 // Compute robot position relative to walls using either left or right distance sensor
 float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
     // Offsets from robot center for each sensor
@@ -110,7 +111,7 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
         if (useRightSensor) {
             // Left wall (swapped)
             correctedDist = distanceIn * cos(angRad) + rotatedX;
-            finalPos = correctedDist - 71;
+            finalPos = -correctedDist -71 ;
         } else {
             // Right wall
             correctedDist = -distanceIn * cos(angRad) - rotatedX;
@@ -145,17 +146,17 @@ void autonSkills() {
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
     //Q1
-    chassis.moveToPoint(47,-48,1400,{.minSpeed=60,.earlyExitRange=8});
+    chassis.moveToPoint(48,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     chassis.turnToHeading(180,2000,{.maxSpeed=50},false);
     loaderMech.set_value(true);
     pros::delay(100);
-    chassis.moveToPoint(48,-65,2500,{.maxSpeed=60},false);
+    chassis.moveToPoint(47.5,-65,2500,{.maxSpeed=60},false);
     chassis.turnToHeading(180,500,{.maxSpeed=80});
     loaderMech.set_value(false);
     chassis.moveToPoint(48,-22,2000,{.forwards=false,.minSpeed=80});
     pros::delay(900);
     scoringBar.set_value(true);
-    pros::delay(600);
+    pros::delay(800);
     frontIntake.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
@@ -174,7 +175,7 @@ void autonSkills() {
     chassis.moveToPoint(60,-26,1500,{.minSpeed=60,.earlyExitRange=2});
     chassis.turnToHeading(0,1500);
     chassis.moveToPoint(60,36,3000,{.minSpeed=60,.earlyExitRange=8});
-    chassis.turnToPoint(45,48,1500,{.maxSpeed=60,.earlyExitRange=2});
+    chassis.turnToPoint(45,48,1500,{.minSpeed=60,.earlyExitRange=3});
     chassis.moveToPose(45,48,0,2000,{.maxSpeed=60});
     chassis.turnToHeading(0,1500,{.maxSpeed=80});
     pros::delay(300);
@@ -189,25 +190,26 @@ void autonSkills() {
     pros::delay(2000);
     chassis.setPose(chassis.getPose().x, 30, chassis.getPose().theta);
     chassis.moveToPose(18,63,-90,2500,{.minSpeed=70,.earlyExitRange=5});
-    chassis.turnToHeading(-85,500,{.earlyExitRange=5},false);
+    chassis.turnToHeading(-85,500,{.earlyExitRange=3},false);
     scoringBar.set_value(false); 
     right_dt.move(90);
     left_dt.move(90);
     loaderMech.set_value(true);
-    pros::delay(1700);
+    pros::delay(1900);
     loaderMech.set_value(false);
     left_dt.move(0);
     right_dt.move(0);
     chassis.turnToHeading(-105,1500,{.earlyExitRange=5},false);
-    right_dt.move(-25);
-    left_dt.move(-25);
-    pros::delay(1700);
+    right_dt.move(-35);
+    left_dt.move(-35);
+    pros::delay(500);
     left_dt.move(0);
     right_dt.move(0);
+
     chassis.turnToHeading(-90,1500,{},false);
     chassis.setPose(-17,wallDistance(false,true), chassis.getPose().theta);
     pros::delay(200);
-    chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70,.earlyExitRange=5});
+    chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70});
     chassis.turnToHeading(0,1000,{},false);
     chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
     chassis.moveToPoint(-48,18,3000,{.forwards=false,.maxSpeed=60});
@@ -219,14 +221,13 @@ void autonSkills() {
     scoringBar.set_value(false);
     chassis.moveToPoint(-48,70,3000,{.maxSpeed=60});
     pros::delay(1000);
-    chassis.moveToPoint(-48,22,2500,{.forwards=false,.maxSpeed=80});
+    chassis.moveToPoint(-48,22,2500,{.forwards=false,.maxSpeed=90});
     pros::delay(1300);
     scoringBar.set_value(true);
     loaderMech.set_value(false);
     pros::delay(2000);
     chassis.setPose(chassis.getPose().x, 30, chassis.getPose().theta);
     scoringBar.set_value(false); 
-
     chassis.moveToPoint(-48,36,1000,{.maxSpeed=85});
     pros::delay(200);
     wingMech.set_value(true);
@@ -238,15 +239,19 @@ void autonSkills() {
     chassis.moveToPoint(-60,26,1500,{.minSpeed=60,.earlyExitRange=2});
     chassis.turnToHeading(180,1500);
     chassis.moveToPoint(-60,-36,3000,{.minSpeed=60,.earlyExitRange=8});
-    chassis.turnToPoint(-45,-48,1500,{.maxSpeed=60,.earlyExitRange=2});
+    chassis.turnToPoint(-45,-48,1500,{.minSpeed=60,.earlyExitRange=3});
     chassis.moveToPose(-45,-48,180,2000,{.maxSpeed=60});
-    chassis.turnToHeading(180,1500,{.maxSpeed=80});
+    chassis.turnToHeading(180,1500,{.maxSpeed=80},false);
     pros::delay(300);
     loaderMech.set_value(true);
     pros::delay(300);
+    chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
+    pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
+    pros::lcd::print(6, "Chassis Y: %.2f", chassis.getPose().y);
+    pros::lcd::print(7, "Chassis X: %.2f", chassis.getPose().x);
     chassis.moveToPoint(-46,-70,3000,{.maxSpeed=60});
     pros::delay(1000);
-    chassis.moveToPoint(-46,-22,2500,{.forwards=false,.maxSpeed=80});
+    chassis.moveToPoint(-46,-22,2500,{.forwards=false,.minSpeed=80});
     pros::delay(1300);
     scoringBar.set_value(true);
     loaderMech.set_value(false);
@@ -254,15 +259,15 @@ void autonSkills() {
     chassis.setPose(chassis.getPose().x, -30, chassis.getPose().theta);
     scoringBar.set_value(false);
     wingMech.set_value(true);
-    chassis.moveToPose(-18,-63,90,3000,{.lead=0.5,.minSpeed=70,.earlyExitRange=5});
+    chassis.moveToPose(-18,-63,90,3000,{.lead=0.5,.minSpeed=80,.earlyExitRange=3});
     chassis.turnToHeading(95,500,{.earlyExitRange=5},false);
-    right_dt.move(90);
-    left_dt.move(90);
     loaderMech.set_value(true);
-    pros::delay(700);
-    loaderMech.set_value(false);
-    left_dt.move(0);
-    right_dt.move(0);
+    right_dt.move(127);
+    left_dt.move(127);
+    pros::delay(1200);
+    left_dt.move(-25);
+    right_dt.move(-25);
+    
     /*
         frontIntake.move(127);iop[poio]iu
     middleRollers.move(127);
