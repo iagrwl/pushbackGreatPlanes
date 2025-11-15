@@ -97,6 +97,7 @@ void initialize() {
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
+        pros::Task wall(&wallDistanceTask);
     }
 
     topOptical.set_led_pwm(100);
@@ -161,7 +162,7 @@ void autonomous() {
 
 
 void opcontrol() {
-    //chassis.setPose(15,-48,90);
+//chassis.setPose(15,-48,90);
   while (true) {
 
         //drivemode switcher
@@ -233,7 +234,7 @@ void opcontrol() {
                 else {
                     ParkHoldTime = 0; // reset if released early
                 }
-
+    
     // driver control functions go here
     handleDriveMode(defaultDrive);
     handleIOCommands();

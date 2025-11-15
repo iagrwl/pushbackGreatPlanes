@@ -14,6 +14,7 @@ void one_goal_right();
 void solo_awp();
 void one_goal();
 void autonSkills();
+float wallDistance(bool shouldPrint, bool useRightSensor);
 void Q1();
 void Q2();
 void Q3();
