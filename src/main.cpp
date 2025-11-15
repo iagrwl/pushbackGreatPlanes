@@ -58,6 +58,13 @@ void telemetryTask(void*){
     }
 }
 
+void wallDistanceTask(void*){
+    while(true){
+        wallDistance(true, true);
+        pros::delay(500);
+    }
+}
+
 //2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
@@ -79,6 +86,7 @@ void initialize() {
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
+        pros::Task wall(&wallDistanceTask);
     }
 
     topOptical.set_led_pwm(100);
@@ -134,13 +142,13 @@ Occurs when the 15s auton period is happening
 void autonomous() {
   // runs selected auton
   //selector.run_auton();
-  solo_awp();
-
+  //solo_awp();
+    autonSkills();
  }
 
 
 void opcontrol() {
-    chassis.setPose(15,-48,90);
+//chassis.setPose(15,-48,90);
   while (true) {
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -210,7 +218,7 @@ void opcontrol() {
                 else {
                     ParkHoldTime = 0; // reset if released early
                 }
-
+    
     // driver control functions go here
     handleDriveMode(defaultDrive);
     handleIOCommands();

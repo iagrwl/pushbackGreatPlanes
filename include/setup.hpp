@@ -115,3 +115,4 @@ inline pros::adi::DigitalOut parkMech('D');
 inline pros::Optical topOptical(18);
 inline pros::Distance bottomDistance(8);
 inline pros::Distance sideDistance(17);
+inline pros::Distance side2Distance(9);

@@ -56,106 +56,95 @@ float wallDistance(bool shouldPrint = false) {
 }
 */
 
-void wallDistance(bool shouldPrint = false) {
-    float robotX = chassis.getPosition().x;
-    float robotY = chassis.getPosition().y;
+// Compute robot position relative to walls using either left or right distance sensor
+float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
+    // Offsets from robot center for each sensor
+    float rightOffsetX = 2.5, rightOffsetY = 1.0;
+    float leftOffsetX  = 2.0, leftOffsetY  = 0.0;
+
+    // Pick which sensor to use
+    float offsetX = useRightSensor ? rightOffsetX : leftOffsetX;
+    float offsetY = useRightSensor ? rightOffsetY : leftOffsetY;
+
+    // Read distance from the chosen sensor
+    float distancemm = useRightSensor ? side2Distance.get() : sideDistance.get();
+    float distanceIn = distancemm / 25.4 + offsetX;
+
     float angDeg = chassis.getPose().theta;
     float angRad = angDeg * M_PI / 180.0;
 
-    // Sensor offsets
-    float rightOffsetX = 1.0, rightOffsetY = 2.0;
-    float leftOffsetX  = 2.0, leftOffsetY  = 0.0;
+    // Normalize angle to [0,360)
+    float angle = fmod(angDeg, 360.0);
+    if (angle < 0) angle += 360.0;
 
-    //Finds the sensor's coordinates using fancy math
-    //Basically we measure the robot's coordinate's from it's center but the distance sensors are offset from the center of the robot
-    //We take the robot's coordinates and angle and the distance sensor's offset and find out where the distance sensors are in the field
-    //If you want me to like fully explain it call me
-    auto getSensorCoords = [&](float offsetX, float offsetY) {
-        return std::pair<float,float>(
-            robotX + offsetX * cos(angRad) - offsetY * sin(angRad),
-            robotY + offsetX * sin(angRad) + offsetY * cos(angRad)
-        );
-    };
-    auto [rightSensorX, rightSensorY] = getSensorCoords(rightOffsetX, rightOffsetY);
-    auto [leftSensorX,  leftSensorY ] = getSensorCoords(leftOffsetX,  leftOffsetY);
+    // Rotate offsets into field coordinates
+    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
+    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
 
-    //So like before we had these ranges in degrees that measured the robot's angle to determine which wall it was facing
-    //smth like if (angle >= 315 || angle < 45) {
-    //But I realized that was dumb since we already use radians for other stuff 
-    //So now we use vectors and all thats important is the sign of the numbers
-    //So like if the x is positive and the y is 0 we know its facing the right wall
-    //Basically all you need to know is that plugging in the angle gets you a coordinate that points in the direction the sensor is facing
-    //If you want me to like fully explain it call me
-    float rightVecX =  cos(angRad), rightVecY =  sin(angRad);
-    float leftVecX  = -cos(angRad), leftVecY  = -sin(angRad);
+    float correctedDist = 0;
+    float finalPos = 0;
 
-    //I decided to use the ray formula for this just because theres a formula for it and I didn't know how to do it with trig
-    //The formula Position(t) = Start + t * Direction
-    //t just tells you far along the ray you are so like t=0 is the start and t=1 is one unit along the ray etc
-    //sx and sy are the sensor's position and dx and dy are the sensor direction vectors
-    //The 71 are the walls x and y coordinates
-    //Basically we solve for the t where the ray intersects each wall and take the smallest positive t to find the closest wall
-    //It seems kinda complicated but its actually simple and this is lowkey what frc does 
-    //We probably didn't need to all ts but like if it's good we can reset our position without lining up
-    auto getWallDistance = [&](float sx, float sy, float dx, float dy) {
-        float t = INFINITY;
-        float toLeft  = (-71 - sx) / dx;
-        float toRight = ( 71 - sx) / dx;
-        float toBack  = (-71 - sy) / dy;
-        float toFront = ( 71 - sy) / dy;
-        if (toLeft  > 0) t = fmin(t, toLeft);
-        if (toRight > 0) t = fmin(t, toRight);
-        if (toBack  > 0) t = fmin(t, toBack);
-        if (toFront > 0) t = fmin(t, toFront);
-        return t;
-    };
-
-    //ts just calls the function
-    float rightDist = getWallDistance(rightSensorX, rightSensorY, rightVecX, rightVecY);
-    float leftDist  = getWallDistance(leftSensorX,  leftSensorY,  leftVecX,  leftVecY);
-
-    //ts js picks the sensor with the closest wall
-    //it uses the right sensor if the right t is smaller than the left t
-    bool useRight = (rightDist < leftDist);
-    float chosenDist = useRight ? rightDist : leftDist;
-    float sensorX = useRight ? rightSensorX : leftSensorX;
-    float sensorY = useRight ? rightSensorY : leftSensorY;
-    float vecX    = useRight ? rightVecX : leftVecX;
-    float vecY    = useRight ? rightVecY : leftVecY;
-
-    //Ts just like the distance it hits at
-    float hitX = sensorX + chosenDist * vecX;
-    float hitY = sensorY + chosenDist * vecY;
-
-    //sets the pose but only updates the coordinate that was corrected
-    //it takes the absolute value of wherever the sensor hit the wall and checks if it's 71
-    float correctedX = robotX;
-    float correctedY = robotY;
-    float errorMargin = 1.0; 
-    if (fabs(fabs(hitX) - 71) < errorMargin) correctedX = hitX;
-    if (fabs(fabs(hitY) - 71) < errorMargin) correctedY = hitY;
+    // Decide which wall we’re measuring against based on heading
+    // If using the right sensor, swap the wall cases
+    if (angle >= 315 || angle < 45) {
+        if (useRightSensor) {
+            // Right wall (swapped)
+            correctedDist = -distanceIn * cos(angRad) - rotatedX;
+            finalPos = 71 - correctedDist;
+        } else {
+            // Left wall
+            correctedDist = distanceIn * cos(angRad) + rotatedX;
+            finalPos = correctedDist - 71;
+        }
+    } else if (angle >= 45 && angle < 135) {
+        if (useRightSensor) {
+            // Front wall (swapped)
+            correctedDist = -distanceIn * sin(angRad) - rotatedY;
+            finalPos = correctedDist - 71;
+        } else {
+            // Back wall
+            correctedDist = distanceIn * sin(angRad) + rotatedY;
+            finalPos = 71 - correctedDist;
+        }
+    } else if (angle >= 135 && angle < 225) {
+        if (useRightSensor) {
+            // Left wall (swapped)
+            correctedDist = distanceIn * cos(angRad) + rotatedX;
+            finalPos = correctedDist - 71;
+        } else {
+            // Right wall
+            correctedDist = -distanceIn * cos(angRad) - rotatedX;
+            finalPos = 71 - correctedDist;
+        }
+    } else {
+        if (useRightSensor) {
+            // Back wall (swapped)
+            correctedDist = distanceIn * sin(angRad) + rotatedY;
+            finalPos = 71 + correctedDist;
+        } else {
+            // Front wall
+            correctedDist = -distanceIn * sin(angRad) - rotatedY;
+            finalPos = correctedDist - 71;
+        }
+    }
 
     if (shouldPrint) {
-        pros::lcd::print(5, "Chosen Sensor: %s", useRight ? "Right" : "Left");
-        pros::lcd::print(6, "Robot Pos: (%.2f, %.2f)", robotX, robotY);
-        pros::lcd::print(7, "Hit Pos:   (%.2f, %.2f)", hitX, hitY);
-        pros::lcd::print(8, "Corrected: (%.2f, %.2f, %.2f)", correctedX, correctedY, angDeg);
+        pros::lcd::print(5, "Distance: %.2f", distanceIn);
+        pros::lcd::print(6, "Corrected: %.2f", correctedDist);
     }
-    //I haven't tested if it'll let you call it and it just sets it or if I needa return something
-    chassis.setPose({correctedX, correctedY, angDeg});
+
+    return finalPos;
 }
 
-void autonSkills() {
-    
+void autonSkills() { 
     //SETUP
+    chassis.setPose(15,-48,90);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
-    /*
     //Q1
-    chassis.setPose(15,-48,90);
     chassis.moveToPoint(47,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     chassis.turnToHeading(180,2000,{.maxSpeed=50},false);
     loaderMech.set_value(true);
@@ -172,8 +161,7 @@ void autonSkills() {
     scoringRoller.move(0);
     pros::delay(200);
     scoringBar.set_value(false);
-    float correctedPos = wallDistance(true);
-    chassis.setPose(correctedPos, -30, chassis.getPose().theta);
+    chassis.setPose(wallDistance(false,false), -30, chassis.getPose().theta);
 
     chassis.moveToPoint(48,-36,2000,{.maxSpeed=85});
     pros::delay(200);
@@ -200,27 +188,81 @@ void autonSkills() {
     loaderMech.set_value(false);
     pros::delay(2000);
     chassis.setPose(chassis.getPose().x, 30, chassis.getPose().theta);
-    scoringBar.set_value(false);   
-    */
-    chassis.setPose(48, 30, chassis.getPose().theta);
-    chassis.moveToPose(18,63,-90,3000,{.minSpeed=70,.earlyExitRange=5});
-    chassis.turnToHeading(-75,500,{.earlyExitRange=5},false);
+    chassis.moveToPose(18,63,-90,2500,{.minSpeed=70,.earlyExitRange=5});
+    chassis.turnToHeading(-85,500,{.earlyExitRange=5},false);
+    scoringBar.set_value(false); 
     right_dt.move(90);
     left_dt.move(90);
-    pros::delay(1600);
+    loaderMech.set_value(true);
+    pros::delay(1700);
+    loaderMech.set_value(false);
     left_dt.move(0);
     right_dt.move(0);
     chassis.turnToHeading(-105,1500,{.earlyExitRange=5},false);
     right_dt.move(-25);
     left_dt.move(-25);
+    pros::delay(1700);
+    left_dt.move(0);
+    right_dt.move(0);
+    chassis.turnToHeading(-90,1500,{},false);
+    chassis.setPose(-17,wallDistance(false,true), chassis.getPose().theta);
+    pros::delay(200);
+    chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70,.earlyExitRange=5});
+    chassis.turnToHeading(0,1000,{},false);
+    chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
+    chassis.moveToPoint(-48,18,3000,{.forwards=false,.maxSpeed=60});
     pros::delay(500);
+    scoringBar.set_value(true);
     loaderMech.set_value(true);
     pros::delay(1200);
+    chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
+    scoringBar.set_value(false);
+    chassis.moveToPoint(-48,70,3000,{.maxSpeed=60});
+    pros::delay(1000);
+    chassis.moveToPoint(-48,22,2500,{.forwards=false,.maxSpeed=80});
+    pros::delay(1300);
+    scoringBar.set_value(true);
+    loaderMech.set_value(false);
+    pros::delay(2000);
+    chassis.setPose(chassis.getPose().x, 30, chassis.getPose().theta);
+    scoringBar.set_value(false); 
+
+    chassis.moveToPoint(-48,36,1000,{.maxSpeed=85});
+    pros::delay(200);
+    wingMech.set_value(true);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    scoringBar.set_value(false);
+    chassis.turnToPoint(-60,26,1500,{.maxSpeed=60});
+    chassis.moveToPoint(-60,26,1500,{.minSpeed=60,.earlyExitRange=2});
+    chassis.turnToHeading(180,1500);
+    chassis.moveToPoint(-60,-36,3000,{.minSpeed=60,.earlyExitRange=8});
+    chassis.turnToPoint(-45,-48,1500,{.maxSpeed=60,.earlyExitRange=2});
+    chassis.moveToPose(-45,-48,180,2000,{.maxSpeed=60});
+    chassis.turnToHeading(180,1500,{.maxSpeed=80});
+    pros::delay(300);
+    loaderMech.set_value(true);
+    pros::delay(300);
+    chassis.moveToPoint(-46,-70,3000,{.maxSpeed=60});
+    pros::delay(1000);
+    chassis.moveToPoint(-46,-22,2500,{.forwards=false,.maxSpeed=80});
+    pros::delay(1300);
+    scoringBar.set_value(true);
+    loaderMech.set_value(false);
+    pros::delay(2000);
+    chassis.setPose(chassis.getPose().x, -30, chassis.getPose().theta);
+    scoringBar.set_value(false);
+    wingMech.set_value(true);
+    chassis.moveToPose(-18,-63,90,3000,{.lead=0.5,.minSpeed=70,.earlyExitRange=5});
+    chassis.turnToHeading(95,500,{.earlyExitRange=5},false);
+    right_dt.move(90);
+    left_dt.move(90);
+    loaderMech.set_value(true);
+    pros::delay(700);
     loaderMech.set_value(false);
     left_dt.move(0);
     right_dt.move(0);
-    chassis.turnToHeading(-90,1500);
-    wallDistance(false);
     /*
         frontIntake.move(127);iop[poio]iu
     middleRollers.move(127);
