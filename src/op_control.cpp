@@ -74,7 +74,7 @@ void handleIOCommands() {
     scoringBar.set_value(false);
     
   }
-
+  bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
     scoringBar.set_value(false);
@@ -84,14 +84,19 @@ void handleIOCommands() {
     return; // return bc its a hold
   }
 
-  if (isIntakeOn) { // if the L1 is toggled on then this passes
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-  } else { // if the L1 is toggled off then this passes
-    frontIntake.move(0);
-    middleRollers.move(0);
-    scoringRoller.move(0);
+  // base intake toggle only applies when r1 and r2 are not being held
+  if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
+      !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+
+      if (isIntakeOn) {
+        frontIntake.move(127);
+        middleRollers.move(127);
+        scoringRoller.move(127);
+      } else {
+        frontIntake.move(0);
+        middleRollers.move(0);
+        scoringRoller.move(0);
+      }
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "parth!",
+    "project_name": "comp ready 11/15",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,9 +323,9 @@
       }
     },
     "upload_options": {
-      "slot": 2,
-      "description": " no",
-      "icon": "alien"
+      "slot": 1,
+      "description": "ready broski",
+      "icon": "X"
     },
     "use_early_access": false
   }
