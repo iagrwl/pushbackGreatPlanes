@@ -18,7 +18,7 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
     float offsetY = useRightSensor ? rightOffsetY : leftOffsetY;
 
     // Read distance from the chosen sensor
-    float distancemm = useRightSensor ? side2Distance.get() : sideDistance.get();
+    float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get();
     float distanceIn = distancemm / 25.4 + offsetX;
 
     float angDeg = chassis.getPose().theta;
@@ -85,6 +85,41 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
     }
 
     return finalPos;
+}
+
+void moveToPointWallTracking(float x, float y, int timeout, 
+                             float targetWallDistMM, float targetAngle, bool useRightSensor,
+                             lemlib::MoveToPointParams params = {}) {
+    
+    //start moving to general direction
+    chassis.moveToPoint(x, y, timeout, params);
+    
+    uint32_t startTime = pros::millis();
+    
+    //countinous correction loop
+    while (pros::millis() - startTime < timeout) {
+        
+        float distanceMM = useRightSensor ? rightDistance.get() : leftDistance.get();
+        
+        float currentAngle = chassis.getPose().theta;
+        float angleError = targetAngle - currentAngle;
+        float angleErrorRad = angleError * M_PI / 180.0;
+        
+        //calculate estimated straight line dist
+        float correctedDistanceMM = distanceMM * cos(angleErrorRad);
+        
+        // sets correction dist to the target - actual
+        float correctionMM = targetWallDistMM - correctedDistanceMM;
+        //covert for lemlib
+        float correctionInches = correctionMM / 25.4;
+        
+        //update x position while moving
+        chassis.setPose(chassis.getPose().x + correctionInches, 
+                       chassis.getPose().y, 
+                       chassis.getPose().theta);
+        
+        pros::delay(20);
+    }
 }
 
 void autonSkills() { 
@@ -479,7 +514,8 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
+    //chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
+    moveToPointWallTracking(15, 34.5, 1300, 381.0, 90.0, false, {.maxSpeed=100});
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
     
