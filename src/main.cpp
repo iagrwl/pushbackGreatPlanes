@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -152,12 +152,12 @@ Occurs when the 15s auton period is happening
 */
 void autonomous() {
   // runs selected auton
-  selector.run_auton();
+  //selector.run_auton();
   //pros::Task colorSortTask(colorSort);
   //autonSkills();
   //one_goal_right();
   //colorSortTask.suspend();
-
+solo_awp();
  }
 
 

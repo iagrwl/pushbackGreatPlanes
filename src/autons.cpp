@@ -9,6 +9,7 @@
 
 // Compute robot position relative to walls using either left or right distance sensor
 float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
+
     // Offsets from robot center for each sensor
     float rightOffsetX = 2.5, rightOffsetY = 1.0;
     float leftOffsetX  = 2.0, leftOffsetY  = 0.0;
@@ -87,39 +88,61 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
     return finalPos;
 }
 
-void moveToPointWallTracking(float x, float y, int timeout, 
-                             float targetWallDistMM, float targetAngle, bool useRightSensor,
-                             lemlib::MoveToPointParams params = {}) {
-    
-    //start moving to general direction
-    chassis.moveToPoint(x, y, timeout, params);
-    
-    uint32_t startTime = pros::millis();
-    
-    //countinous correction loop
-    while (pros::millis() - startTime < timeout) {
-        
-        float distanceMM = useRightSensor ? rightDistance.get() : leftDistance.get();
-        
-        float currentAngle = chassis.getPose().theta;
-        float angleError = targetAngle - currentAngle;
-        float angleErrorRad = angleError * M_PI / 180.0;
-        
-        //calculate estimated straight line dist
-        float correctedDistanceMM = distanceMM * cos(angleErrorRad);
-        
-        // sets correction dist to the target - actual
-        float correctionMM = targetWallDistMM - correctedDistanceMM;
-        //covert for lemlib
-        float correctionInches = correctionMM / 25.4;
-        
-        //update x position while moving
-        chassis.setPose(chassis.getPose().x + correctionInches, 
-                       chassis.getPose().y, 
-                       chassis.getPose().theta);
-        
-        pros::delay(20);
+
+void moveToPointWallTracking(float x, float y, int timeout, float targetWallDistMM, float targetAngle, bool useRightSensor, lemlib::MoveToPointParams params) {
+    int start = pros::millis();
+
+    // Start async move
+    chassis.moveToPoint(x, y, timeout, params, true);
+
+    float lastError = 0;
+
+    while (pros::millis() - start < timeout) {
+
+        // Exit if reached
+        float dx = x - chassis.getPose().x;
+        float dy = y - chassis.getPose().y;
+        if (fabsf(dx) < 1.5 && fabsf(dy) < 1.5) break;
+
+        float measuredWallDist = useRightSensor ? rightDistance.get() : leftDistance.get();
+
+        float wallError = targetWallDistMM - measuredWallDist;
+        float wallSlope = wallError - lastError;
+        lastError = wallError;
+
+        // --- ANGLE HOLD CORRECTION ---
+        float currentHeading = chassis.getPose().theta;
+        float headingError = targetAngle - currentHeading;
+
+        // Normalize headingError to [-180, 180]
+        while (headingError > 180) headingError -= 360;
+        while (headingError < -180) headingError += 360;
+
+        float angleGain = 0.008; // angle correction strength
+        float angleP = angleGain * headingError;
+        // Correction (strength chosen to work with your lemlib tuning)
+        float wallGain = 0.012;
+        float wallPD = wallGain * wallError + (wallGain * 0.12f) * wallSlope;
+        float steer = wallPD + angleP;
+
+        // Fetch LEMlib motor voltages (normalized -1..1)
+        float leftCmd  = left_dt.get_voltage()  / 12000.0;
+        float rightCmd = right_dt.get_voltage() / 12000.0;
+
+        // Apply correction bias
+        if (useRightSensor) {
+            left_dt.move(127 * (leftCmd + steer));
+            right_dt.move(127 * (rightCmd - steer));
+        } else {
+            left_dt.move(127 * (leftCmd - steer));
+            right_dt.move(127 * (rightCmd + steer));
+        }
+
+        pros::delay(15);
     }
+
+    left_dt.move(0);
+    right_dt.move(0);
 }
 
 void autonSkills() { 
@@ -503,7 +526,7 @@ void Q4() {
 }
 
 void solo_awp(){
-   wingMech.set_value(true);
+    wingMech.set_value(true);
     //turn on intake
     frontIntake.move(127);
     middleRollers.move(127);
@@ -514,11 +537,9 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    //chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
-    moveToPointWallTracking(15, 34.5, 1300, 381.0, 90.0, false, {.maxSpeed=100});
+    chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
-    
     //go to long goal
     chassis.moveToPoint(-20,34,1000,{.forwards=false},false);
     //let balls score
@@ -572,34 +593,6 @@ void solo_awp(){
     //lets blocks score
     scoringBar.set_value(true);
     wingMech.set_value(false);
-    
-    // wingMech.set_value(true);
-    // //turn on intake 
-    // frontIntake.move(127);
-    // middleRollers.move(127);
-    // scoringRoller.move(127);
-    // chassis.moveToPoint(0,32, 1500, {.maxSpeed = 80});
-    // chassis.turnToPoint(12,39,800);
-    // loaderMech.set_value(true);
-    // chassis.moveToPoint(16,39,1000, {.minSpeed = 60});
-    // chassis.moveToPoint(-24,40,1800, {.forwards = false, .maxSpeed = 90});
-    // pros::delay(600);
-    // scoringBar.set_value(true);
-    // pros::delay(1200);
-    // loaderMech.set_value(false);
-    // scoringBar.set_value(false);
-    // chassis.turnToHeading(200, 800);
-    // chassis.moveToPoint(-6, 9, 1000, {.maxSpeed = 60, .minSpeed = 30, .earlyExitRange = 2});
-    // chassis.moveToPoint(-4, -32, 1500, {.maxSpeed = 90});
-    // chassis.turnToPoint(-16, -19.5, 800, {.forwards = false});
-    // chassis.moveToPoint(-16,-19.5, 1000, {.forwards = false, .maxSpeed = 80});
-    // middleRollers.move(-127);
-    // scoringRoller.move(-127);
-    // frontIntake.move(-127);
-    // pros::delay(150);
-    // middleRollers.move(100);   
-    // frontIntake.move(100); 
-    // pros::delay(460);
 
 }
 void two_goal_LEFT() {
