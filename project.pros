@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "comp ready 11/15",
+    "project_name": "COLORSORT",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,9 +323,9 @@
       }
     },
     "upload_options": {
-      "slot": 1,
-      "description": "ready broski",
-      "icon": "X"
+      "slot": 2,
+      "description": "colorsort testing",
+      "icon": "pizza"
     },
     "use_early_access": false
   }

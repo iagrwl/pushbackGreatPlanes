@@ -7,7 +7,6 @@
 #include "pros/motors.hpp"
 
 // general setup
-
 inline bool KeepRed = true;
 inline bool IsColorSortEngaged = false;
 
@@ -78,7 +77,7 @@ inline lemlib::ControllerSettings angular_controller(3.5, // proportional gain (
 inline lemlib::ExpoDriveCurve
     throttle_curve(3,    // joystick deadband out of 127
                    0,   // minimum output where drivetrain will move out of 127
-                   1.017 // expo curve gain
+                   1.02 // expo curve gain
     );
 
 // input curve for steer input during driver control
