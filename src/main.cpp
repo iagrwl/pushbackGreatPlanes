@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -16,6 +16,7 @@ bool defaultDrive = true; //default toggler, true for arcade default and false f
 
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
+int CSSwitchHoldTime = 0;
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
 
@@ -25,10 +26,10 @@ int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
 int BLUE_MAX = 230;
-int BLUE_MIN = 150;
-int RED_MAX = 50;
+int BLUE_MIN = 170;
+int RED_MAX = 20;
 int RED_MIN = 0;
-bool isRed = false;
+bool isRed = true;
 int OPP_MIN;
 int OPP_MAX;
 
@@ -43,7 +44,7 @@ void positionTracker() {
     //XY THETA DISPLAY
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     //BOTTOM DIST SENSOR DISPLAY
-    pros::lcd::print(2, "left: %d", leftDistance.get_distance());
+    //pros::lcd::print(2, "left: %d", leftDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
     pros::lcd::print(3, "applied delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
@@ -59,10 +60,19 @@ Color sorting task - ejects opposite alliance rings
 Runs continuously during autonomous and driver control
 */
 void colorSort() {
+    
     // Set integration time to minimum for fastest response (3ms)
-    topOptical.set_integration_time(15);
+    topOptical.set_integration_time(3);
     
     while (true) {
+        if (isRed){
+        OPP_MIN = BLUE_MIN;
+        OPP_MAX = BLUE_MAX;
+    }
+    else{
+        OPP_MIN = RED_MIN;
+        OPP_MAX = RED_MAX;
+    }
         // Get current color sensor reading (hue value)
         double colorValue = topOptical.get_hue();
         
@@ -71,7 +81,9 @@ void colorSort() {
             // Check if detected color is within opposite alliance range
             if (colorValue >= OPP_MIN && colorValue <= OPP_MAX) {
                 // Opposite alliance color detected - STOP THE ROLLER
-                scoringRoller.move(-100);
+                
+                scoringRoller.move(-50);
+                
             }
         }
         
@@ -106,14 +118,7 @@ Occurs when bot goes into init phase.
 */
 void initialize() {
     // Set opponent color ranges based on alliance
-    if (isRed){
-        OPP_MIN = BLUE_MIN;
-        OPP_MAX = BLUE_MAX;
-    }
-    else{
-        OPP_MIN = RED_MIN;
-        OPP_MAX = RED_MAX;
-    }
+    
     
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
@@ -181,10 +186,10 @@ NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
   // runs selected auton
-  //selector.run_auton();
+  selector.run_auton();
   //autonSkills();
   //one_goal_right();
-  solo_awp();
+  //solo_awp();
  }
 
 
@@ -202,6 +207,17 @@ void opcontrol() {
             }
         } else {
             DHoldTime = 0; // reset if released early
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            CSSwitchHoldTime += 20; // loop delay is 20ms
+            if (CSSwitchHoldTime >= 1000) { // must hold for 2000 ms for statement to pass
+                isRed = !isRed; // toggle mode
+                controller.rumble("-"); // give feedback
+                CSSwitchHoldTime = 0; // reset so it doesn't keep toggling
+            }
+        } else {
+            CSSwitchHoldTime = 0; // reset if released early
         }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {

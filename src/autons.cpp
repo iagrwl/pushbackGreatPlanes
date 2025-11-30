@@ -5,76 +5,58 @@
 #include "setup.hpp"
 #include "op_control.hpp"
 
-
-
 // Compute robot position relative to walls using either left or right distance sensor
 float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
-
-    // Offsets from robot center for each sensor
     float rightOffsetX = 2.5, rightOffsetY = 1.0;
     float leftOffsetX  = 2.0, leftOffsetY  = 0.0;
 
-    // Pick which sensor to use
     float offsetX = useRightSensor ? rightOffsetX : leftOffsetX;
     float offsetY = useRightSensor ? rightOffsetY : leftOffsetY;
 
-    // Read distance from the chosen sensor
     float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get();
     float distanceIn = distancemm / 25.4 + offsetX;
 
     float angDeg = chassis.getPose().theta;
     float angRad = angDeg * M_PI / 180.0;
 
-    // Normalize angle to [0,360)
     float angle = fmod(angDeg, 360.0);
     if (angle < 0) angle += 360.0;
 
-    // Rotate offsets into field coordinates
     float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
     float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
 
     float correctedDist = 0;
     float finalPos = 0;
 
-    // Decide which wall we’re measuring against based on heading
-    // If using the right sensor, swap the wall cases
     if (angle >= 315 || angle < 45) {
         if (useRightSensor) {
-            // Right wall (swapped)
             correctedDist = -distanceIn * cos(angRad) - rotatedX;
             finalPos = 71 - correctedDist;
         } else {
-            // Left wall
             correctedDist = distanceIn * cos(angRad) + rotatedX;
             finalPos = correctedDist - 71;
         }
     } else if (angle >= 45 && angle < 135) {
         if (useRightSensor) {
-            // Front wall (swapped)
             correctedDist = -distanceIn * sin(angRad) - rotatedY;
             finalPos = correctedDist - 71;
         } else {
-            // Back wall
             correctedDist = distanceIn * sin(angRad) + rotatedY;
             finalPos = 71 - correctedDist;
         }
     } else if (angle >= 135 && angle < 225) {
         if (useRightSensor) {
-            // Left wall (swapped)
             correctedDist = distanceIn * cos(angRad) + rotatedX;
             finalPos = -correctedDist -71 ;
         } else {
-            // Right wall
             correctedDist = -distanceIn * cos(angRad) - rotatedX;
             finalPos = 71 - correctedDist;
         }
     } else {
         if (useRightSensor) {
-            // Back wall (swapped)
             correctedDist = distanceIn * sin(angRad) + rotatedY;
             finalPos = 71 + correctedDist;
         } else {
-            // Front wall
             correctedDist = -distanceIn * sin(angRad) - rotatedY;
             finalPos = correctedDist - 71;
         }
@@ -89,61 +71,20 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
 }
 
 
-void moveToPointWallTracking(float x, float y, int timeout, float targetWallDistMM, float targetAngle, bool useRightSensor, lemlib::MoveToPointParams params) {
-    int start = pros::millis();
-
-    // Start async move
-    chassis.moveToPoint(x, y, timeout, params, true);
-
-    float lastError = 0;
-
-    while (pros::millis() - start < timeout) {
-
-        // Exit if reached
-        float dx = x - chassis.getPose().x;
-        float dy = y - chassis.getPose().y;
-        if (fabsf(dx) < 1.5 && fabsf(dy) < 1.5) break;
-
-        float measuredWallDist = useRightSensor ? rightDistance.get() : leftDistance.get();
-
-        float wallError = targetWallDistMM - measuredWallDist;
-        float wallSlope = wallError - lastError;
-        lastError = wallError;
-
-        // --- ANGLE HOLD CORRECTION ---
-        float currentHeading = chassis.getPose().theta;
-        float headingError = targetAngle - currentHeading;
-
-        // Normalize headingError to [-180, 180]
-        while (headingError > 180) headingError -= 360;
-        while (headingError < -180) headingError += 360;
-
-        float angleGain = 0.008; // angle correction strength
-        float angleP = angleGain * headingError;
-        // Correction (strength chosen to work with your lemlib tuning)
-        float wallGain = 0.012;
-        float wallPD = wallGain * wallError + (wallGain * 0.12f) * wallSlope;
-        float steer = wallPD + angleP;
-
-        // Fetch LEMlib motor voltages (normalized -1..1)
-        float leftCmd  = left_dt.get_voltage()  / 12000.0;
-        float rightCmd = right_dt.get_voltage() / 12000.0;
-
-        // Apply correction bias
-        if (useRightSensor) {
-            left_dt.move(127 * (leftCmd + steer));
-            right_dt.move(127 * (rightCmd - steer));
-        } else {
-            left_dt.move(127 * (leftCmd - steer));
-            right_dt.move(127 * (rightCmd + steer));
-        }
-
-        pros::delay(15);
+float fetchWallCoord(bool useRight = true, float targetCoord = 0){
+    float dist;
+    if (useRight){
+        dist = (rightDistance.get() / 25.4) + 12.8;
+    } else {
+        dist = (leftDistance.get() / 25.4) + 12.8;
     }
 
-    left_dt.move(0);
-    right_dt.move(0);
+    float error = targetCoord - dist;
+    float modX = error + targetCoord;
+    pros::lcd::print(2, "error: %.2f", modX);
+    return modX;
 }
+
 
 void autonSkills() { 
     //SETUP
@@ -525,7 +466,10 @@ void Q4() {
     chassis.moveToPose(-15,120,90,2000);
 }
 
+
 void solo_awp(){
+
+    
     wingMech.set_value(true);
     //turn on intake
     frontIntake.move(127);
@@ -537,62 +481,62 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(15,34.5,1150,{.maxSpeed=100},false);
+    chassis.moveToPoint(16,fetchWallCoord(false,35),1150,{.maxSpeed=100},false);
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
     //go to long goal
-    chassis.moveToPoint(-20,34,1000,{.forwards=false},false);
+    chassis.moveToPoint(-20,fetchWallCoord(false,34),1000,{.forwards=false},false);
     //let balls score
     scoringBar.set_value(true);
     //wait for blocks to be scored
-    pros::delay(1100);
+    pros::delay(1100); 
     //retract loader mech
     loaderMech.set_value(false);
-    //swing w 450ms turn
-    left_dt.move(127);
-    right_dt.move(-127);
-    pros::delay(450);
-    left_dt.move(0);
-    right_dt.move(0);
-    //correctional swing turn
-    chassis.turnToHeading(190,400);
-    //retract bar once swung
-    scoringBar.set_value(false);
-    //go to first 3 stack
-    chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
-    //go to second 3 stack
-    chassis.moveToPoint(-9,-35,1900,{.minSpeed=50},false);
-    loaderMech.set_value(true);
-    //turn opposite of mid goal
-    chassis.turnToHeading(133,500);
-    //ram mid goal
-    chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
-    //reverse 150ms then push forward to prevent clogging
-    middleRollers.move(-127);
-    scoringRoller.move(-100);
-    frontIntake.move(-127);
-    loaderMech.set_value(false);
-    pros::delay(200);
-    middleRollers.move(127);
-    frontIntake.move(127);
-    pros::delay(460);
-    //scoring recovery
-    middleRollers.move(-127);
-    pros::delay(110);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    pros::delay(10);
-    //moves parallel to long goal
-    chassis.moveToPoint(17,-59,1300);
-    //correctional parallel with goal
-    chassis.turnToHeading(90,400);
-    //rams goal
-    chassis.moveToPoint(-18,-59,1100,{.forwards=false});
-    //lets pid settle
-    pros::delay(500);
-    //lets blocks score
-    scoringBar.set_value(true);
-    wingMech.set_value(false);
+    // //swing w 450ms turn
+    // left_dt.move(127);
+    // right_dt.move(-127);
+    // pros::delay(450);
+    // left_dt.move(0);
+    // right_dt.move(0);
+    // //correctional swing turn
+    // chassis.turnToHeading(190,400);
+    // //retract bar once swung
+    // scoringBar.set_value(false);
+    // //go to first 3 stack
+    // chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
+    // //go to second 3 stack
+    // chassis.moveToPoint(-9,-35,1900,{.minSpeed=50},false);
+    // loaderMech.set_value(true);
+    // //turn opposite of mid goal
+    // chassis.turnToHeading(133,500);
+    // //ram mid goal
+    // chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
+    // //reverse 150ms then push forward to prevent clogging
+    // middleRollers.move(-127);
+    // scoringRoller.move(-100);
+    // frontIntake.move(-127);
+    // loaderMech.set_value(false);
+    // pros::delay(200);
+    // middleRollers.move(127);
+    // frontIntake.move(127);
+    // pros::delay(460);
+    // //scoring recovery
+    // middleRollers.move(-127);
+    // pros::delay(110);
+    // middleRollers.move(127);
+    // scoringRoller.move(127);
+    // pros::delay(10);
+    // //moves parallel to long goal
+    // chassis.moveToPoint(17,-59,1300);
+    // //correctional parallel with goal
+    // chassis.turnToHeading(90,400);
+    // //rams goal
+    // chassis.moveToPoint(-18,-59,1100,{.forwards=false});
+    // //lets pid settle
+    // pros::delay(500);
+    // //lets blocks score
+    // scoringBar.set_value(true);
+    // wingMech.set_value(false);
 
 }
 void two_goal_LEFT() {
