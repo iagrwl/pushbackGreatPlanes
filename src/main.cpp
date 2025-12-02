@@ -185,6 +185,13 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
+  int hue = topOptical.get_hue();
+  if (hue >= BLUE_MIN && hue <= BLUE_MAX){
+    isRed = false;
+  }
+  else if (hue >= RED_MIN && hue <= RED_MAX){
+    isRed = true;
+  }
   // runs selected auton
   selector.run_auton();
   //autonSkills();
