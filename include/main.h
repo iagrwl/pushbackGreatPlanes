@@ -67,7 +67,7 @@ void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
 inline bool isRed;
-inline bool colorsortOn = false;
+inline bool colorsortOn = true;
 #ifdef __cplusplus
 }
 #endif
