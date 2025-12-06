@@ -95,10 +95,10 @@ void wallTrackMove(int desiredDist=0, float desiredX=0, float desiredY=0, int ti
         float error;
         float modVal;
         if(useRight){
-            distance = (rightDistance.get()/25.4)
+            distance = (rightDistance.get()/25.4);
         }
         else{
-            distance = (leftDistance.get()/25.4)
+            distance = (leftDistance.get()/25.4);
         }
 
         if(distance<desiredDist){
@@ -511,7 +511,6 @@ void Q4() {
 
 
 void solo_awp(){
-
     
     wingMech.set_value(true);
     //turn on intake
@@ -524,12 +523,12 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(16,fetchWallCoord(false,35),1150,{.maxSpeed=100},false);
+    chassis.moveToPoint(18,35,1050,{.maxSpeed=110},false);
 
     //fix lat alignment
     chassis.turnToHeading(90,400,{.maxSpeed=80});
     //go to long goal
-    chassis.moveToPoint(-20,fetchWallCoord(false,34),1000,{.forwards=false},false);
+    chassis.moveToPoint(-20,36,1000,{.forwards=false},false);
     //let balls score
     scoringBar.set_value(true);
     //wait for blocks to be scored
@@ -549,15 +548,16 @@ void solo_awp(){
     //go to first 3 stack
     chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
     //go to second 3 stack
-    chassis.moveToPoint(-9,-35,1900,{.minSpeed=50},false);
-    loaderMech.set_value(true);
+    chassis.moveToPoint(-8.5,-36,1900,{.minSpeed=35});
+    scoringRoller.brake();
+    colorsortOn = false;
     //turn opposite of mid goal
     chassis.turnToHeading(133,500);
     //ram mid goal
-    chassis.moveToPoint(-24,-21.5,1100,{.forwards=false},false);
+    chassis.moveToPoint(-24,-21.5,1000,{.forwards=false},false);
     //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
-    scoringRoller.move(-100);
+    scoringRoller.move(-90);
     frontIntake.move(-127);
     loaderMech.set_value(false);
     pros::delay(200);
@@ -570,12 +570,13 @@ void solo_awp(){
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(10);
+    colorsortOn=true;
     //moves parallel to long goal
     chassis.moveToPoint(17,-59,1300);
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-59,1100,{.forwards=false});
+    chassis.moveToPoint(-18,-60,1100,{.forwards=false});
     //lets pid settle
     pros::delay(500);
     //lets blocks score

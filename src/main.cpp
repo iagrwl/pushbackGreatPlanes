@@ -25,11 +25,12 @@ int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
+
 int BLUE_MAX = 230;
 int BLUE_MIN = 170;
 int RED_MAX = 20;
 int RED_MIN = 0;
-bool isRed = true;
+
 int OPP_MIN;
 int OPP_MAX;
 
@@ -65,14 +66,16 @@ void colorSort() {
     topOptical.set_integration_time(3);
     
     while (true) {
-        if (isRed){
+        
+            if (isRed){
         OPP_MIN = BLUE_MIN;
         OPP_MAX = BLUE_MAX;
-    }
-    else{
-        OPP_MIN = RED_MIN;
-        OPP_MAX = RED_MAX;
-    }
+        }
+        else{
+            OPP_MIN = RED_MIN;
+            OPP_MAX = RED_MAX;
+        }
+        if (colorsortOn == true){
         // Get current color sensor reading (hue value)
         double colorValue = topOptical.get_hue();
         
@@ -86,9 +89,12 @@ void colorSort() {
                 
             }
         }
-        
+        }
+        else{
+            pros::delay(5);
+        }
         // Minimal delay for fastest detection
-        pros::delay(5);
+        pros::delay(2);
     }
 }
 

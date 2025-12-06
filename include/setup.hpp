@@ -6,9 +6,6 @@
 #include "pros/distance.hpp"
 #include "pros/motors.hpp"
 
-// general setup
-inline bool KeepRed = true;
-inline bool IsColorSortEngaged = false;
 
 // controller
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
