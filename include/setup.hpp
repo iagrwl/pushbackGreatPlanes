@@ -11,8 +11,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
-inline pros::MotorGroup left_dt({-7, -6, 5}, pros::MotorGearset::blue);    // left side
-inline pros::MotorGroup right_dt({14, 15, -16}, pros::MotorGearset::blue);  // right side
+inline pros::MotorGroup right_dt({7, -6, 5}, pros::MotorGearset::blue);    // right side
+inline pros::MotorGroup left_dt({-14, 15, -16}, pros::MotorGearset::blue);  // left side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -28,14 +28,15 @@ inline pros::Imu imu(20);
 // declare sensors needed for odom setup
 /*inline pros::Rotation horizontalEnc(17);
 inline pros::Rotation verticalEnc(18);
+*/
 
-
-// configure tracking wheels
-inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
-inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -0.475);*/
+inline pros::Rotation verticalEnc(10);
+//configure tracking wheels
+//inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
+inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, -0.125);
 
 // configure entire odom setup
-inline lemlib::OdomSensors sensors(nullptr,
+inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
 							nullptr,
 							nullptr,
 							nullptr,
