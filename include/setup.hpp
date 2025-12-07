@@ -6,10 +6,6 @@
 #include "pros/distance.hpp"
 #include "pros/motors.hpp"
 
-// general setup
-
-inline bool KeepRed = true;
-inline bool IsColorSortEngaged = false;
 
 // controller
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
@@ -78,7 +74,7 @@ inline lemlib::ControllerSettings angular_controller(3.5, // proportional gain (
 inline lemlib::ExpoDriveCurve
     throttle_curve(3,    // joystick deadband out of 127
                    0,   // minimum output where drivetrain will move out of 127
-                   1.017 // expo curve gain
+                   1.02 // expo curve gain
     );
 
 // input curve for steer input during driver control
@@ -114,5 +110,5 @@ inline pros::adi::DigitalOut parkMech('D');
 // clog sensors
 inline pros::Optical topOptical(18);
 inline pros::Distance bottomDistance(8);
-inline pros::Distance sideDistance(17);
-inline pros::Distance side2Distance(9);
+inline pros::Distance leftDistance(17);
+inline pros::Distance rightDistance(9);

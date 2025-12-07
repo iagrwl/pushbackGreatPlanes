@@ -16,6 +16,7 @@ bool defaultDrive = true; //default toggler, true for arcade default and false f
 
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
+int CSSwitchHoldTime = 0;
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
 
@@ -24,12 +25,12 @@ int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
-float currentColor;
+
 int BLUE_MAX = 230;
-int BLUE_MIN = 150;
-int RED_MAX = 50;
+int BLUE_MIN = 170;
+int RED_MAX = 20;
 int RED_MIN = 0;
-bool isRed = true;
+
 int OPP_MIN;
 int OPP_MAX;
 
@@ -46,28 +47,64 @@ void positionTracker() {
     //BOTTOM DIST SENSOR DISPLAY
     //pros::lcd::print(2, "left: %d", leftDistance.get_distance());
     //TOP COLOR SENSOR DISPLAY
-    pros::lcd::print(3, "calced delay %.2f", DPdelay);
+    pros::lcd::print(3, "applied delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    pros::lcd::print(45, "color val: %d", topOptical.get_hue());
+    pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
+    pros::lcd::print(6, "alliance: %d", isRed);
+    pros::lcd::print(7, "right: %d", rightDistance.get_distance());
     pros::delay(10); // delay to avoid overloading the system
     }
 }
+
+/*
+Color sorting task - ejects opposite alliance rings
+Runs continuously during autonomous and driver control
+*/
+void colorSort() {
+    
+    // Set integration time to minimum for fastest response (3ms)
+    topOptical.set_integration_time(3);
+    
+    while (true) {
+        
+            if (isRed){
+        OPP_MIN = BLUE_MIN;
+        OPP_MAX = BLUE_MAX;
+        }
+        else{
+            OPP_MIN = RED_MIN;
+            OPP_MAX = RED_MAX;
+        }
+        if (colorsortOn == true){
+        // Get current color sensor reading (hue value)
+        double colorValue = topOptical.get_hue();
+        
+        // Check if the reading is valid (not an error)
+        if (colorValue >= 0 && colorValue <= 360) {
+            // Check if detected color is within opposite alliance range
+            if (colorValue >= OPP_MIN && colorValue <= OPP_MAX) {
+                // Opposite alliance color detected - STOP THE ROLLER
+                
+                scoringRoller.move(-50);
+                
+            }
+        }
+        }
+        else{
+            pros::delay(5);
+        }
+        // Minimal delay for fastest detection
+        pros::delay(2);
+    }
+}
+
 /*
 Define tasks to be run in parallel here
 Use the below format.
 */
 
 
-// void colorSort(void*){
-//     while (true) {
-//         currentColor=topOptical.get_hue();
-//         if (currentColor > OPP_MIN && currentColor < OPP_MAX){
-//             scoringRoller.move(-127);
-//             pros::delay(50);
-//             scoringRoller.move(127);
-//         }
-//     }
-// }
+
 //2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
@@ -86,30 +123,31 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-    if (isRed){
-        OPP_MIN = BLUE_MIN;
-        OPP_MAX = BLUE_MAX;
-    }
-    else{
-        OPP_MIN = RED_MIN;
-        OPP_MAX = RED_MAX;
-    }
+    // Set opponent color ranges based on alliance
+    
+    
     if (tuneMode == true){
         pros::lcd::initialize(); // comment both lines for selector
         pros::Task pos(&positionTracker);
     }
-
+    
+    // Initialize optical sensor
     topOptical.set_led_pwm(100);
-    controller.set_text(0, 0, "imu ready");
+    topOptical.disable_gesture();
+    
+    // START COLOR SORT TASK - runs during both auton and driver control
+    pros::Task colorSortTask(colorSort);
+    
+    controller.set_text(0, 0, ("goodluck!"));
+
     //task caller
-
     pros::Task telemetryTask(telemetry);
-
+    
 
 
     //calibrates drivetrain
     chassis.calibrate();
-
+    
     //SETS DRIVETRAIN IDLE MODE
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -126,6 +164,7 @@ void initialize() {
 
         }
     });
+    
 }
 
 /*
@@ -149,15 +188,21 @@ void competition_initialize() {
 /*
 Occurs when the 15s auton period is happening
 1. Runs the auton selected by the selector.
+NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
+  int hue = topOptical.get_hue();
+  if (hue >= BLUE_MIN && hue <= BLUE_MAX){
+    isRed = false;
+  }
+  else if (hue >= RED_MIN && hue <= RED_MAX){
+    isRed = true;
+  }
   // runs selected auton
   selector.run_auton();
-  //pros::Task colorSortTask(colorSort);
   //autonSkills();
   //one_goal_right();
-  //colorSortTask.suspend();
-
+  //solo_awp();
  }
 
 
@@ -171,10 +216,21 @@ void opcontrol() {
             if (DHoldTime >= 2000) { // must hold for 2000 ms for statement to pass
                 defaultDrive = !defaultDrive; // toggle mode
                 controller.rumble(".."); // give feedback
-                DHoldTime = 0; // reset so it doesn’t keep toggling
+                DHoldTime = 0; // reset so it doesn't keep toggling
             }
         } else {
             DHoldTime = 0; // reset if released early
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            CSSwitchHoldTime += 20; // loop delay is 20ms
+            if (CSSwitchHoldTime >= 1000) { // must hold for 2000 ms for statement to pass
+                isRed = !isRed; // toggle mode
+                controller.rumble("-"); // give feedback
+                CSSwitchHoldTime = 0; // reset so it doesn't keep toggling
+            }
+        } else {
+            CSSwitchHoldTime = 0; // reset if released early
         }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
@@ -182,7 +238,7 @@ void opcontrol() {
             if (POHoldTime >= 300) { // must hold for 2000 ms for statement to pass
                 isParkDown = !isParkDown; // toggle mode
                 controller.rumble("--"); // give feedback
-                POHoldTime = 0; // reset so it doesn’t keep toggling
+                POHoldTime = 0; // reset so it doesn't keep toggling
                 parkMech.set_value(isParkDown);
             }
         } else {
@@ -227,7 +283,7 @@ void opcontrol() {
 
                         }
 
-                        ParkHoldTime = 0; // reset so it doesn’t keep toggling
+                        ParkHoldTime = 0; // reset so it doesn't keep toggling
                     }
 
                 }
