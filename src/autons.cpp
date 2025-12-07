@@ -523,12 +523,12 @@ void solo_awp(){
     //drop loader mech
     loaderMech.set_value(true);
     //ram loader
-    chassis.moveToPoint(18,35,1050,{.maxSpeed=110},false);
+    chassis.moveToPoint(18,35,1050,{.maxSpeed=100},false);
 
     //fix lat alignment
-    chassis.turnToHeading(90,400,{.maxSpeed=80});
+    chassis.turnToHeading(90,200,{.maxSpeed=80});
     //go to long goal
-    chassis.moveToPoint(-20,36,1000,{.forwards=false},false);
+    chassis.moveToPoint(-20,35,1000,{.forwards=false,.minSpeed=40},false);
     //let balls score
     scoringBar.set_value(true);
     //wait for blocks to be scored
@@ -542,11 +542,13 @@ void solo_awp(){
     left_dt.move(0);
     right_dt.move(0);
     //correctional swing turn
-    chassis.turnToHeading(190,400);
+    chassis.turnToHeading(187,400);
+    // chassis.moveToPoint(-7,35,1000);
+    // chassis.turnToPoint(-15,5,400);
     //retract bar once swung
     scoringBar.set_value(false);
     //go to first 3 stack
-    chassis.moveToPoint(-11,1,1200,{.maxSpeed=80});
+    chassis.moveToPoint(-10.5,0,1200,{.maxSpeed=80});
     //go to second 3 stack
     chassis.moveToPoint(-8.5,-36,1900,{.minSpeed=35});
     scoringRoller.brake();
@@ -554,7 +556,7 @@ void solo_awp(){
     //turn opposite of mid goal
     chassis.turnToHeading(133,500);
     //ram mid goal
-    chassis.moveToPoint(-24,-21.5,1000,{.forwards=false},false);
+    chassis.moveToPoint(-23.8,-21.5,1000,{.forwards=false},false);
     //reverse 150ms then push forward to prevent clogging
     middleRollers.move(-127);
     scoringRoller.move(-90);
@@ -572,11 +574,11 @@ void solo_awp(){
     pros::delay(10);
     colorsortOn=true;
     //moves parallel to long goal
-    chassis.moveToPoint(17,-59,1300);
+    chassis.moveToPoint(17,-61,1300);
     //correctional parallel with goal
     chassis.turnToHeading(90,400);
     //rams goal
-    chassis.moveToPoint(-18,-60,1100,{.forwards=false});
+    chassis.moveToPoint(-18,-64,1100,{.forwards=false,.minSpeed=40});
     //lets pid settle
     pros::delay(500);
     //lets blocks score
@@ -641,6 +643,7 @@ void two_goal_LEFT() {
 }
 
 void one_goal_left() {
+    colorsortOn= false;
     // start intake
     frontIntake.move(127);
     colorSortRoller.move(127);
@@ -676,7 +679,7 @@ void one_goal_left() {
     scoringBar.set_value(true);
     pros::delay(1300);
     // get blocks from loader
-    chassis.moveToPoint(-31.51, -16.91, 2000, {.maxSpeed = 80});
+    chassis.moveToPoint(-31.51, -16.91, 2000, {.maxSpeed = 60});
     pros::delay(200);
     scoringBar.set_value(false);
     //chassis.moveToPoint(-31.51, -16.41, 2000, {}, false);
@@ -685,10 +688,11 @@ void one_goal_left() {
     pros::delay(1000);
     // score last set of blocks
     scoringBar.set_value(true);
-    chassis.moveToPoint(-31.51, -60, 5000, {.forwards = false});
+    //chassis.moveToPoint(-31.51, -60, 5000, {.forwards = false});
     //chassis.moveToPoint(-31.51, 13.44, 1000, {});
     //scoringBar.set_value(false);
     //chassis.moveToPoint(-31.51, 30.44, 2000, {.forwards = false});
+    colorsortOn=true;
 }
 
 // void one_goal_right() {
@@ -775,12 +779,14 @@ void one_goal_right() {
     //pros::delay(100);
     chassis.moveToPoint(35.51, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
+    colorsortOn = false;
     scoringBar.set_value(true);
     chassis.moveToPoint(34.51, 30.44, 2000, {.forwards = false});
     pros::delay(1200);
     scoringBar.set_value(false);
     scoringRoller.move(0);
     middleRollers.move(0);
+    colorsortOn=true;
     frontIntake.move(0);
     
 }

@@ -138,7 +138,7 @@ void initialize() {
     // START COLOR SORT TASK - runs during both auton and driver control
     pros::Task colorSortTask(colorSort);
     
-    controller.set_text(0, 0, ("red?"+isRed));
+    controller.set_text(0, 0, ("goodluck!"));
 
     //task caller
     pros::Task telemetryTask(telemetry);
