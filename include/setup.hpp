@@ -12,7 +12,7 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
 inline pros::MotorGroup right_dt({7, -6, 5}, pros::MotorGearset::blue);    // right side
-inline pros::MotorGroup left_dt({-14, 15, -16}, pros::MotorGearset::blue);  // left side
+inline pros::MotorGroup left_dt({9,-8,7}, pros::MotorGearset::blue);  // left side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
