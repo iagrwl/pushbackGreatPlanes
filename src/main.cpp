@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -51,7 +51,7 @@ void positionTracker() {
     pros::lcd::print(4, "est. psi: %d", PSI);
     pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
     pros::lcd::print(6, "alliance: %d", isRed);
-    pros::lcd::print(7, "right: %d", rightDistance.get_distance());
+    pros::lcd::print(7, "NEW BOT CODE");
     pros::delay(10); // delay to avoid overloading the system
     }
 }
