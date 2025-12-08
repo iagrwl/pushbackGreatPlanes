@@ -11,8 +11,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
-inline pros::MotorGroup right_dt({7, -6, 5}, pros::MotorGearset::blue);    // right side
-inline pros::MotorGroup left_dt({9,-8,7}, pros::MotorGearset::blue);  // left side
+inline pros::MotorGroup right_dt({7,-8 , 9}, pros::MotorGearset::blue);    // right side
+inline pros::MotorGroup left_dt({-14,-16,15}, pros::MotorGearset::blue);  // left side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -24,13 +24,13 @@ inline lemlib::Drivetrain drivetrain(&left_dt,
 							  2
 );
 
-inline pros::Imu imu(20);
+inline pros::Imu imu(1);
 // declare sensors needed for odom setup
 /*inline pros::Rotation horizontalEnc(17);
 inline pros::Rotation verticalEnc(18);
 */
 
-inline pros::Rotation verticalEnc(10);
+inline pros::Rotation verticalEnc(6);
 //configure tracking wheels
 //inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
 inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, -0.125);
@@ -56,14 +56,14 @@ inline lemlib::ControllerSettings lateral_controller(5.25, //proportional gain (
 );
 
 // angular pid
-inline lemlib::ControllerSettings angular_controller(3.5, // proportional gain (kP) was 3.25 (reverted to 3.5)
-                                              0.4, // integral gain (kI)
-                                              24, // derivative gain (kD) was 22 
-                                              3.5, // anti windup
-                                              0.5, // small error range, in degrees
-                                                50, // small error range timeout, in milliseconds
-                                              1.5, // large error range, in degrees
-                                              200, // large error range timeout, in milliseconds
+inline lemlib::ControllerSettings angular_controller(5, // proportional gain (kP)
+                                              0, // integral gain (kI)
+                                              43.5, // derivative gain (kD)
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -97,10 +97,10 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // declare additional motors, sensors, and pnuematics here
 
 //intake groups
-inline pros::Motor frontIntake(2, pros::MotorGearset::blue);
+inline pros::Motor frontIntake(5, pros::MotorGearset::blue);
 inline pros::Motor middleRollers(-10);
 inline pros::Motor colorSortRoller(4);
-inline pros::Motor scoringRoller(-19);
+inline pros::Motor scoringRoller(-11);
 
 //extensions
 inline pros::adi::DigitalOut scoringBar('A');

@@ -202,29 +202,30 @@ void autonomous() {
   }
   
   if (tuneMode){
-    if (testRoute == "S"){
-        autonSkills();
-    }
-    else if (testRoute == "1GR")
-    {
-        one_goal_right();
-    }
-    else if (testRoute == "1GL")
-    {
-        one_goal_left();
-    }
-    else if (testRoute == "AWP")
-    {
-        solo_awp();
-    }
-    else if (testRoute == "2GL")
-    {
-        two_goal_LEFT();
-    }
-    else if (testRoute == "2GR")
-    {
-        two_goal_RIGHT();
-    }
+    // if (testRoute == "S"){
+    //     autonSkills();
+    // }
+    // else if (testRoute == "1GR")
+    // {
+    //     one_goal_right();
+    // }
+    // else if (testRoute == "1GL")
+    // {
+    //     one_goal_left();
+    // }
+    // else if (testRoute == "AWP")
+    // {
+    //     solo_awp();
+    // }
+    // else if (testRoute == "2GL")
+    // {
+    //     two_goal_LEFT();
+    // }
+    // else if (testRoute == "2GR")
+    // {
+    //     two_goal_RIGHT();
+    // }
+    turnTesting(true);
   }
   else{
   // runs auton from selected

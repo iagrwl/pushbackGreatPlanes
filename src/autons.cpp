@@ -642,6 +642,10 @@ void two_goal_LEFT() {
     */
 }
 
+void two_goal_RIGHT(){
+
+};
+
 void one_goal_left() {
     colorsortOn= false;
     // start intake
@@ -794,7 +798,8 @@ void one_goal_right() {
 void turnTesting(bool isCW) {
 
     const int SIZE = 8;
-    int turns[SIZE] = {15, 30, 45, 60, 90, 120, 150, 180};
+    //int turns[SIZE] = {15, 30, 45, 60, 90, 120, 150, 180};
+    int turns[SIZE] = { 30,  60, 90, 120, 180};
     int actualTurn[SIZE] = {};
     int currTurn;
 
