@@ -44,9 +44,9 @@ inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
 );
 
 // lateral pid
-inline lemlib::ControllerSettings lateral_controller(5.25, //proportional gain (kP) //5.5
-                                            0.55, // integral gain (kI) //0.5
-                                        21, // derivative gain (kD) //18
+inline lemlib::ControllerSettings lateral_controller(6.25, //proportional gain (kP) //5.5
+                                            0, // integral gain (kI) //0.5
+                                        25, // derivative gain (kD) //18
                                          1,//windup
                                            0.5, // small error range, in inches
                                           100, // small error range timeout, in milliseconds
@@ -59,11 +59,11 @@ inline lemlib::ControllerSettings lateral_controller(5.25, //proportional gain (
 inline lemlib::ControllerSettings angular_controller(5, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               43.5, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
+                                              3.5, // anti windup
+                                              0.5, // small error range, in degrees
+                                                50, // small error range timeout, in milliseconds
+                                              1.5, // large error range, in degrees
+                                              200, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -112,4 +112,4 @@ inline pros::adi::DigitalOut parkMech('D');
 inline pros::Optical topOptical(18);
 inline pros::Distance bottomDistance(8);
 inline pros::Distance leftDistance(17);
-inline pros::Distance rightDistance(9);
+inline pros::Distance rightDistance(13);

@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
@@ -225,7 +225,8 @@ void autonomous() {
     // {
     //     two_goal_RIGHT();
     // }
-    turnTesting(true);
+    //driveTesting(true);
+    chassis.moveToPoint(0, 100,4000, {}, false);
   }
   else{
   // runs auton from selected

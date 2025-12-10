@@ -753,46 +753,36 @@ void one_goal_right() {
     frontIntake.move(127);
     colorSortRoller.move(127);
     middleRollers.move(127);
-    scoringRoller.move(127);
+    scoringRoller.move(20);
     wingMech.set_value(true);
     chassis.moveToPoint(0,4,500);
     chassis.turnToHeading(17.5,1000);
     chassis.moveToPoint(8, 26, 3000, {.maxSpeed = 80, .minSpeed = 40});
     pros::delay(600);
-    loaderMech.set_value(true);
-    chassis.turnToPoint(25.32, 39.94, 800);
-    chassis.moveToPoint(26.32, 39.94, 1200);
-    pros::delay(50);
-    loaderMech.set_value(false);
     //chassis.turnToHeading(72, 800, {});
     pros::delay(700);
     loaderMech.set_value(true);
-    chassis.moveToPoint(14.27, 27.05, 1500, {.forwards = false/*.minSpeed = 30, .earlyExitRange = 10*/});
-    chassis.turnToPoint(33.21, 3, 800);
-    chassis.moveToPoint(33.21, 3, 1500);
-    chassis.turnToPoint(34.51, 26.44, 800, {.forwards = false});
-    chassis.moveToPoint(34.51, 26.44, 1500, {.forwards = false});
-    //chassis.turnToHeading(180, 800);
-    pros::delay(700);
-    scoringBar.set_value(true);
-    pros::delay(1300);
-    chassis.moveToPoint(34.51, -12.41, 2000, {.maxSpeed = 100});
+    chassis.turnToPoint(31, 3, 800);
+    chassis.moveToPoint(31, 3, 1500);
+    chassis.moveToPoint(31, -12.41, 2000, {.maxSpeed = 100});
     pros::delay(200);
     scoringBar.set_value(false);
     //chassis.moveToPoint(34.51, -10.41, 2000, {.forwards = false}, false);
     //pros::delay(100);
-    chassis.moveToPoint(35.51, 26.44, 1500, {.forwards = false});
+    chassis.moveToPoint(31, 26.44, 1500, {.forwards = false});
     pros::delay(1000);
     colorsortOn = false;
+    scoringRoller.move(127);
     scoringBar.set_value(true);
-    chassis.moveToPoint(34.51, 30.44, 2000, {.forwards = false});
+    chassis.moveToPoint(31, 30.44, 2000, {.forwards = false});
     pros::delay(1200);
     scoringBar.set_value(false);
     scoringRoller.move(0);
     middleRollers.move(0);
     colorsortOn=true;
     frontIntake.move(0);
-    
+    chassis.moveToPoint(31, -2, 1000, {});
+    chassis.moveToPose(42, 40, 180, 2500, {.forwards=false});
 }
 
 void turnTesting(bool isCW) {

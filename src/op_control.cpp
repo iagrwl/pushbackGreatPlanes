@@ -91,7 +91,7 @@ void handleIOCommands() {
       if (isIntakeOn) {
         frontIntake.move(127);
         middleRollers.move(127);
-        scoringRoller.move(127);
+        scoringRoller.move(20);
       } else {
         frontIntake.move(0);
         middleRollers.move(0);
