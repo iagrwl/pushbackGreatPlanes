@@ -8,7 +8,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "2GL"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -201,31 +201,31 @@ void autonomous() {
   }
   
   if (tuneMode){
-    // if (testRoute == "S"){
-    //     autonSkills();
-    // }
-    // else if (testRoute == "1GR")
-    // {
-    //     one_goal_right();
-    // }
-    // else if (testRoute == "1GL")
-    // {
-    //     one_goal_left();
-    // }
-    // else if (testRoute == "AWP")
-    // {
-    //     solo_awp();
-    // }
-    // else if (testRoute == "2GL")
-    // {
-    //     two_goal_LEFT();
-    // }
-    // else if (testRoute == "2GR")
-    // {
-    //     two_goal_RIGHT();
-    // }
+    if (testRoute == "S"){
+        autonSkills();
+    }
+    else if (testRoute == "1GR")
+    {
+        one_goal_right();
+    }
+    else if (testRoute == "1GL")
+    {
+        one_goal_left();
+    }
+    else if (testRoute == "AWP")
+    {
+        solo_awp();
+    }
+    else if (testRoute == "2GL")
+    {
+        two_goal_LEFT();
+    }
+    else if (testRoute == "2GR")
+    {
+        two_goal_RIGHT();
+    }
     //driveTesting(true);
-    solo_awp();
+    //solo_awp();
   }
   else{
   // runs auton from selected

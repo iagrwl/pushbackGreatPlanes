@@ -484,33 +484,59 @@ void solo_awp(){
     */
 }
 void two_goal_LEFT() {
+    // start intake
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+
+    // sets pose for the remainder of autonomous
     chassis.setPose(-16, -48, 0);
+
+    // moves forward from park zone
     chassis.moveToPoint(-16,-44,1000);
+
+    // turns + move cluster
     chassis.turnToHeading(-18,400);
     chassis.moveToPoint(-25,-23,1200);
     pros::delay(200);
+
+    // turns + move 2 ball
     chassis.turnToPoint(-48,0,300);
     chassis.moveToPoint(-48,-2,1200);
     pros::delay(500);
+
+    // puts loader down
     loaderMech.set_value(true);
+
+    // moves back parallel to goal start
     chassis.moveToPoint(-32,-24,1000,{.forwards=false,.earlyExitRange=5});
+
+    // turns opposite from alliance wall
     chassis.turnToHeading(180,500);
+
+    // moves towards alliance wall 
     chassis.moveToPoint(-48,-52,1300,{.earlyExitRange=5});
+
+    // rams back into goal
     chassis.moveToPoint(-48,-20,1000);
+
+    // scores all blocks
     scoringBar.set_value(true);
     pros::delay(1000);
-    
+
+    // moves into loader
     chassis.moveToPoint(-48,-73,1800);
-    chassis.moveToPoint(-48,-50,1200,{.earlyExitRange=5});
+
+    // pulls out of goal
+    chassis.moveToPoint(-48,-50,1200,{.earlyExitRange=2});
+
+    // reverse turns to mid goal
     chassis.turnToPoint(-24,-24,{.forwards=false});
+
+    // backs up into mid goal
     chassis.moveToPoint(0,0,{.forwards=false});
 
-
-    
-
+    // OLD TWO GOAL
     // chassis.setPose(-16, -48, 0);   
 
     // frontIntake.move(127);
