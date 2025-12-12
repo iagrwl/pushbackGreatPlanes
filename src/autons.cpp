@@ -484,88 +484,117 @@ void solo_awp(){
     */
 }
 void two_goal_LEFT() {
-    chassis.setPose(-16, -48, 0);   
-
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
-    scoringRoller.move(20);
-    wingMech.set_value(true);
-
-    chassis.moveToPoint(-16, -44, 500);
-
-    chassis.turnToPoint(-24, -24, 500, {});
-    chassis.moveToPoint(-24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
-
-    pros::delay(400);
-    loaderMech.set_value(true);
-
-    chassis.turnToPoint(-48, -45, 800);
-    chassis.moveToPose(-48, -64, 180, 3000, {.lead = 0.35});
-
-    pros::delay(200);
-
-    scoringBar.set_value(false);
-    chassis.moveToPoint(-48, -20, 1500, {.forwards = false});
-    pros::delay(1000);
-
-    colorsortOn = false;
     scoringRoller.move(127);
-    scoringBar.set_value(true);
-
-    chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
-    pros::delay(1200);
-
-    scoringBar.set_value(false);
-    scoringRoller.move(0);
-    middleRollers.move(0);
-    colorsortOn = true;
-    frontIntake.move(0);
-
-    chassis.moveToPoint(-48, -50, 1000);
-    chassis.moveToPose(-38, -8, 180, 2500, {.forwards = false});
-
-    chassis.setPose(16, -48, 0);
-    frontIntake.move(127);
-    colorSortRoller.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(20);
-    wingMech.set_value(true);
-
-    chassis.moveToPoint(16, -44, 500);
-    chassis.turnToPoint(24, -24, 500, {});
-    chassis.moveToPoint(24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
-    pros::delay(400);
+    chassis.setPose(-16, -48, 0);
+    chassis.moveToPoint(-16,-44,1000);
+    chassis.turnToHeading(-18,400);
+    chassis.moveToPoint(-25,-23,1200);
+    pros::delay(200);
+    chassis.turnToPoint(-48,0,300);
+    chassis.moveToPoint(-48,-2,1200);
+    pros::delay(500);
     loaderMech.set_value(true);
-    chassis.turnToPoint(0, 0, 800,{.forwards=false});
-    chassis.moveToPoint(0, 0, 2000,{.forwards=false,.maxSpeed=60});
+    chassis.moveToPoint(-32,-24,1000,{.forwards=false,.earlyExitRange=5});
+    chassis.turnToHeading(180,500);
+    chassis.moveToPoint(-48,-52,1300,{.earlyExitRange=5});
+    chassis.moveToPoint(-48,-20,1000);
+    scoringBar.set_value(true);
+    pros::delay(1000);
     
-    chassis.moveToPose(48, -64, 180, 4000, {.lead=0.3});
+    chassis.moveToPoint(-48,-73,1800);
+    chassis.moveToPoint(-48,-50,1200,{.earlyExitRange=5});
+    chassis.turnToPoint(-24,-24,{.forwards=false});
+    chassis.moveToPoint(0,0,{.forwards=false});
 
-    pros::delay(200);
 
-    scoringBar.set_value(false);
-    chassis.moveToPoint(48, -20, 1500, {.forwards = false});
-    pros::delay(1000);
+    
 
-    colorsortOn = false;
-    scoringRoller.move(127);
-    scoringBar.set_value(true);
+    // chassis.setPose(-16, -48, 0);   
 
-    chassis.moveToPoint(48, -20, 2000, {.forwards = false});
-    pros::delay(1200);
+    // frontIntake.move(127);
+    // colorSortRoller.move(127);
+    // middleRollers.move(127);
+    // scoringRoller.move(20);
+    // wingMech.set_value(true);
 
-    scoringBar.set_value(false);
-    scoringRoller.move(0);
-    middleRollers.move(0);
-    colorsortOn = true;
-    frontIntake.move(0);
+    // chassis.moveToPoint(-16, -44, 500);
 
-    chassis.moveToPoint(48, -50, 1000);
-    chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
+    // chassis.turnToPoint(-24, -24, 500, {});
+    // chassis.moveToPoint(-24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
+
+    // pros::delay(400);
+    // loaderMech.set_value(true);
+
+    // chassis.turnToPoint(-48, -45, 800);
+    // chassis.moveToPose(-48, -64, 180, 3000, {.lead = 0.35});
+
+    // pros::delay(200);
+
+    // scoringBar.set_value(false);
+    // chassis.moveToPoint(-48, -20, 1500, {.forwards = false});
+    // pros::delay(1000);
+
+    // colorsortOn = false;
+    // scoringRoller.move(127);
+    // scoringBar.set_value(true);
+
+    // chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
+    // pros::delay(1200);
+
+    // scoringBar.set_value(false);
+    // scoringRoller.move(0);
+    // middleRollers.move(0);
+    // colorsortOn = true;
+    // frontIntake.move(0);
+
+    // chassis.moveToPoint(-48, -50, 1000);
+    // chassis.moveToPose(-38, -8, 180, 2500, {.forwards = false});
+
+    // chassis.setPose(16, -48, 0);
+    // frontIntake.move(127);
+    // colorSortRoller.move(127);
+    // middleRollers.move(127);
+    // scoringRoller.move(20);
+    // wingMech.set_value(true);
+
+    // chassis.moveToPoint(16, -44, 500);
+    // chassis.turnToPoint(24, -24, 500, {});
+    // chassis.moveToPoint(24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
+    // pros::delay(400);
+    // loaderMech.set_value(true);
+    // chassis.turnToPoint(0, 0, 800,{.forwards=false});
+    // chassis.moveToPoint(0, 0, 2000,{.forwards=false,.maxSpeed=60});
+    
+    // chassis.moveToPose(48, -64, 180, 4000, {.lead=0.3});
+
+    // pros::delay(200);
+
+    // scoringBar.set_value(false);
+    // chassis.moveToPoint(48, -20, 1500, {.forwards = false});
+    // pros::delay(1000);
+
+    // colorsortOn = false;
+    // scoringRoller.move(127);
+    // scoringBar.set_value(true);
+
+    // chassis.moveToPoint(48, -20, 2000, {.forwards = false});
+    // pros::delay(1200);
+
+    // scoringBar.set_value(false);
+    // scoringRoller.move(0);
+    // middleRollers.move(0);
+    // colorsortOn = true;
+    // frontIntake.move(0);
+
+    // chassis.moveToPoint(48, -50, 1000);
+    // chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
 } 
 
 void two_goal_RIGHT(){
+    //nothing here
+
 
 };
 
