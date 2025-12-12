@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
@@ -57,9 +57,9 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
-    pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
-    pros::lcd::print(7, "NEW BOT CODE");
+    //pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
+    //pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
+    //pros::lcd::print(7, "NEW BOT CODE");
     pros::delay(10);
     }
 }
@@ -146,7 +146,6 @@ void initialize() {
     pros::Task telemetryTask(telemetry);
     pros::Task colorSortTask(colorSort);
 
-
     // calibrates drivetrain
     chassis.calibrate();
     
@@ -226,7 +225,7 @@ void autonomous() {
     //     two_goal_RIGHT();
     // }
     //driveTesting(true);
-    chassis.moveToPoint(0, 100,4000, {}, false);
+    solo_awp();
   }
   else{
   // runs auton from selected
