@@ -37,11 +37,6 @@ int OPP_MIN; // enemy alliance color min
 int OPP_MAX; // enemy alliance color max
 
 
-
-
-
-
-
 /*
 Define tasks to be run in parallel here
 Use the below format.
@@ -139,8 +134,9 @@ void initialize() {
     topOptical.set_led_pwm(100);
     topOptical.disable_gesture();
     
-    // sets text on controller. slow updating
-    controller.set_text(0, 0, ("goodluck!"));
+    // sets text on controller. 
+    //NOTE: slow updating text on controller
+    controller.set_text(0, 0, ("goodluck! eternity."));
 
     // task callerss
     pros::Task telemetryTask(telemetry);
