@@ -29,17 +29,12 @@ float DPdelay = 0;
 
 
 int BLUE_MAX = 230; // max blue hue
-int BLUE_MIN = 170; // min blue hue
+int BLUE_MIN = 190; // min blue hue
 int RED_MAX = 20; // max red hue
-int RED_MIN = 0; // min red hue
+int RED_MIN = 5; // min red hue
 
 int OPP_MIN; // enemy alliance color min
 int OPP_MAX; // enemy alliance color max
-
-
-
-
-
 
 
 /*
@@ -57,7 +52,7 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    //pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
+    pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
     //pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
     //pros::lcd::print(7, "NEW BOT CODE");
     pros::delay(10);
@@ -161,7 +156,8 @@ void colorSort() {
                 // checks if in range of enemy color
                 if (colorValue >= OPP_MIN && colorValue <= OPP_MAX) {
                     // code that occurs when enemy color detected
-                    scoringRoller.move(-50);
+                    scoringRoller.move(-120);
+             
                 }
             }
         }
@@ -169,8 +165,7 @@ void colorSort() {
         else{ 
             pros::delay(5);
         }
-        // reaction delay
-        pros::delay(2);
+    
     }
 }
 
@@ -194,7 +189,7 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-    
+    scoringBar.set_value(false);
     if (tuneMode == true){
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);
@@ -204,8 +199,9 @@ void initialize() {
     topOptical.set_led_pwm(100);
     topOptical.disable_gesture();
     
-    // sets text on controller. slow updating
-    controller.set_text(0, 0, ("goodluck!"));
+    // sets text on controller. 
+    //NOTE: slow updating text on controller
+    controller.set_text(0, 0, ("goodluck! eternity."));
 
     // task callerss
     pros::Task telemetryTask(telemetry);
@@ -239,7 +235,7 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 */
 
 void disabled() {
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
   }
 
 /*
@@ -266,29 +262,29 @@ void autonomous() {
   }
   
   if (tuneMode){
-    // if (testRoute == "S"){
-    //     autonSkills();
-    // }
-    // else if (testRoute == "1GR")
-    // {
-    //     one_goal_right();
-    // }
-    // else if (testRoute == "1GL")
-    // {
-    //     one_goal_left();
-    // }
-    // else if (testRoute == "AWP")
-    // {
-    //     solo_awp();
-    // }
-    // else if (testRoute == "2GL")
-    // {
-    //     two_goal_LEFT();
-    // }
-    // else if (testRoute == "2GR")
-    // {
-    //     two_goal_RIGHT();
-    // }
+    if (testRoute == "S"){
+        autonSkills();
+    }
+    else if (testRoute == "1GR")
+    {
+        one_goal_right();
+    }
+    else if (testRoute == "1GL")
+    {
+        one_goal_left();
+    }
+    else if (testRoute == "AWP")
+    {
+        solo_awp();
+    }
+    else if (testRoute == "2GL")
+    {
+        two_goal_LEFT();
+    }
+    else if (testRoute == "2GR")
+    {
+        two_goal_RIGHT();
+    }
     //driveTesting(true);
     one_goal_right();
   }

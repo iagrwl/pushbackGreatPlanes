@@ -165,13 +165,13 @@ void autonSkills() {
     pros::delay(200);
     chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70});
     chassis.turnToHeading(0,1000,{},false);
-    chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
+    //chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
     chassis.moveToPoint(-48,18,3000,{.forwards=false,.maxSpeed=60});
     pros::delay(500);
     scoringBar.set_value(true);
     loaderMech.set_value(true);
     pros::delay(1200);
-    chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
+    //chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
     scoringBar.set_value(false);
     chassis.moveToPoint(-48,70,3000,{.maxSpeed=60});
     pros::delay(1000);
@@ -199,8 +199,8 @@ void autonSkills() {
     pros::delay(300);
     loaderMech.set_value(true);
     pros::delay(300);
-    chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
-    pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
+    //chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
+    //pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
     pros::lcd::print(6, "Chassis Y: %.2f", chassis.getPose().y);
     pros::lcd::print(7, "Chassis X: %.2f", chassis.getPose().x);
     chassis.moveToPoint(-46,-70,3000,{.maxSpeed=60});
@@ -392,7 +392,7 @@ void solo_awp(){
     scoringRoller.move(127);
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
-    //Q1
+    //Q1    
     chassis.moveToPoint(46,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     loaderMech.set_value(true);
     chassis.turnToHeading(180,500,{.maxSpeed=50,.earlyExitRange=5},false);
@@ -425,10 +425,8 @@ void solo_awp(){
     pros::delay(1000);  
 }
 void two_goal_LEFT() {
-    chassis.setPose(-16, -48, 0);   
-
+    // start intake
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
     scoringRoller.move(20);
     wingMech.set_value(true);
@@ -493,8 +491,8 @@ void two_goal_LEFT() {
     scoringRoller.move(127);
     scoringBar.set_value(false);
 
-    chassis.moveToPoint(48, -20, 2000, {.forwards = false});
-    pros::delay(1200);
+    // chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
+    // pros::delay(1200);
 
     scoringBar.set_value(true);
     scoringRoller.move(0);
@@ -502,11 +500,52 @@ void two_goal_LEFT() {
     colorsortOn = true;
     frontIntake.move(0);
 
-    chassis.moveToPoint(48, -50, 1000);
-    chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
+    // chassis.moveToPoint(-48, -50, 1000);
+    // chassis.moveToPose(-38, -8, 180, 2500, {.forwards = false});
+
+    // chassis.setPose(16, -48, 0);
+    // frontIntake.move(127);
+    // colorSortRoller.move(127);
+    // middleRollers.move(127);
+    // scoringRoller.move(20);
+    // wingMech.set_value(true);
+
+    // chassis.moveToPoint(16, -44, 500);
+    // chassis.turnToPoint(24, -24, 500, {});
+    // chassis.moveToPoint(24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
+    // pros::delay(400);
+    // loaderMech.set_value(true);
+    // chassis.turnToPoint(0, 0, 800,{.forwards=false});
+    // chassis.moveToPoint(0, 0, 2000,{.forwards=false,.maxSpeed=60});
+    
+    // chassis.moveToPose(48, -64, 180, 4000, {.lead=0.3});
+
+    // pros::delay(200);
+
+    // scoringBar.set_value(false);
+    // chassis.moveToPoint(48, -20, 1500, {.forwards = false});
+    // pros::delay(1000);
+
+    // colorsortOn = false;
+    // scoringRoller.move(127);
+    // scoringBar.set_value(true);
+
+    // chassis.moveToPoint(48, -20, 2000, {.forwards = false});
+    // pros::delay(1200);
+
+    // scoringBar.set_value(false);
+    // scoringRoller.move(0);
+    // middleRollers.move(0);
+    // colorsortOn = true;
+    // frontIntake.move(0);
+
+    // chassis.moveToPoint(48, -50, 1000);
+    // chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
 } 
 
 void two_goal_RIGHT(){
+    //nothing here
+
 
 };
 

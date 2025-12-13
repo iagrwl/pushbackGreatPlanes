@@ -11,7 +11,7 @@
 //extensions
 bool isScoringBarUp = false;
 bool isLoaderExtended = false;
-bool isWingsOut = false;
+bool isWingsOut = true;
 //core func
 bool isIntakeOn = false;
 bool shouldSC = false;
@@ -66,18 +66,18 @@ void handleIOCommands() {
 
   // hold behavior while R1 is held
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
   } else { // what happens when the R1 is let go off
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     
   }
   bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     frontIntake.move(127);
     middleRollers.move(100);
     scoringRoller.move(-50);
