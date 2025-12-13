@@ -116,7 +116,7 @@ void autonSkills() {
     scoringRoller.move(0);
     pros::delay(200);
     scoringBar.set_value(false);
-    //chassis.setPose(wallDistance(false,false), -30, chassis.getPose().theta);
+    chassis.setPose(wallDistance(false,false), -30, chassis.getPose().theta);
 
     chassis.moveToPoint(48,-36,2000,{.maxSpeed=85});
     pros::delay(200);
@@ -161,17 +161,17 @@ void autonSkills() {
     right_dt.move(0);
 
     chassis.turnToHeading(-90,1500,{},false);
-    //chassis.setPose(-17,wallDistance(false,true), chassis.getPose().theta);
+    chassis.setPose(-17,wallDistance(false,true), chassis.getPose().theta);
     pros::delay(200);
     chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70});
     chassis.turnToHeading(0,1000,{},false);
-    //chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
+    chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
     chassis.moveToPoint(-48,18,3000,{.forwards=false,.maxSpeed=60});
     pros::delay(500);
     scoringBar.set_value(true);
     loaderMech.set_value(true);
     pros::delay(1200);
-    //chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
+    chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
     scoringBar.set_value(false);
     chassis.moveToPoint(-48,70,3000,{.maxSpeed=60});
     pros::delay(1000);
@@ -199,7 +199,7 @@ void autonSkills() {
     pros::delay(300);
     loaderMech.set_value(true);
     pros::delay(300);
-    //chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
+    chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
     //pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
     pros::lcd::print(6, "Chassis Y: %.2f", chassis.getPose().y);
     pros::lcd::print(7, "Chassis X: %.2f", chassis.getPose().x);
@@ -385,81 +385,7 @@ void autonSkills() {
 
 
 void solo_awp(){
-
-    wingMech.set_value(true);
     scoringBar.set_value(true);
-    //turn on intake
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    //go perpendicular to loader
-    chassis.moveToPoint(0,33,1400,{.maxSpeed=85});
-    chassis.turnToHeading(90,800,{.maxSpeed=70});
-    //drop loader mech
-    loaderMech.set_value(true);
-    //ram loader
-    chassis.moveToPoint(18,35,1050,{.maxSpeed=100},false);
-
-    //fix lat alignment
-    chassis.turnToHeading(90,200,{.maxSpeed=80});
-    //go to long goal
-    chassis.moveToPoint(-20,35,1000,{.forwards=false,.minSpeed=40},false);
-    //let balls score
-    scoringBar.set_value(false);
-    //wait for blocks to be scored
-    pros::delay(1100); 
-    //retract loader mech
-    loaderMech.set_value(false);
-    //swing w 450ms turn
-    left_dt.move(127);
-    right_dt.move(-127);
-    pros::delay(450);
-    left_dt.move(0);
-    right_dt.move(0);
-    //correctional swing turn
-    chassis.turnToHeading(187,400);
-    // chassis.moveToPoint(-7,35,1000);
-    // chassis.turnToPoint(-15,5,400);
-    //retract bar once swung
-    scoringBar.set_value(true);
-    //go to first 3 stack
-    chassis.moveToPoint(-10.5,0,1200,{.maxSpeed=80});
-    //go to second 3 stack
-    chassis.moveToPoint(-8.5,-36,1900,{.minSpeed=35});
-    scoringRoller.brake();
-    colorsortOn = false;
-    //turn opposite of mid goal
-    chassis.turnToHeading(133,500);
-    //ram mid goal
-    chassis.moveToPoint(-23.8,-21.5,1000,{.forwards=false},false);
-    //reverse 150ms then push forward to prevent clogging
-    middleRollers.move(-127);
-    scoringRoller.move(-90);
-    frontIntake.move(-127);
-    loaderMech.set_value(false);
-    pros::delay(200);
-    middleRollers.move(127);
-    frontIntake.move(127);
-    pros::delay(460);
-    //scoring recovery
-    middleRollers.move(-127);
-    pros::delay(110);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    pros::delay(10);
-    colorsortOn=true;
-    //moves parallel to long goal
-    chassis.moveToPoint(17,-61,1300);
-    //correctional parallel with goal
-    chassis.turnToHeading(90,400);
-    //rams goal
-    chassis.moveToPoint(-18,-64,1100,{.forwards=false,.minSpeed=40});
-    //lets pid settle
-    pros::delay(500);
-    //lets blocks score
-    scoringBar.set_value(false);
-    wingMech.set_value(false);
-    /*
     chassis.setPose(16.5,-48,90);
     frontIntake.move(127);
     middleRollers.move(127);
@@ -467,29 +393,58 @@ void solo_awp(){
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
     //Q1    
-    chassis.moveToPoint(46,-48,1400,{.minSpeed=60,.earlyExitRange=8});
+    chassis.moveToPoint(46,-48,1400,{.minSpeed=80,.earlyExitRange=8});
     loaderMech.set_value(true);
-    chassis.turnToHeading(180,500,{.maxSpeed=50},false);
-    //chassis.setPose(wallDistance(true,false), chassis.getPose().y, chassis.getPose().theta);
-    chassis.moveToPoint(48,-65,1000,{.maxSpeed=70});
+    chassis.turnToHeading(180,700,{.minSpeed=50},false);
+    chassis.setPose(wallDistance(true,false), chassis.getPose().y, chassis.getPose().theta);
+    chassis.moveToPoint(48,-65,1000,{.maxSpeed=80});
     pros::delay(700);
     loaderMech.set_value(false);
-    chassis.moveToPoint(48,-30,2000,{.forwards=false,.minSpeed=80});
+    chassis.moveToPoint(49,-32,2000,{.forwards=false,.minSpeed=70});
     pros::delay(800);
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
     pros::delay(800);
     frontIntake.move(0);
     middleRollers.move(0);
     scoringRoller.move(0);
-    scoringBar.set_value(false);
-    /*
+    scoringBar.set_value(true);
     chassis.moveToPoint(48,-44,2000,{.minSpeed=80,.earlyExitRange=2});
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(20);
     chassis.turnToPoint(24,-24,500,{.earlyExitRange=5});
     chassis.moveToPoint(24,-24,1500,{.minSpeed=60,.earlyExitRange=7});
-    chassis.turnToHeading(-90,500,{.earlyExitRange=5});
-    chassis.setPose(chassis.getPose().x,wallDistance(true,false),chassis.getPose().theta);
+    pros::delay(750);
+    loaderMech.set_value(true);
+    chassis.turnToHeading(-90,500,{.earlyExitRange=5},false);
+    loaderMech.set_value(false);
+    chassis.setPose(chassis.getPose().x, wallDistance(true,false), chassis.getPose().theta);
     chassis.moveToPose(-24,-24,-90,4000,{.lead=0.3});
+    pros::delay(950);
+    loaderMech.set_value(true);
+    pros::delay(300);
+    chassis.turnToPoint(-9,-9,500,{.forwards=false});
+    chassis.moveToPoint(-9,-9,2000,{.forwards=false,.maxSpeed=70});
+    pros::delay(400);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    frontIntake.move(-127);
+    pros::delay(120);
+    scoringRoller.move(-70);
+    middleRollers.move(100);
+    frontIntake.move(127);
+    pros::delay(1000);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    frontIntake.move(127);
 
+    chassis.moveToPose(-46,-64,180,2500,{.lead=0.3},false);
+    chassis.setPose(wallDistance(true,true), chassis.getPose().y, chassis.getPose().theta);
+    loaderMech.set_value(false);
+    chassis.moveToPoint(-49,-20,1500,{.forwards = false,.minSpeed=70});
+    pros::delay(1000);  
+    scoringBar.set_value(false);
+    /*
     chassis.turnToPoint(0,0,1000,{.earlyExitRange=5});
     chassis.moveToPoint(0,0,3000,{.forwards = false, .maxSpeed=50});
 
