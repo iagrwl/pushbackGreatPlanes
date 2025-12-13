@@ -231,13 +231,13 @@ void autonSkills() {
     pros::delay(200);
     chassis.moveToPose(-48,48,-135,3000,{.lead=-0.6,.minSpeed=70});
     chassis.turnToHeading(0,1000,{},false);
-    chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
+    //chassis.setPose(wallDistance(false,false), chassis.getPose().y, chassis.getPose().theta);
     chassis.moveToPoint(-48,18,3000,{.forwards=false,.maxSpeed=60});
     pros::delay(500);
     scoringBar.set_value(true);
     loaderMech.set_value(true);
     pros::delay(1200);
-    chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
+    //chassis.setPose(wallDistance(false,false), 30, chassis.getPose().theta);
     scoringBar.set_value(false);
     chassis.moveToPoint(-48,70,3000,{.maxSpeed=60});
     pros::delay(1000);
@@ -265,8 +265,8 @@ void autonSkills() {
     pros::delay(300);
     loaderMech.set_value(true);
     pros::delay(300);
-    chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
-    pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
+    //chassis.setPose(wallDistance(false, true), chassis.getPose().y, chassis.getPose().theta);
+    //pros::lcd::print(5, "Wall Dist: %.2f", wallDistance(false, true));
     pros::lcd::print(6, "Chassis Y: %.2f", chassis.getPose().y);
     pros::lcd::print(7, "Chassis X: %.2f", chassis.getPose().x);
     chassis.moveToPoint(-46,-70,3000,{.maxSpeed=60});
@@ -458,7 +458,7 @@ void solo_awp(){
     scoringRoller.move(127);
     left_dt.set_brake_mode(pros::MotorBrake::brake);
     right_dt.set_brake_mode(pros::MotorBrake::brake);
-    //Q1
+    //Q1    
     chassis.moveToPoint(46,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     loaderMech.set_value(true);
     chassis.turnToHeading(180,500,{.maxSpeed=50,.earlyExitRange=5},false);
@@ -488,6 +488,7 @@ void two_goal_LEFT() {
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
+    scoringBar.set_value(true);
 
     // sets pose for the remainder of autonomous
     chassis.setPose(-16, -48, 0);
@@ -496,45 +497,45 @@ void two_goal_LEFT() {
     chassis.moveToPoint(-16,-44,1000);
 
     // turns + move cluster
-    chassis.turnToHeading(-18,400);
-    chassis.moveToPoint(-25,-23,1200);
+    chassis.turnToHeading(-17,400);
+    chassis.moveToPoint(-24,-23,1200,{.maxSpeed=80});
     pros::delay(200);
 
     // turns + move 2 ball
-    chassis.turnToPoint(-48,0,300);
-    chassis.moveToPoint(-48,-2,1200);
-    pros::delay(500);
+    chassis.turnToPoint(-48,-10,300);
+    chassis.moveToPoint(-48,-10,1200);
+    // pros::delay(500);
 
-    // puts loader down
-    loaderMech.set_value(true);
+    // // puts loader down
+    // loaderMech.set_value(true);
 
-    // moves back parallel to goal start
-    chassis.moveToPoint(-32,-24,1000,{.forwards=false,.earlyExitRange=5});
+    // // moves back parallel to goal start
+    // chassis.moveToPoint(-32,-24,1000,{.forwards=false,.earlyExitRange=5});
 
-    // turns opposite from alliance wall
-    chassis.turnToHeading(180,500);
+    // // turns opposite from alliance wall
+    // chassis.turnToHeading(180,500);
 
-    // moves towards alliance wall 
-    chassis.moveToPoint(-48,-52,1300,{.earlyExitRange=5});
+    // // moves towards alliance wall 
+    // chassis.moveToPoint(-48,-52,1300,{.earlyExitRange=5});
 
-    // rams back into goal
-    chassis.moveToPoint(-48,-20,1000);
+    // // rams back into goal
+    // chassis.moveToPoint(-48,-20,1000);
 
-    // scores all blocks
-    scoringBar.set_value(true);
-    pros::delay(1000);
+    // // scores all blocks
+    // scoringBar.set_value(true);
+    // pros::delay(1000);
 
-    // moves into loader
-    chassis.moveToPoint(-48,-73,1800);
+    // // moves into loader
+    // chassis.moveToPoint(-48,-73,1800);
 
-    // pulls out of goal
-    chassis.moveToPoint(-48,-50,1200,{.earlyExitRange=2});
+    // // pulls out of goal
+    // chassis.moveToPoint(-48,-50,1200,{.earlyExitRange=2});
 
-    // reverse turns to mid goal
-    chassis.turnToPoint(-24,-24,{.forwards=false});
+    // // reverse turns to mid goal
+    // chassis.turnToPoint(-24,-24,500,{.forwards=false});
 
-    // backs up into mid goal
-    chassis.moveToPoint(0,0,{.forwards=false});
+    // // backs up into mid goal
+    // chassis.moveToPoint(0,0,500,{.forwards=false});
 
     // OLD TWO GOAL
     // chassis.setPose(-16, -48, 0);   
