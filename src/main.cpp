@@ -64,6 +64,71 @@ void positionTracker() {
     }
 }
 
+double wallDistance(bool print, bool isRight) {
+
+  double leftSensorOffsetX  = 0.0;
+  double rightSensorOffsetX = -1.0;
+  double leftSensorOffsetY  = 4.50;
+  double rightSensorOffsetY = 4.50;
+
+  double leftWallX  = -71.0;
+  double rightWallX =  71.0;
+  double backWallY  = -71.0;
+  double frontWallY =  71.0;
+
+  double offsetX = isRight ? rightSensorOffsetX : leftSensorOffsetX;
+  double offsetY = isRight ? rightSensorOffsetY : leftSensorOffsetY;
+  double rawDistanceIN =
+      (isRight ? rightDistance.get() : leftDistance.get()) / 25.4;
+
+  auto pose = chassis.getPose();
+  double robotX = pose.x;
+  double robotY = pose.y;
+  double theta  = pose.theta * M_PI / 180.0; 
+
+  const char* wall = "";
+  double sensorDir = isRight ? 0.0 : M_PI; 
+  double absoluteAngle = sensorDir + theta;
+
+  while (absoluteAngle > M_PI) absoluteAngle -= 2 * M_PI;
+  while (absoluteAngle < -M_PI) absoluteAngle += 2 * M_PI;
+
+  if (fabs(cos(absoluteAngle)) > fabs(sin(absoluteAngle))) {
+    wall = (cos(absoluteAngle) > 0) ? "RIGHT" : "LEFT";
+  } else {
+    wall = (sin(absoluteAngle) > 0) ? "FRONT" : "BACK";
+  }
+
+  double correctedDistance = 0.0;
+  if (strcmp(wall, "LEFT") == 0) {
+    correctedDistance = fabs(leftWallX - (robotX + offsetX * cos(theta) - offsetY * sin(theta) + rawDistanceIN * sin(theta)));
+  } 
+  else if (strcmp(wall, "RIGHT") == 0) {
+    correctedDistance = fabs(rightWallX - (robotX + offsetX * cos(theta) - offsetY * sin(theta) + rawDistanceIN * sin(theta)));
+  }
+  else if (strcmp(wall, "BACK") == 0) {
+    correctedDistance = fabs(backWallY - (robotY + offsetY * cos(theta) + offsetX * sin(theta) + rawDistanceIN * cos(theta)));
+  }
+  else if (strcmp(wall, "FRONT") == 0) {
+    correctedDistance = fabs(frontWallY - (robotY + offsetY * cos(theta) + offsetX * sin(theta) + rawDistanceIN * cos(theta)));
+  }
+
+  if (print) {
+    pros::lcd::print(5, "Wall: %s", wall);
+    pros::lcd::print(6, "Dist: %.2f in", correctedDistance);
+  }
+
+  return correctedDistance;
+}
+
+
+
+void wallTask(void* param) {
+  while (true) {
+    wallDistance(true, false);
+    pros::delay(10);
+  }
+}
 
 /*
 Color sorting task - ejects opposite alliance rings
@@ -145,7 +210,7 @@ void initialize() {
     // task callerss
     pros::Task telemetryTask(telemetry);
     pros::Task colorSortTask(colorSort);
-
+    pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
     
@@ -225,7 +290,7 @@ void autonomous() {
     //     two_goal_RIGHT();
     // }
     //driveTesting(true);
-    solo_awp();
+    one_goal_right();
   }
   else{
   // runs auton from selected

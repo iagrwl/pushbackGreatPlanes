@@ -5,72 +5,6 @@
 #include "setup.hpp"
 #include "op_control.hpp"
 
-/*
-float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
-    float rightOffsetX = 4.5, rightOffsetY = 0.0;
-    float leftOffsetX  = 0, leftOffsetY  = 1.0;
-
-    float offsetX = useRightSensor ? rightOffsetX : leftOffsetX;
-    float offsetY = useRightSensor ? rightOffsetY : leftOffsetY;
-
-    float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get();
-    float distanceIn = distancemm / 25.4 + offsetX;
-
-    float angDeg = chassis.getPose().theta;
-    float angRad = angDeg * M_PI / 180.0;
-
-    float angle = fmod(angDeg, 360.0);
-    if (angle < 0) angle += 360.0;
-
-    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
-    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
-
-    float correctedDist = 0;
-    float finalPos = 0;
-
-    if (angle >= 315 || angle < 45) {
-        if (useRightSensor) {
-            correctedDist = -distanceIn * cos(angRad) - rotatedX;
-            finalPos = 71 - correctedDist;
-        } else {
-            correctedDist = distanceIn * cos(angRad) + rotatedX;
-            finalPos = correctedDist - 71;
-        }
-    } else if (angle >= 45 && angle < 135) {
-        if (useRightSensor) {
-            correctedDist = -distanceIn * sin(angRad) - rotatedY;
-            finalPos = correctedDist - 71;
-        } else {
-            correctedDist = distanceIn * sin(angRad) + rotatedY;
-            finalPos = 71 - correctedDist;
-        }
-    } else if (angle >= 135 && angle < 225) {
-        if (useRightSensor) {
-            correctedDist = distanceIn * cos(angRad) + rotatedX;
-            finalPos = -correctedDist -71 ;
-        } else {
-            correctedDist = -distanceIn * cos(angRad) - rotatedX;
-            finalPos = 71 - correctedDist;
-        }
-    } else {
-        if (useRightSensor) {
-            correctedDist = distanceIn * sin(angRad) + rotatedY;
-            finalPos = 71 + correctedDist;
-        } else {
-            correctedDist = -distanceIn * sin(angRad) - rotatedY;
-            finalPos = correctedDist - 71;
-        }
-    }
-
-    if (shouldPrint) {
-        pros::lcd::print(5, "Distance: %.2f", distanceIn);
-        pros::lcd::print(6, "Corrected: %.2f", correctedDist);
-    }
-
-    return finalPos;
-}
-*/
-
 
 
 
@@ -462,8 +396,7 @@ void solo_awp(){
     chassis.moveToPoint(46,-48,1400,{.minSpeed=60,.earlyExitRange=8});
     loaderMech.set_value(true);
     chassis.turnToHeading(180,500,{.maxSpeed=50,.earlyExitRange=5},false);
-    //chassis.setPose(wallDistance(true,false), chassis.getPose().y, chassis.getPose().theta);
-    /*
+    chassis.setPose(wallDistance(true,false), chassis.getPose().y, chassis.getPose().theta);
     chassis.moveToPoint(47.5,-65,1000,{.maxSpeed=60});
     pros::delay(200);
     loaderMech.set_value(false);
@@ -481,7 +414,15 @@ void solo_awp(){
     chassis.turnToHeading(-90,500,{.earlyExitRange=5});
     chassis.setPose(chassis.getPose().x,wallDistance(true,false),chassis.getPose().theta);
     chassis.moveToPose(-24,-24,-90,4000,{.lead=0.3});
-    */
+
+    chassis.turnToPoint(0,0,1000,{.earlyExitRange=5});
+    chassis.moveToPoint(0,0,3000,{.forwards = false, .maxSpeed=50});
+
+    chassis.moveToPose(-48,-64,180,4000,{.lead=0.3});
+    loaderMech.set_value(true);
+    pros::delay(300);
+    chassis.moveToPoint(-48,-20,1500,{.forwards = false});
+    pros::delay(1000);  
 }
 void two_goal_LEFT() {
     chassis.setPose(-16, -48, 0);   
@@ -505,18 +446,18 @@ void two_goal_LEFT() {
 
     pros::delay(200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     chassis.moveToPoint(-48, -20, 1500, {.forwards = false});
     pros::delay(1000);
 
     colorsortOn = false;
     scoringRoller.move(127);
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
 
     chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
     pros::delay(1200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     scoringRoller.move(0);
     middleRollers.move(0);
     colorsortOn = true;
@@ -544,18 +485,18 @@ void two_goal_LEFT() {
 
     pros::delay(200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     chassis.moveToPoint(48, -20, 1500, {.forwards = false});
     pros::delay(1000);
 
     colorsortOn = false;
     scoringRoller.move(127);
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
 
     chassis.moveToPoint(48, -20, 2000, {.forwards = false});
     pros::delay(1200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     scoringRoller.move(0);
     middleRollers.move(0);
     colorsortOn = true;
@@ -591,18 +532,18 @@ void one_goal_left() {
 
     pros::delay(200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     chassis.moveToPoint(-47, -20, 1500, {.forwards = false});
     pros::delay(1000);
 
     colorsortOn = false;
     scoringRoller.move(127);
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
 
     chassis.moveToPoint(-47, -20, 2000, {.forwards = false});
     pros::delay(1200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     scoringRoller.move(0);
     middleRollers.move(0);
     colorsortOn = true;
@@ -613,7 +554,8 @@ void one_goal_left() {
 } 
 
 void one_goal_right() {
-    chassis.setPose(16, -48, 0);
+    chassis.setPose(16.5, -48, 0);
+    scoringBar.set_value(true);
     frontIntake.move(127);
     colorSortRoller.move(127);
     middleRollers.move(127);
@@ -626,29 +568,32 @@ void one_goal_right() {
     pros::delay(400);
     loaderMech.set_value(true);
     chassis.turnToPoint(48, -45, 800);
-    chassis.moveToPose(48, -64, 180, 3000, {.lead=0.35});
-
+    chassis.moveToPose(48, -62, 180, 3000, {.lead = 0.4,.earlyExitRange= 2});
+    chassis.moveToPoint(48, -64, 1000, {.minSpeed = 60});
     pros::delay(200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     chassis.moveToPoint(48, -20, 1500, {.forwards = false});
     pros::delay(1000);
 
     colorsortOn = false;
     scoringRoller.move(127);
-    scoringBar.set_value(true);
+    scoringBar.set_value(false);
 
     chassis.moveToPoint(48, -20, 2000, {.forwards = false});
     pros::delay(1200);
 
-    scoringBar.set_value(false);
+    scoringBar.set_value(true);
     scoringRoller.move(0);
     middleRollers.move(0);
     colorsortOn = true;
     frontIntake.move(0);
 
     chassis.moveToPoint(48, -50, 1000);
-    chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
+    chassis.moveToPose(57, -8, 180, 2500, {.forwards = false},false);
+    while (chassis.getPose().y < -10) {
+        chassis.moveToPoint(57, -8, 2500, {.forwards = false});
+    }
 }
 
 
