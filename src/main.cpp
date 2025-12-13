@@ -7,7 +7,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
@@ -52,71 +52,76 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
+    //pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
     //pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
     //pros::lcd::print(7, "NEW BOT CODE");
     pros::delay(10);
     }
 }
 
-double wallDistance(bool print, bool isRight) {
+float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
+    float rightOffsetX = 2.5, rightOffsetY = -1.0;
+    float leftOffsetX  = 1.5, leftOffsetY  = 0.0;
 
-  double leftSensorOffsetX  = 0.0;
-  double rightSensorOffsetX = -1.0;
-  double leftSensorOffsetY  = 4.50;
-  double rightSensorOffsetY = 4.50;
+    float offsetX = useRightSensor ? rightOffsetX : leftOffsetX;
+    float offsetY = useRightSensor ? rightOffsetY : leftOffsetY;
 
-  double leftWallX  = -71.0;
-  double rightWallX =  71.0;
-  double backWallY  = -71.0;
-  double frontWallY =  71.0;
+    float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get();
+    float distanceIn = distancemm / 25.4 + offsetX;
 
-  double offsetX = isRight ? rightSensorOffsetX : leftSensorOffsetX;
-  double offsetY = isRight ? rightSensorOffsetY : leftSensorOffsetY;
-  double rawDistanceIN =
-      (isRight ? rightDistance.get() : leftDistance.get()) / 25.4;
+    float angDeg = chassis.getPose().theta;
+    float angRad = angDeg * M_PI / 180.0;
 
-  auto pose = chassis.getPose();
-  double robotX = pose.x;
-  double robotY = pose.y;
-  double theta  = pose.theta * M_PI / 180.0; 
+    float angle = fmod(angDeg, 360.0);
+    if (angle < 0) angle += 360.0;
 
-  const char* wall = "";
-  double sensorDir = isRight ? 0.0 : M_PI; 
-  double absoluteAngle = sensorDir + theta;
+    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad);
+    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad);
 
-  while (absoluteAngle > M_PI) absoluteAngle -= 2 * M_PI;
-  while (absoluteAngle < -M_PI) absoluteAngle += 2 * M_PI;
+    float correctedDist = 0;
+    float finalPos = 0;
 
-  if (fabs(cos(absoluteAngle)) > fabs(sin(absoluteAngle))) {
-    wall = (cos(absoluteAngle) > 0) ? "RIGHT" : "LEFT";
-  } else {
-    wall = (sin(absoluteAngle) > 0) ? "FRONT" : "BACK";
-  }
+    if (angle >= 315 || angle < 45) {
+        if (useRightSensor) {
+            correctedDist = -distanceIn * cos(angRad) - rotatedX;
+            finalPos = 71 - correctedDist;
+        } else {
+            correctedDist = distanceIn * cos(angRad) + rotatedX;
+            finalPos = correctedDist - 71;
+        }
+    } else if (angle >= 45 && angle < 135) {
+        if (useRightSensor) {
+            correctedDist = -distanceIn * sin(angRad) - rotatedY;
+            finalPos = correctedDist - 71;
+        } else {
+            correctedDist = distanceIn * sin(angRad) + rotatedY;
+            finalPos = 71 - correctedDist;
+        }
+    } else if (angle >= 135 && angle < 225) {
+        if (useRightSensor) {
+            correctedDist = distanceIn * cos(angRad) + rotatedX;
+            finalPos = -correctedDist -71 ;
+        } else {
+            correctedDist = -distanceIn * cos(angRad) - rotatedX;
+            finalPos = 71 - correctedDist;
+        }
+    } else {
+        if (useRightSensor) {
+            correctedDist = distanceIn * sin(angRad) + rotatedY;
+            finalPos = 71 + correctedDist;
+        } else {
+            correctedDist = -distanceIn * sin(angRad) - rotatedY;
+            finalPos = correctedDist - 71;
+        }
+    }
 
-  double correctedDistance = 0.0;
-  if (strcmp(wall, "LEFT") == 0) {
-    correctedDistance = fabs(leftWallX - (robotX + offsetX * cos(theta) - offsetY * sin(theta) + rawDistanceIN * sin(theta)));
-  } 
-  else if (strcmp(wall, "RIGHT") == 0) {
-    correctedDistance = fabs(rightWallX - (robotX + offsetX * cos(theta) - offsetY * sin(theta) + rawDistanceIN * sin(theta)));
-  }
-  else if (strcmp(wall, "BACK") == 0) {
-    correctedDistance = fabs(backWallY - (robotY + offsetY * cos(theta) + offsetX * sin(theta) + rawDistanceIN * cos(theta)));
-  }
-  else if (strcmp(wall, "FRONT") == 0) {
-    correctedDistance = fabs(frontWallY - (robotY + offsetY * cos(theta) + offsetX * sin(theta) + rawDistanceIN * cos(theta)));
-  }
+    if (shouldPrint) {
+        pros::lcd::print(5, "Distance: %.2f", distanceIn);
+        pros::lcd::print(6, "Corrected: %.2f", correctedDist);
+    }
 
-  if (print) {
-    pros::lcd::print(5, "Wall: %s", wall);
-    pros::lcd::print(6, "Dist: %.2f in", correctedDistance);
-  }
-
-  return correctedDistance;
+    return finalPos;
 }
-
-
 
 void wallTask(void* param) {
   while (true) {
@@ -189,6 +194,7 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
+    selector.focus();
     scoringBar.set_value(false);
     if (tuneMode == true){
         pros::lcd::initialize();
@@ -285,8 +291,7 @@ void autonomous() {
     {
         two_goal_RIGHT();
     }
-    //driveTesting(true);
-    one_goal_right();
+
   }
   else{
   // runs auton from selected
