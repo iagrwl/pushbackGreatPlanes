@@ -9,7 +9,7 @@
 
 //STATES
 //extensions
-bool isScoringBarUp = false;
+bool isScoringBarUp = true;
 bool isLoaderExtended = false;
 bool isWingsOut = true;
 //core func

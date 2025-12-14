@@ -6,7 +6,21 @@
 #include "op_control.hpp"
 
 
-
+void scoreBlocks(int numberOfBlocks, bool colorsort){
+    int blocksPending = numberOfBlocks;
+    
+    while (blocksPending>0){
+        scoringBar.set_value(false);
+        scoringRoller.move(127);
+        middleRollers.move(127);
+        float dist = topOptical.get_proximity();
+        if (dist > 10 && dist < 90){ // change range here for when it detects a ball
+            blocksPending--;
+            pros::delay(10); // time that i wait to ensure it doesnt mark the same ball twice
+        }
+        
+    }
+}
 
 /*
 Pose wallDistance(bool shouldPrint = false, bool updatePose = true) {
@@ -646,38 +660,67 @@ void one_goal_left() {
 } 
 
 void one_goal_right() {
+    // sets position to top right of park zone facing forwards
     chassis.setPose(16.5, -48, 0);
+
+    // keeps the scoring bar closed
     scoringBar.set_value(true);
+
+    // starts intake system
     frontIntake.move(127);
-    colorSortRoller.move(127);
     middleRollers.move(127);
-    scoringRoller.move(20);
+    scoringRoller.move(100);
+
+    // keeps the wing down
     wingMech.set_value(false);
+
+    // moves to 3 cluster and loader down after 800 ms
     chassis.moveToPose(24, -24, 15, 3000, {.maxSpeed = 80, .minSpeed = 40});
     pros::delay(800);
     loaderMech.set_value(true);
+    
+    // faces to goal + loader alley
     chassis.turnToPoint(48, -45, 800);
+
+    // enters the loader using motion chain 
     chassis.moveToPose(47, -48, 180, 1500, {.lead=0.3,.minSpeed=60,.earlyExitRange=5});
+    // moves deeper to collect
     chassis.moveToPoint(45.5, -64, 1000, {.minSpeed=55});
+
+    //verifies that scoring bar is closed
     scoringBar.set_value(true);
+    // moves back into the goal waits to reach for second then proceeds
     chassis.moveToPoint(47, -24, 1500, {.forwards = false});
     pros::delay(1000);
+    
+    // sets colorsort to off
     colorsortOn = false;
-    scoringRoller.move(127);
+
+    // open scoring bar for 1.4 seconds
     scoringBar.set_value(false);
     pros::delay(1400);
-
+    
+    // closes scoring bar
     scoringBar.set_value(true);
+
+    // shuts intake system off
     scoringRoller.move(0);
     middleRollers.move(0);
-    colorsortOn = true;
     frontIntake.move(0);
 
+    // colorsort switched back on for remainder of match
+    colorsortOn = true;
+    
+    // moves in front of goal
     chassis.moveToPoint(48, -50, 1000);
+    // wings the goal
     chassis.moveToPose(57, -8, 180, 2500, {.forwards = false},false);
+
+    // verifies the bot doesnt get pushed
     while (chassis.getPose().y < -10) {
         chassis.moveToPose(57, -8, 180, 2500, {.forwards = false});
     }
+    
 }
 
 
