@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "new-bot",
+    "project_name": "comp 12/13",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -325,7 +325,7 @@
     "upload_options": {
       "slot": 1,
       "description": "new bot code",
-      "icon": "pizza"
+      "icon": "X"
     },
     "use_early_access": false
   }
