@@ -250,7 +250,7 @@ Occurs when bot goes into init phase.
 */
 void initialize() {
     selector.focus();
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
     if (tuneMode == true){
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);
@@ -293,7 +293,7 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 */
 
 void disabled() {
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
     controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
   }
 
