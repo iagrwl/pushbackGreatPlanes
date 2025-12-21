@@ -472,124 +472,94 @@ void solo_awp(){
     */
 }
 void two_goal_LEFT() {
-    // start intake
+    // sets position to top left of park zone facing forwards
+    chassis.setPose(-16.5, -48, 0);
+
+    // keeps the scoring bar closed
+    scoringGate.set_value(true);
+    // starts intake system
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(20);
-    wingMech.set_value(true);
+    scoringRoller.move(100);
+    
+    // keeps the wing down
+    wingMech.set_value(false);
 
-    chassis.moveToPoint(-16, -44, 500);
-
-    chassis.turnToPoint(-24, -24, 500, {});
-    chassis.moveToPoint(-24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
-
-    pros::delay(400);
+    // moves to 3 cluster and loader down after 600 ms
+    chassis.moveToPose(-24, -24, -15, 3000, {.minSpeed = 40});
+    pros::delay(800);
     loaderMech.set_value(true);
-
-    chassis.turnToPoint(-48, -45, 800);
-    chassis.moveToPose(-48, -64, 180, 3000, {.lead = 0.35});
-
+    
+    //chassis.turnToPoint(-40, -10, 700);
+    chassis.moveToPose(-45,-10, -85, 2500, {.lead = 0.3, .minSpeed = 60});
     pros::delay(200);
-
-    scoringGate.set_value(true);
-    chassis.moveToPoint(-48, -20, 1500, {.forwards = false});
-    pros::delay(1000);
-
-    colorsortOn = false;
-    scoringRoller.move(127);
+    loaderMech.set_value(false);
+    pros::delay(700);
+    loaderMech.set_value(true);
+    pros::delay(200);
+    chassis.moveToPoint(-36, -30, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
+    chassis.moveToPose(-50, -22, 180, 2000, {.forwards = false, .lead = 0.3, .minSpeed =60});
+    chassis.swingToHeading(-180, lemlib::DriveSide::LEFT, 750, {.minSpeed = 60});
+    chassis.moveToPoint(-48, -18, 1000, {.forwards = false});
     scoringGate.set_value(false);
-
-    chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
+    pros::delay(450);
+    scoringGate.set_value(true);
+    chassis.moveToPoint(-48, -64, 1000, {.maxSpeed = 60});
+    //pros::delay(500);
+    chassis.moveToPoint(-48, -58, 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
+    chassis.moveToPose(-12, -8, -135, 2500, {.forwards = false, .minSpeed = 20}, false);
+    frontIntake.move(0);
+    middleRollers.move(100);
+    scoringRoller.move(-50);
     pros::delay(1200);
+    chassis.moveToPoint(-36, -30, 1500);
+    chassis.turnToHeading(170, 750);
+    chassis.moveToPoint(-38, -12, 1500, {.forwards = false, .maxSpeed = 60});
 
-    scoringGate.set_value(true);
-    scoringRoller.move(0);
-    middleRollers.move(0);
-    colorsortOn = true;
-    frontIntake.move(0);
+    // // faces to goal + loader alley
+    // chassis.turnToPoint(-48, -45, 800);
 
-    chassis.moveToPoint(-48, -50, 1000);
-    chassis.moveToPose(-38, -8, 180, 2500, {.forwards = false});
+    // // enters the loader using motion chain 
+    // chassis.moveToPose(-47, -48, 180, 1500, {.lead = 0.3, .minSpeed = 60, .earlyExitRange = 5});
+    // // moves deeper to collect
+    // chassis.moveToPoint(-47, -64, 1400, {.minSpeed = 60});
+    // pros::delay(150);
 
-    chassis.setPose(16, -48, 0);
-    frontIntake.move(127);
-    colorSortRoller.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(20);
-    wingMech.set_value(true);
-
-    chassis.moveToPoint(16, -44, 500);
-    chassis.turnToPoint(24, -24, 500, {});
-    chassis.moveToPoint(24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
-    pros::delay(400);
-    loaderMech.set_value(true);
-    chassis.turnToPoint(0, 0, 800,{.forwards=false});
-    chassis.moveToPoint(0, 0, 2000,{.forwards=false,.maxSpeed=60});
-    
-    chassis.moveToPose(48, -64, 180, 4000, {.lead=0.3});
-
-    pros::delay(200);
-
-    scoringGate.set_value(true);
-    chassis.moveToPoint(48, -20, 1500, {.forwards = false});
-    pros::delay(1000);
-
-    colorsortOn = false;
-    scoringRoller.move(127);
-    scoringGate.set_value(false);
-
-    // chassis.moveToPoint(-48, -20, 2000, {.forwards = false});
-    // pros::delay(1200);
-
-    scoringGate.set_value(true);
-    scoringRoller.move(0);
-    middleRollers.move(0);
-    colorsortOn = true;
-    frontIntake.move(0);
-
-    openGate = true;
-
-    // chassis.moveToPoint(-48, -50, 1000);
-    // chassis.moveToPose(-38, -8, 180, 2500, {.forwards = false});
-
-    // chassis.setPose(16, -48, 0);
-    // frontIntake.move(127);
-    // colorSortRoller.move(127);
-    // middleRollers.move(127);
-    // scoringRoller.move(20);
-    // wingMech.set_value(true);
-
-    // chassis.moveToPoint(16, -44, 500);
-    // chassis.turnToPoint(24, -24, 500, {});
-    // chassis.moveToPoint(24, -24, 3000, {.maxSpeed = 80, .minSpeed = 40});
-    // pros::delay(400);
-    // loaderMech.set_value(true);
-    // chassis.turnToPoint(0, 0, 800,{.forwards=false});
-    // chassis.moveToPoint(0, 0, 2000,{.forwards=false,.maxSpeed=60});
-    
-    // chassis.moveToPose(48, -64, 180, 4000, {.lead=0.3});
-
-    // pros::delay(200);
-
-    // scoringGate.set_value(false);
-    // chassis.moveToPoint(48, -20, 1500, {.forwards = false});
-    // pros::delay(1000);
-
-    // colorsortOn = false;
-    // scoringRoller.move(127);
+    // // verifies that scoring bar is closed
     // scoringGate.set_value(true);
 
-    // chassis.moveToPoint(48, -20, 2000, {.forwards = false});
-    // pros::delay(1200);
+    // // moves back into the goal waits to reach for second then proceeds
+    // chassis.moveToPoint(-48, -24, 1500, {.forwards = false});
+    // pros::delay(1000);
 
+    // // sets colorsort to off
+    // colorsortOn = false;
+
+    // // open scoring bar for 1.4 seconds
     // scoringGate.set_value(false);
+    // pros::delay(1400);
+
+    // // closes scoring bar
+    // scoringGate.set_value(true);
+
+    // // shuts intake system off
     // scoringRoller.move(0);
     // middleRollers.move(0);
-    // colorsortOn = true;
     // frontIntake.move(0);
+    // // colorsort switched back on for remainder of match
+    // colorsortOn = true;
 
-    // chassis.moveToPoint(48, -50, 1000);
-    // chassis.moveToPose(58, -8, 180, 2500, {.forwards = false});
+    // // moves in front of goal
+    // chassis.moveToPoint(-48, -50, 1000);
+
+    // // wings the goal
+    // chassis.moveToPose(-36, -8, 0, 2500, {.forwards = false,.lead=-0.6}, false);
+
+    // // verifies the bot doesnt get pushed
+    // while (chassis.getPose().y < -10) {
+    //     chassis.moveToPose(-36.5, -8, 180, 2500, {.forwards = false,.lead=-0.6});
+    // }
+    // openGate = true;
 
 
 } 
