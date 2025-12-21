@@ -217,7 +217,7 @@ Occurs when bot goes into init phase.
 */
 void initialize() {
     selector.focus();
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
     if (tuneMode == true){
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);

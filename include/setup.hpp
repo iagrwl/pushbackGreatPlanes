@@ -34,7 +34,6 @@ inline pros::Rotation verticalEnc(-6);
 //configure tracking wheels
 //inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
 inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
-inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
 //inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, 1.5);
 // configure entire odom setup
 inline lemlib::OdomSensors sensors(&verticalTrackingWheel,

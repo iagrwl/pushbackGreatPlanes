@@ -401,7 +401,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(30);
     chassis.setPose(0,-47,180);
-    scoringBar.set_value(true);
+    scoringGate.set_value(true);
     //turn on intake
     /*
     left_dt.move(100);
@@ -433,7 +433,7 @@ void autonSkills() {
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringBar.set_value(true);
+    scoringGate.set_value(true);
     chassis.turnToPoint(-60,-26,1500,{.maxSpeed=60});
     chassis.moveToPoint(-60,-26,1500,{.minSpeed=60,.earlyExitRange=2});
     chassis.turnToHeading(0,1500);
@@ -455,7 +455,7 @@ void solo_awp(){
     scoringGate.set_value(true);
 
     wingMech.set_value(true);
-    scoringBar.set_value(true);
+    scoringGate.set_value(true);
     //turn on intake
     frontIntake.move(127);
     middleRollers.move(127);
@@ -473,7 +473,7 @@ void solo_awp(){
     //go to long goal
     chassis.moveToPoint(-20,35,1000,{.forwards=false,.minSpeed=40},false);
     //let balls score
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
     //wait for blocks to be scored
     pros::delay(1100); 
     //retract loader mech
@@ -489,7 +489,7 @@ void solo_awp(){
     // chassis.moveToPoint(-7,35,1000);
     // chassis.turnToPoint(-15,5,400);
     //retract bar once swung
-    scoringBar.set_value(true);
+    scoringGate.set_value(true);
     //go to first 3 stack
     chassis.moveToPoint(-10.5,0,1200,{.maxSpeed=80});
     //go to second 3 stack
@@ -525,7 +525,7 @@ void solo_awp(){
     //lets pid settle
     pros::delay(500);
     //lets blocks score
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
     wingMech.set_value(false);
     /*
     chassis.setPose(16.5,-48,90);
