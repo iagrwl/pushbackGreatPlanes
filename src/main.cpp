@@ -38,12 +38,6 @@ int OPP_MAX; // enemy alliance color max
 
 
 /*
-Define tasks to be run in parallel here
-Use the below format.
-*/
-
-
-/*
 Tuning screen - screen that displays x,y theta + additional debug info. 
 Only runs when tunemode is set to true
 */
@@ -53,7 +47,7 @@ void positionTracker() {
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
     //pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
-    //pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
+    pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
     //pros::lcd::print(7, "NEW BOT CODE");
     pros::delay(10);
     }
@@ -141,6 +135,8 @@ float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
     return finalPos; 
 }
 
+
+
 void wallTask(void* param) {
   while (true) {
     wallDistance(true, false);
@@ -148,17 +144,12 @@ void wallTask(void* param) {
   }
 }
 
-/*
-Color sorting task - ejects opposite alliance rings
-Runs continuously during autonomous and driver control
-*/
 void colorSort() {
     
     // fastest int time to 3ms
     topOptical.set_integration_time(3);
 
-    // all code that should run consistently below here
-    while (true) {
+   
         // assigns enemy range based on alliance color
         if (isRed){
             OPP_MIN = BLUE_MIN;
@@ -190,6 +181,19 @@ void colorSort() {
         }
     
     }
+
+void CSTaskFunc(void* param) {
+  while (true) {
+    colorSort();
+    pros::delay(11);
+  }
+}
+
+void telemetryFunc(void* param) {
+  while (true) {
+    telemetry();
+    pros::delay(12);
+  }
 }
 
 
@@ -222,10 +226,7 @@ void initialize() {
     // init color sensor
     topOptical.set_led_pwm(100);
     topOptical.disable_gesture();
-    
-    // sets text on controller. 
-    //NOTE: slow updating text on controller
-    controller.set_text(0, 0, ("goodluck! eternity."));
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
 
     // task callerss
     //pros::Task telemetryTask(telemetry);
@@ -259,7 +260,8 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 */
 
 void disabled() {
-    scoringBar.set_value(false);
+    scoringGate.set_value(false);
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
   }
 
 /*
@@ -277,6 +279,7 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
+  controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
     isRed = false;
@@ -286,31 +289,13 @@ void autonomous() {
   }
   
   if (tuneMode){
-    if (testRoute == "S"){
-        autonSkills();
+   if (testRoute == "S") autonSkills();
+    else if (testRoute == "1GR") one_goal_right();
+    else if (testRoute == "1GL") one_goal_left();
+    else if (testRoute == "AWP") solo_awp();
+    else if (testRoute == "2GL") two_goal_LEFT();
+    else if (testRoute == "2GR") two_goal_RIGHT();
     }
-    else if (testRoute == "1GR")
-    {
-        one_goal_right();
-    }
-    else if (testRoute == "1GL")
-    {
-        one_goal_left();
-    }
-    else if (testRoute == "AWP")
-    {
-        solo_awp();
-    }
-    else if (testRoute == "2GL")
-    {
-        two_goal_LEFT();
-    }
-    else if (testRoute == "2GR")
-    {
-        two_goal_RIGHT();
-    }
-
-  }
   else{
   // runs auton from selected
   selector.run_auton();
@@ -410,6 +395,7 @@ void opcontrol() {
     handleLoaderMechCommands();
     handleWingMechCommands();
     updatePSI();
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
