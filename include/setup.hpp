@@ -33,7 +33,7 @@ inline pros::Rotation verticalEnc(18);
 inline pros::Rotation verticalEnc(-6);
 //configure tracking wheels
 //inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
-inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, -1.25);
+inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
 //inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, 1.5);
 // configure entire odom setup
 inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
@@ -80,7 +80,7 @@ inline lemlib::ExpoDriveCurve
 
 // input curve for steer input during driver control
 inline lemlib::ExpoDriveCurve
-    steer_curve(10,    // joystick deadband out of 127
+    steer_curve(60,    // joystick deadband out of 127
                 15,   // minimum output where drivetrain will move out of 127
                 1.016 // expo curve gain
     );
