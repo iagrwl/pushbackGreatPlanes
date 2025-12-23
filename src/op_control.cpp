@@ -3,7 +3,7 @@
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "setup.hpp"
-
+#include "op_control.hpp"
 #include <fstream>
 #include <string>
 
