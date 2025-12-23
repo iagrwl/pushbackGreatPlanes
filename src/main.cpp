@@ -8,7 +8,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "2GL"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -53,124 +53,91 @@ void positionTracker() {
     }
 }
 
-float wallDistance(bool shouldPrint = false, bool useRightSensor = true) {
-    // Sensor positions relative to robot center
-    // Right: 4.5" right, 0.5" back → (+4.5, -0.5)
-    // Left:  4.5" left, 1.5" back  → (-4.5, -1.5)
-    float rightOffsetX = 4.5, rightOffsetY = -0.5;
-    float leftOffsetX  = -4.5, leftOffsetY  = -1.5;
-
-    // Get raw sensor distances in inches
-    float rightDistMm = rightDistance.get();
-    float leftDistMm = leftDistance.get();
-    float rightSensorDist = rightDistMm / 25.4;
-    float leftSensorDist = leftDistMm / 25.4;
-
-    // Get robot angle
-    float angDeg = chassis.getPose().theta;
-    float angRad = angDeg * M_PI / 180.0;
-
-    // Normalize angle to [0, 360)
-    float angle = fmod(angDeg, 360.0);
-    if (angle < 0) angle += 360.0;
-
-    // At theta=0, robot faces +Y (forward)
-    // Right sensor points +X (right), left sensor points -X (left)
+float wallDistance(bool shouldPrint = false, bool useRightSensor = true) { 
+    float rightOffsetX = 2.5, rightOffsetY = -1.0; 
+    float leftOffsetX  = 1.5, leftOffsetY  = 0.0; 
+ 
+    float offsetX = useRightSensor ? rightOffsetX : leftOffsetX; 
+    float offsetY = useRightSensor ? rightOffsetY : leftOffsetY; 
+ 
+    float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get(); 
+    float distanceIn = distancemm / 25.4 + offsetX; 
+ 
+    float angDeg = chassis.getPose().theta; 
+    float angRad = angDeg * M_PI / 180.0; 
+ 
+    float angle = fmod(angDeg, 360.0); 
+    if (angle < 0) angle += 360.0; 
+ 
+    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad); 
+    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad); 
+ 
+    float correctedDist = 0; 
+    float finalPos = 0; 
+    bool isXAxis = true;  // true if measuring X position, false if measuring Y
+ 
+    if (angle >= 315 || angle < 45) { 
+        isXAxis = true;  // Facing forward/back walls (measuring Y)
+        if (useRightSensor) { 
+            correctedDist = -distanceIn * cos(angRad) - rotatedX; 
+            finalPos = 71 - correctedDist; 
+        } else { 
+            correctedDist = distanceIn * cos(angRad) + rotatedX; 
+            finalPos = correctedDist - 71; 
+        } 
+    } else if (angle >= 45 && angle < 135) { 
+        isXAxis = false;  // Facing left/right walls (measuring X)
+        if (useRightSensor) { 
+            correctedDist = -distanceIn * sin(angRad) - rotatedY; 
+            finalPos = correctedDist - 71; 
+        } else { 
+            correctedDist = distanceIn * sin(angRad) + rotatedY; 
+            finalPos = 71 - correctedDist; 
+        } 
+    } else if (angle >= 135 && angle < 225) { 
+        isXAxis = true;  // Facing forward/back walls (measuring Y)
+        if (useRightSensor) { 
+            correctedDist = distanceIn * cos(angRad) + rotatedX; 
+            finalPos = -correctedDist - 71; 
+        } else { 
+            correctedDist = -distanceIn * cos(angRad) - rotatedX; 
+            finalPos = 71 - correctedDist; 
+        } 
+    } else { 
+        isXAxis = true;  // Facing left/right walls (measuring X)
+        if (useRightSensor) { 
+            correctedDist = distanceIn * sin(angRad) + rotatedY; 
+            finalPos = 71 + correctedDist; 
+        } else { 
+            correctedDist = -distanceIn * sin(angRad) - rotatedY; 
+            finalPos = correctedDist - 71; 
+        } 
+    } 
+ 
+    // Get current pose
+    lemlib::Pose currentPose = chassis.getPose();
     
-    // Right sensor points 90° clockwise from robot heading (in world frame)
-    float rightSensorAngle = angle + 90;
-    if (rightSensorAngle >= 360) rightSensorAngle -= 360;
-
-    // Left sensor points 90° counter-clockwise from robot heading
-    float leftSensorAngle = angle - 90;
-    if (leftSensorAngle < 0) leftSensorAngle += 360;
-
-    // Calculate adjusted distances (sensor reading + offset magnitude in sensor direction)
-    float rightAdjustedDist = rightSensorDist + sqrt(rightOffsetX * rightOffsetX + rightOffsetY * rightOffsetY);
-    float leftAdjustedDist = leftSensorDist + sqrt(leftOffsetX * leftOffsetX + leftOffsetY * leftOffsetY);
-
-    // Determine which wall each sensor faces and calculate robot position
-    // Assuming field: X: [-72, 72], Y: [-72, 72] with walls at boundaries
-    float rightWallPos = 0, leftWallPos = 0;
-    float rightRobotPos = 0, leftRobotPos = 0;
-    const char* rightWall = "";
-    const char* leftWall = "";
-    
-    // Calculate angle deviation from perpendicular for each sensor
-    float rightAngleDeviation = 0;
-    float leftAngleDeviation = 0;
-
-    // Right sensor - calculate perpendicular distance using cosine correction
-    if (rightSensorAngle >= 315 || rightSensorAngle < 45) {  // Right wall (+X)
-        rightWall = "Right(+X)";
-        rightWallPos = 72;
-        // Angle from perpendicular to wall (0° = perpendicular to +X wall)
-        rightAngleDeviation = (rightSensorAngle > 180) ? (360 - rightSensorAngle) : rightSensorAngle;
-        rightAdjustedDist = rightAdjustedDist * cos(rightAngleDeviation * M_PI / 180.0);
-        rightRobotPos = rightWallPos - rightAdjustedDist;
-    } else if (rightSensorAngle >= 45 && rightSensorAngle < 135) {  // Top wall (+Y)
-        rightWall = "Top(+Y)";
-        rightWallPos = 72;
-        // Angle from perpendicular to wall (90° = perpendicular to +Y wall)
-        rightAngleDeviation = fabs(90 - rightSensorAngle);
-        rightAdjustedDist = rightAdjustedDist * cos(rightAngleDeviation * M_PI / 180.0);
-        rightRobotPos = rightWallPos - rightAdjustedDist;
-    } else if (rightSensorAngle >= 135 && rightSensorAngle < 225) {  // Left wall (-X)
-        rightWall = "Left(-X)";
-        rightWallPos = -72;
-        // Angle from perpendicular to wall (180° = perpendicular to -X wall)
-        rightAngleDeviation = fabs(180 - rightSensorAngle);
-        rightAdjustedDist = rightAdjustedDist * cos(rightAngleDeviation * M_PI / 180.0);
-        rightRobotPos = rightWallPos + rightAdjustedDist;
-    } else {  // Bottom wall (-Y)
-        rightWall = "Bottom(-Y)";
-        rightWallPos = -72;
-        // Angle from perpendicular to wall (270° = perpendicular to -Y wall)
-        rightAngleDeviation = fabs(270 - rightSensorAngle);
-        rightAdjustedDist = rightAdjustedDist * cos(rightAngleDeviation * M_PI / 180.0);
-        rightRobotPos = rightWallPos + rightAdjustedDist;
+    // Reset appropriate axis based on which walls we're measuring
+    if (isXAxis) {
+        // Sensors face left/right walls - reset X position
+        chassis.setPose(finalPos, currentPose.y, currentPose.theta);
+    } else {
+        // Sensors face front/back walls - reset Y position
+        chassis.setPose(currentPose.x, finalPos, currentPose.theta);
     }
-
-    // Left sensor - calculate perpendicular distance using cosine correction
-    if (leftSensorAngle >= 315 || leftSensorAngle < 45) {  // Right wall (+X)
-        leftWall = "Right(+X)";
-        leftWallPos = 72;
-        leftAngleDeviation = (leftSensorAngle > 180) ? (360 - leftSensorAngle) : leftSensorAngle;
-        leftAdjustedDist = leftAdjustedDist * cos(leftAngleDeviation * M_PI / 180.0);
-        leftRobotPos = leftWallPos - leftAdjustedDist;
-    } else if (leftSensorAngle >= 45 && leftSensorAngle < 135) {  // Top wall (+Y)
-        leftWall = "Top(+Y)";
-        leftWallPos = 72;
-        leftAngleDeviation = fabs(90 - leftSensorAngle);
-        leftAdjustedDist = leftAdjustedDist * cos(leftAngleDeviation * M_PI / 180.0);
-        leftRobotPos = leftWallPos - leftAdjustedDist;
-    } else if (leftSensorAngle >= 135 && leftSensorAngle < 225) {  // Left wall (-X)
-        leftWall = "Left(-X)";
-        leftWallPos = -72;
-        leftAngleDeviation = fabs(180 - leftSensorAngle);
-        leftAdjustedDist = leftAdjustedDist * cos(leftAngleDeviation * M_PI / 180.0);
-        leftRobotPos = leftWallPos + leftAdjustedDist;
-    } else {  // Bottom wall (-Y)
-        leftWall = "Bottom(-Y)";
-        leftWallPos = -72;
-        leftAngleDeviation = fabs(270 - leftSensorAngle);
-        leftAdjustedDist = leftAdjustedDist * cos(leftAngleDeviation * M_PI / 180.0);
-        leftRobotPos = leftWallPos + leftAdjustedDist;
-    }
-
-    if (shouldPrint) {
-        pros::lcd::print(5, "R adj: %.2f\"  L adj: %.2f\"", 
-                        rightAdjustedDist, leftAdjustedDist);
-        pros::lcd::print(6, "R: %s  L: %s", rightWall, leftWall);
-        pros::lcd::print(7, "R pos: %.2f  L pos: %.2f", 
-                        rightRobotPos, leftRobotPos);
-    }
-
-    // Return the requested sensor's calculated robot position
-    return useRightSensor ? rightRobotPos : leftRobotPos;
+ 
+    if (shouldPrint) { 
+        pros::lcd::print(5, "Distance: %.2f", distanceIn); 
+        pros::lcd::print(6, "Corrected: %.2f, Axis: %s", correctedDist, isXAxis ? "X" : "Y"); 
+        pros::lcd::print(7, "Reset pos: %.2f", finalPos);
+    } 
+ 
+    return finalPos; 
 }
 
-void wallTaskFunc(void* param) {
+
+
+void wallTask(void* param) {
   while (true) {
     wallDistance(true, false);
     pros::delay(10);
@@ -262,9 +229,9 @@ void initialize() {
     controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
 
     // task callerss
-    pros::Task telemetryTask(telemetryFunc);
-    pros::Task colorSortTask(CSTaskFunc);
-    pros::Task wallTask(wallTaskFunc);
+    //pros::Task telemetryTask(telemetry);
+    //pros::Task colorSortTask(colorSort);
+    //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
     
