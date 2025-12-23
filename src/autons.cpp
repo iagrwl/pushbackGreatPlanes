@@ -504,10 +504,10 @@ void two_goal_LEFT() {
     scoringGate.set_value(false);
     pros::delay(450);
     scoringGate.set_value(true);
-    chassis.moveToPoint(-48, -64, 1000, {.maxSpeed = 60});
+    chassis.moveToPoint(-48, -64, 1200, {.maxSpeed = 60});
     //pros::delay(500);
     chassis.moveToPoint(-48, -58, 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
-    chassis.moveToPose(-12, -8, -135, 2500, {.forwards = false, .minSpeed = 20}, false);
+    chassis.moveToPose(-12, -8, -135, 3000, {.forwards = false, .minSpeed = 40}, false);
     frontIntake.move(0);
     middleRollers.move(100);
     scoringRoller.move(-50);
