@@ -5,9 +5,12 @@
 #include "setup.hpp"
 #include "midGoalScoring.hpp"
 
-void midGoalScoring(){
+void scoreMidGoal(){
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127); 
+    pros::delay(100);
+    scoringRoller.move(-80);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(127); 
-
 }
