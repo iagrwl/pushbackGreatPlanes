@@ -9,9 +9,6 @@
 void telemetry();
 void updatePSI();
 extern int PSI;
-extern bool openGate;
-extern bool isLoaderExtended;
-extern bool isWingsOut;
 
 //drive
 void handleArcade();

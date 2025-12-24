@@ -79,15 +79,8 @@ inline bool colorsortOn = true;
 #include <iostream>
 #include "setup.hpp"
 #include "op_control.hpp"
-#include "awp.hpp"
-#include "blockScoring.hpp"
-#include "distanceSensor.hpp"
-#include "midGoalScoring.hpp"
-#include "oneGoal.hpp"
-#include "pidTesting.hpp"
-#include "skills.hpp"
-#include "testRoute.hpp"
-#include "twoGoal.hpp"
+#include "autons.hpp"
+
 
 #endif
 
