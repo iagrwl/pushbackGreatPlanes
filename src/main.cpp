@@ -117,7 +117,7 @@ void initialize() {
 
     // task callerss
     //pros::Task telemetryTask(telemetry);
-    //pros::Task colorSortTask(colorSort);
+    pros::Task colorSortTask(CSTaskFunc);
     //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
