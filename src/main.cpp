@@ -17,7 +17,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "1GL"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -30,6 +30,9 @@ int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 int CSSwitchHoldTime = 0;
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
+int CSTogCount = 0;
+int CSTogLastTapTime = 0;
+
 
 float DPDcurveMultiplier = 0.63; // changes the amount of curve the delay has
 int FDPV = 120; // enter at 100 psi what the delay is
@@ -193,8 +196,11 @@ void autonomous() {
 
 void opcontrol() {
 //chassis.setPose(15,-48,90);
-  while (true) {
 
+
+
+  while (true) {
+      
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
             DHoldTime += 20; // loop delay is 20ms
@@ -207,15 +213,21 @@ void opcontrol() {
             DHoldTime = 0; // reset if released early
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-            CSSwitchHoldTime += 20; // loop delay is 20ms
-            if (CSSwitchHoldTime >= 1000) { // must hold for 2000 ms for statement to pass
-                isRed = !isRed; // toggle mode
-                controller.rumble("-"); // give feedback
-                CSSwitchHoldTime = 0; // reset so it doesn't keep toggling
+        // Triple-tap detection for Y button to toggle colorsortOn
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            int currentTime = pros::millis();
+            if (currentTime - CSTogLastTapTime <= 1000) {
+                CSTogCount++;
+            } else {
+                CSTogCount = 1;
             }
-        } else {
-            CSSwitchHoldTime = 0; // reset if released early
+            CSTogLastTapTime = currentTime;
+
+            if (CSTogCount == 3) {
+                colorsortOn = !colorsortOn;
+                controller.rumble("..");
+                CSTogCount = 0;
+            }
         }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
