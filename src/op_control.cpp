@@ -52,7 +52,7 @@ void handleIOCommands() {
     isIntakeOn = !isIntakeOn;
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -79,8 +79,8 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
     scoringGate.set_value(true);
     frontIntake.move(127);
-    middleRollers.move(100);
-    scoringRoller.move(-50);
+    middleRollers.move(127);
+    scoringRoller.move(-30);
     return; // return bc its a hold
   }
 
@@ -131,7 +131,7 @@ void handleLoaderMechCommands() { //toggle button for loader mech
 }
 
 void handleWingMechCommands() { //toggle button wing mech
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { //if the controller recognizes a new press from the B button
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) { //if the controller recognizes a new press from the B button
     isWingsOut = !isWingsOut; //flips the condition of the current state of the wings
     wingMech.set_value(isWingsOut); //sets the physical state to the bool condition of the wings
     if (isWingsOut == false){
