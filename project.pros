@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "12/6 comp ",
+    "project_name": "newbot",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,7 +324,7 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "comp. intake lock in",
+      "description": "new bot code",
       "icon": "X"
     },
     "use_early_access": false

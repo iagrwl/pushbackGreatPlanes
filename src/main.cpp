@@ -1,5 +1,14 @@
 #include "main.h"
-#include "autons.hpp"
+#include "awp.hpp"
+#include "blockScoring.hpp"
+#include "distanceSensor.hpp"
+#include "midGoalScoring.hpp"
+#include "oneGoal.hpp"
+#include "pidTesting.hpp"
+#include "skills.hpp"
+#include "testRoute.hpp"
+#include "twoGoal.hpp"
+#include "colorSort.hpp"
 #include "op_control.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
@@ -7,7 +16,9 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
+std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
 */
@@ -26,82 +37,51 @@ int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
 
-int BLUE_MAX = 230;
-int BLUE_MIN = 170;
-int RED_MAX = 20;
-int RED_MIN = 0;
-
-int OPP_MIN;
-int OPP_MAX;
-
 
 
 
 /*
-A tuning screen that shows x,y, theta and helps for tuning. only runs when the tunemode is set to true
+Tuning screen - screen that displays x,y theta + additional debug info. 
+Only runs when tunemode is set to true
 */
 void positionTracker() {
     while (true) {
-    //XY THETA DISPLAY
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
-    //BOTTOM DIST SENSOR DISPLAY
-    //pros::lcd::print(2, "left: %d", leftDistance.get_distance());
-    //TOP COLOR SENSOR DISPLAY
-    pros::lcd::print(3, "applied delay %.2f", DPdelay);
+    pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
-    pros::lcd::print(6, "alliance: %d", isRed);
-    pros::lcd::print(7, "right: %d", rightDistance.get_distance());
-    pros::delay(10); // delay to avoid overloading the system
+    //pros::lcd::print(5, "colorval: %.2f", topOptical.get_hue());
+    pros::lcd::print(6, "alliance: %d", isRed ? "RED SELECTED" : "BLUE SELECTED");
+    //pros::lcd::print(7, "NEW BOT CODE");
+    pros::delay(10);
     }
 }
 
-/*
-Color sorting task - ejects opposite alliance rings
-Runs continuously during autonomous and driver control
-*/
-void colorSort() {
-    
-    // Set integration time to minimum for fastest response (3ms)
-    topOptical.set_integration_time(3);
-    
-    while (true) {
-        
-            if (isRed){
-        OPP_MIN = BLUE_MIN;
-        OPP_MAX = BLUE_MAX;
-        }
-        else{
-            OPP_MIN = RED_MIN;
-            OPP_MAX = RED_MAX;
-        }
-        if (colorsortOn == true){
-        // Get current color sensor reading (hue value)
-        double colorValue = topOptical.get_hue();
-        
-        // Check if the reading is valid (not an error)
-        if (colorValue >= 0 && colorValue <= 360) {
-            // Check if detected color is within opposite alliance range
-            if (colorValue >= OPP_MIN && colorValue <= OPP_MAX) {
-                // Opposite alliance color detected - STOP THE ROLLER
-                
-                scoringRoller.move(-50);
-                
-            }
-        }
-        }
-        else{
-            pros::delay(5);
-        }
-        // Minimal delay for fastest detection
-        pros::delay(2);
-    }
+
+
+
+
+void wallTask(void* param) {
+  while (true) {
+    wallDistance(true, false);
+    pros::delay(10);
+  }
 }
 
-/*
-Define tasks to be run in parallel here
-Use the below format.
-*/
+
+
+void CSTaskFunc(void* param) {
+  while (true) {
+    colorSort();
+    pros::delay(11);
+  }
+}
+
+void telemetryFunc(void* param) {
+  while (true) {
+    telemetry();
+    pros::delay(12);
+  }
+}
 
 
 
@@ -123,36 +103,30 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-    // Set opponent color ranges based on alliance
-    
-    
+    selector.focus();
+    scoringGate.set_value(false);
     if (tuneMode == true){
-        pros::lcd::initialize(); // comment both lines for selector
+        pros::lcd::initialize();
         pros::Task pos(&positionTracker);
     }
     
-    // Initialize optical sensor
+    // init color sensor
     topOptical.set_led_pwm(100);
     topOptical.disable_gesture();
-    
-    // START COLOR SORT TASK - runs during both auton and driver control
-    pros::Task colorSortTask(colorSort);
-    
-    controller.set_text(0, 0, ("goodluck!"));
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
 
-    //task caller
-    pros::Task telemetryTask(telemetry);
-    
-
-
-    //calibrates drivetrain
+    // task callerss
+    //pros::Task telemetryTask(telemetry);
+    //pros::Task colorSortTask(colorSort);
+    //pros::Task wall(wallTask);
+    // calibrates drivetrain
     chassis.calibrate();
     
-    //SETS DRIVETRAIN IDLE MODE
+    // sets idle mode on drivetrain
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
 
-    //robodash - dont mess w
+    // robodash - dont mess w
     selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
         if (routine == std::nullopt) {
             std::cout << "No routine selected" << std::endl;
@@ -173,7 +147,8 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 */
 
 void disabled() {
-    scoringBar.set_value(true);
+    scoringGate.set_value(false);
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
   }
 
 /*
@@ -191,6 +166,7 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
+  controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
     isRed = false;
@@ -198,11 +174,20 @@ void autonomous() {
   else if (hue >= RED_MIN && hue <= RED_MAX){
     isRed = true;
   }
-  // runs selected auton
+  
+  if (tuneMode){
+   if (testRoute == "S") autonSkills();
+    else if (testRoute == "1GR") one_goal_right();
+    else if (testRoute == "1GL") one_goal_left();
+    else if (testRoute == "AWP") solo_awp();
+    else if (testRoute == "2GL") two_goal_LEFT();
+    else if (testRoute == "2GR") two_goal_RIGHT();
+    }
+  else{
+  // runs auton from selected
   selector.run_auton();
-  //autonSkills();
-  //one_goal_right();
-  //solo_awp();
+  }
+  
  }
 
 
@@ -297,6 +282,7 @@ void opcontrol() {
     handleLoaderMechCommands();
     handleWingMechCommands();
     updatePSI();
+    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
