@@ -81,7 +81,7 @@ inline lemlib::ExpoDriveCurve
 // input curve for steer input during driver control
 inline lemlib::ExpoDriveCurve
     steer_curve(60,    // joystick deadband out of 127
-                15,   // minimum output where drivetrain will move out of 127
+                10,   // minimum output where drivetrain will move out of 127
                 1.016 // expo curve gain
     );
 
