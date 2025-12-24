@@ -80,7 +80,9 @@ void handleIOCommands() {
     scoringGate.set_value(true);
     frontIntake.move(127);
     middleRollers.move(100);
-    scoringRoller.move(-50);
+    scoringRoller.move(-30);
+    middleRollers.move(127);
+    scoringRoller.move(-30);
     return; // return bc its a hold
   }
 
@@ -91,7 +93,7 @@ void handleIOCommands() {
       if (isIntakeOn) {
         frontIntake.move(127);
         middleRollers.move(127);
-        scoringRoller.move(127);
+        scoringRoller.move(90);
       } else {
         frontIntake.move(0);
         middleRollers.move(0);
