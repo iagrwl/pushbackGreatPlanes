@@ -1,5 +1,14 @@
 #include "main.h"
-#include "autons.hpp"
+#include "awp.hpp"
+#include "blockScoring.hpp"
+#include "distanceSensor.hpp"
+#include "midGoalScoring.hpp"
+#include "oneGoal.hpp"
+#include "pidTesting.hpp"
+#include "skills.hpp"
+#include "testRoute.hpp"
+#include "twoGoal.hpp"
+#include "colorSort.hpp"
 #include "op_control.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
@@ -28,13 +37,7 @@ int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
 
-int BLUE_MAX = 230; // max blue hue
-int BLUE_MIN = 190; // min blue hue
-int RED_MAX = 20; // max red hue
-int RED_MIN = 5; // min red hue
 
-int OPP_MIN; // enemy alliance color min
-int OPP_MAX; // enemy alliance color max
 
 
 /*
@@ -53,87 +56,7 @@ void positionTracker() {
     }
 }
 
-float wallDistance(bool shouldPrint = false, bool useRightSensor = true) { 
-    float rightOffsetX = 2.5, rightOffsetY = -1.0; 
-    float leftOffsetX  = 1.5, leftOffsetY  = 0.0; 
- 
-    float offsetX = useRightSensor ? rightOffsetX : leftOffsetX; 
-    float offsetY = useRightSensor ? rightOffsetY : leftOffsetY; 
- 
-    float distancemm = useRightSensor ? rightDistance.get() : leftDistance.get(); 
-    float distanceIn = distancemm / 25.4 + offsetX; 
- 
-    float angDeg = chassis.getPose().theta; 
-    float angRad = angDeg * M_PI / 180.0; 
- 
-    float angle = fmod(angDeg, 360.0); 
-    if (angle < 0) angle += 360.0; 
- 
-    float rotatedX = offsetX * cos(angRad) - offsetY * sin(angRad); 
-    float rotatedY = offsetX * sin(angRad) + offsetY * cos(angRad); 
- 
-    float correctedDist = 0; 
-    float finalPos = 0; 
-    bool isXAxis = true;  // true if measuring X position, false if measuring Y
- 
-    if (angle >= 315 || angle < 45) { 
-        isXAxis = true;  // Facing forward/back walls (measuring Y)
-        if (useRightSensor) { 
-            correctedDist = -distanceIn * cos(angRad) - rotatedX; 
-            finalPos = 71 - correctedDist; 
-        } else { 
-            correctedDist = distanceIn * cos(angRad) + rotatedX; 
-            finalPos = correctedDist - 71; 
-        } 
-    } else if (angle >= 45 && angle < 135) { 
-        isXAxis = false;  // Facing left/right walls (measuring X)
-        if (useRightSensor) { 
-            correctedDist = -distanceIn * sin(angRad) - rotatedY; 
-            finalPos = correctedDist - 71; 
-        } else { 
-            correctedDist = distanceIn * sin(angRad) + rotatedY; 
-            finalPos = 71 - correctedDist; 
-        } 
-    } else if (angle >= 135 && angle < 225) { 
-        isXAxis = true;  // Facing forward/back walls (measuring Y)
-        if (useRightSensor) { 
-            correctedDist = distanceIn * cos(angRad) + rotatedX; 
-            finalPos = -correctedDist - 71; 
-        } else { 
-            correctedDist = -distanceIn * cos(angRad) - rotatedX; 
-            finalPos = 71 - correctedDist; 
-        } 
-    } else { 
-        isXAxis = true;  // Facing left/right walls (measuring X)
-        if (useRightSensor) { 
-            correctedDist = distanceIn * sin(angRad) + rotatedY; 
-            finalPos = 71 + correctedDist; 
-        } else { 
-            correctedDist = -distanceIn * sin(angRad) - rotatedY; 
-            finalPos = correctedDist - 71; 
-        } 
-    } 
- 
-    // Get current pose
-    lemlib::Pose currentPose = chassis.getPose();
-    
-    // Reset appropriate axis based on which walls we're measuring
-    if (isXAxis) {
-        // Sensors face left/right walls - reset X position
-        chassis.setPose(finalPos, currentPose.y, currentPose.theta);
-    } else {
-        // Sensors face front/back walls - reset Y position
-        chassis.setPose(currentPose.x, finalPos, currentPose.theta);
-    }
- 
-    if (shouldPrint) { 
-        pros::lcd::print(5, "Distance: %.2f", distanceIn); 
-        pros::lcd::print(6, "Corrected: %.2f, Axis: %s", correctedDist, isXAxis ? "X" : "Y"); 
-        pros::lcd::print(7, "Reset pos: %.2f", finalPos);
-    } 
- 
-    return finalPos; 
-}
+
 
 
 
@@ -144,43 +67,7 @@ void wallTask(void* param) {
   }
 }
 
-void colorSort() {
-    
-    // fastest int time to 3ms
-    topOptical.set_integration_time(3);
 
-   
-        // assigns enemy range based on alliance color
-        if (isRed){
-            OPP_MIN = BLUE_MIN;
-            OPP_MAX = BLUE_MAX;
-        }
-        else{
-            OPP_MIN = RED_MIN;
-            OPP_MAX = RED_MAX;
-        }
-        // checks if colorsort is allowed to run
-        if (colorsortOn == true){
-
-            // gets hue from sensor
-            double colorValue = topOptical.get_hue();
-        
-            // filters false readings
-            if (colorValue >= 0 && colorValue <= 360) {
-                // checks if in range of enemy color
-                if (colorValue >= OPP_MIN && colorValue <= OPP_MAX) {
-                    // code that occurs when enemy color detected
-                    scoringRoller.move(-120);
-             
-                }
-            }
-        }
-        // passes if color sort isnt allowed to run
-        else{ 
-            pros::delay(5);
-        }
-    
-    }
 
 void CSTaskFunc(void* param) {
   while (true) {
@@ -230,7 +117,7 @@ void initialize() {
 
     // task callerss
     //pros::Task telemetryTask(telemetry);
-    //pros::Task colorSortTask(colorSort);
+    pros::Task colorSortTask(CSTaskFunc);
     //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
