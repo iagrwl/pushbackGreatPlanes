@@ -17,10 +17,10 @@ void solo_awp(){
     scoringRoller.move(127);
     loaderMech.set_value(true);
     chassis.setPose(16,-48,90);
-    chassis.moveToPoint(43,-48,800,{.minSpeed=50,.earlyExitRange=6});
-    chassis.moveToPose(45,-78,180,1000,{.minSpeed=60});
-    pros::delay(1500);
-    chassis.moveToPoint(46.6,-22,1100,{.forwards=false,.minSpeed=20},false);
+    chassis.moveToPoint(39,-48,800,{.minSpeed=50,.earlyExitRange=2});
+    chassis.moveToPose(45,-80,180,1500,{.minSpeed=65},false);
+
+    chassis.moveToPoint(45.5,-22,1200,{.forwards=false,.minSpeed=10},false);
     scoringGate.set_value(false);
     pros::delay(1500);
     loaderMech.set_value(false);
@@ -28,15 +28,15 @@ void solo_awp(){
     chassis.setPose(48,-24,180);
     chassis.moveToPoint(48,-37,500);
     scoringGate.set_value(true);
-    chassis.turnToHeading(320,500);
-    chassis.moveToPoint(24,-22,1200);
+    chassis.turnToHeading(320,750);
+    chassis.moveToPoint(24,-22,900);
     chassis.turnToHeading(-90,250);
     chassis.moveToPoint(-25,-23,1200);
-    chassis.moveToPose(-3,-5,225,900,{.forwards=false},false);
+    chassis.moveToPose(-3,-3,225,900,{.forwards=false},false);
     frontIntake.move(100);
     middleRollers.move(127);
     scoringRoller.move(-80);
-    pros::delay(2000);
+    pros::delay(1500);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
