@@ -18,10 +18,12 @@ void colorSort() {
     pros::lcd::print(6, "H:%.0f P:%.0f", hue, prox);
     
     if (ejecting) {
-        scoringRoller.move_voltage(-15000);
+        scoringRoller.move_voltage(-20000);
+        frontIntake.move_voltage(-20000);
+        middleRollers.move_voltage(-20000);
         pros::lcd::print(7, "EJECT");
         
-        if (pros::millis() - eject_start >= 400) {
+        if (pros::millis() - eject_start >= 50) {
             ejecting = false;
         }
         return;
