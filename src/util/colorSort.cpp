@@ -3,35 +3,34 @@
 #include "setup.hpp"
 #include "colorSort.hpp"
 
-int BLUE_MIN = 190, BLUE_MAX = 230, RED_MIN = 5, RED_MAX = 30;
-
 void colorSort() {
-    static bool sorting = false;
-    static uint32_t start = 0;
-    const uint32_t sort_time = 350;
-
-    topOptical.set_integration_time(3);
-
-    int opp_min = isRed ? BLUE_MIN : RED_MIN;
-    int opp_max = isRed ? BLUE_MAX : RED_MAX;
-
+    static bool ejecting = false;
+    static uint32_t eject_start = 0;
+    
+    topOptical.set_integration_time(1);
+    
     double hue = topOptical.get_hue();
-
-    if (colorsortOn && !sorting && hue >= opp_min && hue <= opp_max) {
-        sorting = true;
-        start = pros::millis();
-    }
-
-    if (sorting) {
-        scoringRoller.move(-127);
-        pros::lcd::print(7, "SORT");
-        if (pros::millis() - start >= sort_time) {
-             
-            scoringRoller.move(0);
-            sorting = false;
+    double prox = topOptical.get_proximity();
+    
+    int enemy_min = isRed ? BLUE_MIN : RED_MIN;
+    int enemy_max = isRed ? BLUE_MAX : RED_MAX;
+    
+    pros::lcd::print(6, "H:%.0f P:%.0f", hue, prox);
+    
+    if (ejecting) {
+        scoringRoller.move_voltage(-15000);
+        pros::lcd::print(7, "EJECT");
+        
+        if (pros::millis() - eject_start >= 400) {
+            ejecting = false;
         }
+        return;
     }
-    pros::lcd::print(7, "KEEP");
-
-    pros::delay(3);
+    
+    if (colorsortOn && prox > 50 && hue >= enemy_min && hue <= enemy_max) {
+        ejecting = true;
+        eject_start = pros::millis();
+    } else {
+        pros::lcd::print(7, "READY");
+    }
 }

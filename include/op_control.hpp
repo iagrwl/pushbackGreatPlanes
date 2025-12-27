@@ -26,4 +26,6 @@ void handleScoringBarCommands();
 void handleLoaderMechCommands();
 void handleWingMechCommands();
 void handleParkCommands();
+void switchCS();
+void toggleCS();
 void rumble();

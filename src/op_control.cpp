@@ -6,6 +6,8 @@
 #include "op_control.hpp"
 #include <fstream>
 #include <string>
+#include "colorSort.hpp"
+
 
 //STATES
 //extensions
@@ -141,6 +143,21 @@ void handleWingMechCommands() { //toggle button wing mech
     }
   }
 }
+
+void toggleCS() { // toggle on off
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { //if the controller recognizes a new press from the B button
+    colorsortOn = !colorsortOn; //flips the condition of the current state of the wings
+
+  }
+}
+
+void switchCS() { // switche color
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { //if the controller recognizes a new press from the B button
+    isRed = !isRed; //flips the condition of the current state of the wings
+
+  }
+}
+
 
 void updatePSI(){
   usedPSI = (LE*LP)+(DE*DP)+(WE*WP);

@@ -27,11 +27,9 @@ bool defaultDrive = true; //default toggler, true for arcade default and false f
 
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
-int CSSwitchHoldTime = 0;
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
-int CSTogCount = 0;
-int CSTogLastTapTime = 0;
+
 
 
 float DPDcurveMultiplier = 0.63; // changes the amount of curve the delay has
@@ -116,7 +114,7 @@ void initialize() {
     // init color sensor
     topOptical.set_led_pwm(100);
     topOptical.disable_gesture();
-    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
+    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
 
     // task callerss
     //pros::Task telemetryTask(telemetry);
@@ -142,7 +140,8 @@ void initialize() {
         }
     });
     
-}
+} 
+
 
 /*
 Occurs when bot is in disable phase - when the autonomous and driving period are over.
@@ -151,7 +150,7 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 
 void disabled() {
     scoringGate.set_value(false);
-    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
+    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
   }
 
 /*
@@ -169,7 +168,7 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
-  controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
+  controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
     isRed = false;
@@ -200,6 +199,8 @@ void opcontrol() {
 
 
   while (true) {
+
+     
       
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -211,17 +212,6 @@ void opcontrol() {
             }
         } else {
             DHoldTime = 0; // reset if released early
-        }
-
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-            CSSwitchHoldTime += 20; // loop delay is 20ms
-            if (CSSwitchHoldTime >= 1000) { // must hold for 2000 ms for statement to pass
-                isRed = !isRed; // toggle mode
-                controller.rumble("-"); // give feedback
-                CSSwitchHoldTime = 0; // reset so it doesn't keep toggling
-            }
-        } else {
-            CSSwitchHoldTime = 0; // reset if released early
         }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
@@ -288,7 +278,9 @@ void opcontrol() {
     handleLoaderMechCommands();
     handleWingMechCommands();
     updatePSI();
-    controller.set_text(0, 0, (isRed ? "RED PRIME" : "BLUE PRIME"));
+    toggleCS();
+    switchCS();           
+    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);
