@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "parthcodeseper",
+    "project_name": "colorsort",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,8 +324,8 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "new bot code",
-      "icon": "power"
+      "description": "colortest",
+      "icon": "ufo"
     },
     "use_early_access": false
   }

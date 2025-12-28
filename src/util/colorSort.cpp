@@ -1,38 +1,51 @@
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include "pros/distance.hpp"
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 #include "colorSort.hpp"
 
+
+int oppMin;
+int oppMax;
+int hue;
+bool sort =false;
+int proximity;
+uint32_t start=0;
+uint32_t current;
+
 void colorSort() {
-    static bool ejecting = false;
-    static uint32_t eject_start = 0;
-    
-    topOptical.set_integration_time(1);
-    
-    double hue = topOptical.get_hue();
-    double prox = topOptical.get_proximity();
-    
-    int enemy_min = isRed ? BLUE_MIN : RED_MIN;
-    int enemy_max = isRed ? BLUE_MAX : RED_MAX;
-    
-    pros::lcd::print(6, "H:%.0f P:%.0f", hue, prox);
-    
-    if (ejecting) {
-        scoringRoller.move_voltage(-20000);
-        frontIntake.move_voltage(-20000);
-        middleRollers.move_voltage(-20000);
-        pros::lcd::print(7, "EJECT");
-        
-        if (pros::millis() - eject_start >= 50) {
-            ejecting = false;
-        }
-        return;
-    }
-    
-    if (colorsortOn && prox > 50 && hue >= enemy_min && hue <= enemy_max) {
-        ejecting = true;
-        eject_start = pros::millis();
+    current = pros::millis();
+    proximity = topOptical.get_proximity();
+    topOptical.set_integration_time(3);
+    pros::lcd::print(0, "Proximity: %d", topOptical.get_proximity());
+    // determine opponent color
+    if (isRed) {
+        oppMin = BLUE_MIN;
+        oppMax = BLUE_MAX;
     } else {
-        pros::lcd::print(7, "READY");
+        oppMin = RED_MIN;
+        oppMax = RED_MAX;
     }
+
+    if (proximity>240&&proximity<260){
+        hue = topOptical.get_hue();
+    if (hue>=oppMin&&hue<=oppMax&&!sort){
+        sort = true;
+        start = pros::millis();
+    }
+    if (current-start<300&&sort)
+    {
+        scoringRoller.move(-127);
+        middleRollers.move(0);
+        frontIntake.move(-20);
+    }
+    if (current-start>300){
+        scoringRoller.move(0);
+        start=0;
+        sort=false;
+    }
+    }
+    
+    
 }
