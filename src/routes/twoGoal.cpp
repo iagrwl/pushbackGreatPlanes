@@ -49,12 +49,16 @@ void two_goal_LEFT() {
     //pros::delay(500);
     //chassis.moveToPoint(-46, -54, 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
     chassis.moveToPose(-12, -8, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
+    frontIntake.move(-100);
+    middleRollers.move(-100);
+    scoringRoller.move(-100);
+    pros::delay(200);
     frontIntake.move(100);
     middleRollers.move(100);
     scoringRoller.move(-30);
     pros::delay(2000);
-    chassis.moveToPoint(-39, -32, 1500);
-    chassis.turnToHeading(170, 750);
+    chassis.moveToPoint(-35, -32, 1500);
+    chassis.turnToHeading(160, 750);
     chassis.moveToPoint(-39, -12, 1500, {.forwards = false, .maxSpeed = 50});
     wingMech.set_value(false);
 
