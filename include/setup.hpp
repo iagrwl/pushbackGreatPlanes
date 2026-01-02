@@ -91,7 +91,7 @@ inline lemlib::ExpoDriveCurve throttle_curve(
 inline lemlib::ExpoDriveCurve steer_curve(
     3,    // deadband 
     0,    // min output
-    1.1   // LINEAR
+    1.0   // LINEAR
 );
 
 
