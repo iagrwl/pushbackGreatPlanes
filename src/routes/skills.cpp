@@ -11,6 +11,12 @@
 #include "setup.hpp"
 #include "skills.hpp"
 
+
+void keepScoringMid() {
+    pros::delay(1000);
+    middleRollers.move(127);
+}
+
 void autonSkills() {
     scoringGate.set_value(true);
     wingMech.set_value(true);
@@ -52,7 +58,7 @@ void autonSkills() {
     //go in 
     left_dt.move(30);
     right_dt.move(30);
-    pros::delay(700);
+    pros::delay(800);
     //stop
     left_dt.move(0);    
     right_dt.move(0);
@@ -72,11 +78,10 @@ void autonSkills() {
     scoreMidGoal();
     loaderMech.set_value(true);
     pros::delay(500);
-    scoringRoller.move(127);
+    //scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-
-    
+    pros::Task keepScoringMidTask(keepScoringMid); 
     chassis.moveToPose(-45,-64.5,185,3000,{.lead=0.45},false);
     wallDistance(true,true);
     pros::delay(500);
@@ -213,6 +218,8 @@ void autonSkills() {
     left_dt.move(-25);
     right_dt.move(-25);
 }
+
+
 
 /*
     //SETUP
