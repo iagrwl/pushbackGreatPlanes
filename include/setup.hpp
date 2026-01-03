@@ -91,11 +91,7 @@ inline lemlib::ExpoDriveCurve throttle_curve(
 inline lemlib::ExpoDriveCurve steer_curve(
     3,    // deadband 
     0,    // min output
-<<<<<<< Updated upstream
     1.0   // LINEAR
-=======
-    1.01   // LINEAR
->>>>>>> Stashed changes
 );
 
 

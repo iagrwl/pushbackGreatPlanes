@@ -48,9 +48,9 @@ void solo_awp(){
     // direct into mid goal
     frontIntake.move(100);
     middleRollers.move(80);
-    scoringRoller.move(-50);
+    scoringRoller.move(-35);
 
-    chassis.moveToPoint(0,0,600,{.forwards=false,.maxSpeed=20},false);
+    chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
     //pros::delay(750);
     // spin regularly to continue
     frontIntake.move(0);
