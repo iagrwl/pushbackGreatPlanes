@@ -72,27 +72,27 @@ inline lemlib::ControllerSettings angular_controller(5, // proportional gain (kP
 // for drive curves explanation and interactive desmos graph
 
 // input curve for throttle input during driver control
-inline lemlib::ExpoDriveCurve
-    throttle_curve(3,    // joystick deadband out of 127
-                   0,   // minimum output where drivetrain will move out of 127
-                   1.017 // expo curve gain
-    );
-// inline lemlib::ExpoDriveCurve throttle_curve(
-//     0,    // deadband
-//     0,    // min output
-//     1.0   // LINEAR
-// );
+// inline lemlib::ExpoDriveCurve
+//     throttle_curve(3,    // joystick deadband out of 127
+//                    0,   // minimum output where drivetrain will move out of 127
+//                    1.017 // expo curve gain
+//     );
+inline lemlib::ExpoDriveCurve throttle_curve(
+    3,    // deadband
+    0,    // min output
+    1.0  
+);
 // input curve for steer input during driver control
-inline lemlib::ExpoDriveCurve
-    steer_curve(60,    // joystick deadband out of 127
-                10,   // minimum output where drivetrain will move out of 127
-                1.016 // expo curve gain
-    );
-// inline lemlib::ExpoDriveCurve steer_curve(
-//     0,    // deadband 
-//     0,    // min output
-//     1   // LINEAR
-// );
+// inline lemlib::ExpoDriveCurve
+//     steer_curve(60,    // joystick deadband out of 127
+//                 10,   // minimum output where drivetrain will move out of 127
+//                 1.016 // expo curve gain
+//     );
+inline lemlib::ExpoDriveCurve steer_curve(
+    3,    // deadband 
+    0,    // min output
+    1.0   // LINEAR
+);
 
 
 inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
