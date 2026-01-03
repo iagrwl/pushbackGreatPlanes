@@ -37,22 +37,30 @@ void two_goal_LEFT() {
     pros::delay(750);
     loaderMech.set_value(true);
     pros::delay(200);
-    chassis.moveToPoint(-35, -30, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
+    chassis.moveToPoint(-33, -30, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
     chassis.swingToHeading(150, lemlib::DriveSide::LEFT, 750);
     chassis.moveToPose(-48, -22, 180, 2000, {.forwards = false, .lead = 0.1, .minSpeed = 100});
     chassis.swingToHeading(-180, lemlib::DriveSide::LEFT, 750, {.minSpeed = 60, .earlyExitRange = 20});
-    chassis.moveToPoint(-48, -18, 1000, {.forwards = false});
+    chassis.moveToPoint(-48, -18, 1500, {.forwards = false, .minSpeed = 100});
     scoringGate.set_value(false);
-    pros::delay(500);
+    pros::delay(550);
     scoringGate.set_value(true);
-    chassis.moveToPoint(-46, -68, 1500, {.maxSpeed = 80});
+    chassis.moveToPoint(-46, -68, 1800, {.maxSpeed = 60});
     //pros::delay(500);
-    //chassis.moveToPoint(-46, -54, 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
-    chassis.moveToPose(-12, -8, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
+    chassis.moveToPoint(-46, -48, 1000, {.forwards = false, .minSpeed = 100, .earlyExitRange = 4});
+    chassis.moveToPose(-8, -8, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
+
+    frontIntake.move(-100);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+
+    pros::delay(100);
+
+    chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
     scoreMidGoal();
-    pros::delay(1000);
-    chassis.moveToPoint(-34, -32, 1500, {.minSpeed = 40, .earlyExitRange = 6});
-    //chassis.turnToHeading(160, 750, {.minSpeed = 20, .earlyExitRange = 40});
-    chassis.moveToPose(-36, -12, 180, 30000, {.forwards = false, .lead = 0.9});
+    pros::delay(800);
+    chassis.moveToPoint(-30, -32, 1500, {});
+    chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40});
+    chassis.moveToPose(-36, -12, 180, 3000, {.forwards = false, .lead = 0.3, .minSpeed = 30});
     wingMech.set_value(false);
 } 
