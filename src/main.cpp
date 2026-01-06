@@ -117,6 +117,8 @@ void initialize() {
     topOptical.disable_gesture();
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
 
+    wingMech.set_value(true); // wings up at init
+
     // task callerss
     //pros::Task telemetryTask(telemetry);
     pros::Task colorSortTask(CSTaskFunc);
@@ -127,6 +129,7 @@ void initialize() {
     // sets idle mode on drivetrain
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
+
 
     // robodash - dont mess w
     selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
