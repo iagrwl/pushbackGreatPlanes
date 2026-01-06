@@ -11,6 +11,12 @@
 #include "setup.hpp"
 #include "skills.hpp"
 
+
+void keepScoringMid() {
+    pros::delay(1000);
+    middleRollers.move(127);
+}
+
 void autonSkills() {
     scoringGate.set_value(true);
     wingMech.set_value(true);
@@ -53,7 +59,7 @@ void autonSkills() {
     //go in 
     left_dt.move(30);
     right_dt.move(30);
-    pros::delay(700);
+    pros::delay(800);
     //stop
     left_dt.move(0);    
     right_dt.move(0);
@@ -211,6 +217,8 @@ void autonSkills() {
     right_dt.move(-15);
     left_dt.move(-15);
 }
+
+
 
 /*
     //SETUP

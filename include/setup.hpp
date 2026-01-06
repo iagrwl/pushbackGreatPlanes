@@ -80,7 +80,7 @@ inline lemlib::ControllerSettings angular_controller(5, // proportional gain (kP
 inline lemlib::ExpoDriveCurve throttle_curve(
     3,    // deadband
     0,    // min output
-    1.0   // LINEAR
+    1.0  
 );
 // input curve for steer input during driver control
 // inline lemlib::ExpoDriveCurve
