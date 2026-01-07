@@ -172,7 +172,7 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
-  controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
+  colorsortOn=false;
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
     isRed = false;
@@ -180,7 +180,8 @@ void autonomous() {
   else if (hue >= RED_MIN && hue <= RED_MAX){
     isRed = true;
   }
-  
+  colorsortOn=true;
+  controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
   if (tuneMode){
    if (testRoute == "S") autonSkills();
     else if (testRoute == "1GR") one_goal_right();
