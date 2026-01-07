@@ -67,6 +67,7 @@ void solo_awp(){
     middleRollers.move(127);
     chassis.moveToPose(-45,-95,180,1000,{.minSpeed=70},false);
 
+    
     chassis.moveToPoint(-46,-25,1100,{.forwards=false},false);
     scoringGate.set_value(false);
     colorsortOn=true;
