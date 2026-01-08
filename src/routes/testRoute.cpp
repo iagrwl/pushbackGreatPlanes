@@ -27,6 +27,7 @@ void oldAutonSkills() {
     pros::delay(800);
     frontIntake.move(0);
     middleRollers.move(0);
+    
     scoringRoller.move(0);
     pros::delay(200);
     scoringGate.set_value(false);

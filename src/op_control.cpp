@@ -79,7 +79,7 @@ void handleIOCommands() {
   bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
-
+    colorsortOn=false;
     frontIntake.move(100);
     middleRollers.move(100);
     scoringRoller.move(-70); 
@@ -90,7 +90,7 @@ void handleIOCommands() {
   // base intake toggle only applies when r1 and r2 are not being held
   if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-
+      colorsortOn=true;
       if (isIntakeOn) {
         frontIntake.move(127);
         middleRollers.move(127);

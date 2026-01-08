@@ -4,7 +4,7 @@
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 #include "awp.hpp"
-
+#include "colorSort.hpp"
 
 
 void solo_awp(){
@@ -22,6 +22,7 @@ void solo_awp(){
     chassis.moveToPose(45.5,-80,180,1450,{.minSpeed=75},false);
 
     chassis.moveToPoint(45.5,-22,1200,{.forwards=false},false);
+    
     scoringGate.set_value(false);
     pros::delay(1300);
     loaderMech.set_value(false);
@@ -31,6 +32,7 @@ void solo_awp(){
     
     chassis.turnToHeading(333,600);
     scoringGate.set_value(true);
+   
     chassis.moveToPoint(23,-20,800);
     chassis.turnToHeading(-94,400);
     chassis.moveToPoint(-25.5,-22.5,1100,{.minSpeed=45});
@@ -51,6 +53,7 @@ void solo_awp(){
     scoringRoller.move(-35);
 
     chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
+    colorsortOn=true;
     //pros::delay(750);
     // spin regularly to continue
     frontIntake.move(0);
@@ -62,8 +65,9 @@ void solo_awp(){
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-    chassis.moveToPose(-44,-90,180,1000,{.minSpeed=60},false);
+    chassis.moveToPose(-45,-95,180,1000,{.minSpeed=70},false);
 
+    
     chassis.moveToPoint(-46,-25,1100,{.forwards=false},false);
     scoringGate.set_value(false);
     colorsortOn=true;

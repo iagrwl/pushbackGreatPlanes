@@ -57,10 +57,13 @@ void two_goal_LEFT() {
     pros::delay(100);
 
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
+    colorsortOn=false;
     scoreMidGoal();
     pros::delay(800);
+    
     chassis.moveToPoint(-30, -32, 1500, {});
     chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40});
     chassis.moveToPose(-36, -12, 180, 3000, {.forwards = false, .lead = 0.3, .minSpeed = 30});
     wingMech.set_value(false);
+    colorsortOn=true;
 } 
