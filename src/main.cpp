@@ -117,7 +117,6 @@ void initialize() {
     topOptical.disable_gesture();
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
 
-    wingMech.set_value(true); // wings up at init
 
     // task callerss
     //pros::Task telemetryTask(telemetry);
@@ -199,7 +198,7 @@ void autonomous() {
 
 void opcontrol() {
 //chassis.setPose(15,-48,90);
-
+  //wingMech.set_value(true); // wings up at init
 
 
   while (true) {

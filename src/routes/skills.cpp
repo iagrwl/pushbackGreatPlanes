@@ -24,6 +24,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     
+    
     chassis.setPose(0,-47,180);
     //go in
     left_dt.move(80);
@@ -52,11 +53,11 @@ void autonSkills() {
     left_dt.move(70);
     right_dt.move(70);
     pros::delay(800);
-    //go out
+    //go out of park
     left_dt.move(-90);
     right_dt.move(-90);
     pros::delay(700);
-    //go in 
+    //go in slow to align
     left_dt.move(30);
     right_dt.move(30);
     pros::delay(800);
@@ -77,9 +78,13 @@ void autonSkills() {
     //scoring mid goal
     pros::delay(350);
     scoreMidGoal();
+
+    //move to 1st loader
     loaderMech.set_value(true);
     pros::delay(500);    
     chassis.moveToPose(-45,-64,175,2200,{.lead=0.45},false);
+
+    //collect from 1st loader
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
@@ -87,16 +92,22 @@ void autonSkills() {
     right_dt.move(80);
     pros::delay(1300);
     wallDistance(true,true);
+
+    //move to other side to score
     chassis.moveToPoint(-48,-53,1000,{.forwards=false,.minSpeed=60,.earlyExitRange=5});
     chassis.turnToPoint(-60,-37,1500,{.minSpeed=60,.earlyExitRange=5});
     loaderMech.set_value(false);
     chassis.moveToPoint(-60,-37,1500,{.minSpeed=60,.earlyExitRange=5});
     chassis.turnToHeading(0,1500,{.minSpeed=60,.earlyExitRange=5});
     chassis.moveToPoint(-60,40,3000,{.minSpeed=60,.earlyExitRange=8});
+
+    //line up to score
     chassis.turnToPoint(-50,18,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=3});
-    chassis.moveToPose(-50,20,0,1500,{.forwards=false,.lead=0.2,.maxSpeed=60,.earlyExitRange=5});
+    chassis.moveToPose(-49.5,20,0,1500,{.forwards=false,.lead=0.2,.maxSpeed=60,.earlyExitRange=5});
     chassis.turnToHeading(0,700,{.minSpeed=80,.earlyExitRange=4});
     loaderMech.set_value(true);
+
+    //score first time in 1st long goal
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -105,24 +116,21 @@ void autonSkills() {
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    pros::delay(700);
+    pros::delay(1500);
     wallDistance(true,false);
     chassis.setPose(chassis.getPose().x,28, chassis.getPose().theta);
     pros::delay(1000);
-    scoringGate.set_value(true);
-    frontIntake.move(-127);
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(200);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    scoringGate.set_value(false);
+
+    //collect 2nd loader
     chassis.moveToPoint(-48,70,2500,{.maxSpeed=60});
     pros::delay(800);
+
+    //line up to score 2nd time in 1st long goal
     scoringGate.set_value(true);
     chassis.moveToPoint(-48,23,2500,{.forwards=false,.maxSpeed=80});
     pros::delay(1000);
+
+    //score 2nd time in 1st long goal
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -133,18 +141,21 @@ void autonSkills() {
     scoringGate.set_value(false);
     pros::delay(1700);
     loaderMech.set_value(false);
+
+    //move to far park zone
     chassis.moveToPose(-15,65,90,2500,{.minSpeed=70,.earlyExitRange=5});
     pros::delay(1300);
+
+    //clear far park zone
     loaderMech.set_value(true);
     chassis.turnToHeading(83,500,{.minSpeed=50,.earlyExitRange=3},false);
     scoringGate.set_value(true);
     right_dt.move(100);
     left_dt.move(97);
     pros::delay(950);
-    loaderMech.set_value(true);
-    right_dt.move(100);
-    left_dt.move(100);
-    pros::delay(600);
+    right_dt.move(120);
+    left_dt.move(120);
+    pros::delay(300);
     left_dt.move(0);
     right_dt.move(0);
     chassis.turnToHeading(105,1500,{.minSpeed=60,.earlyExitRange=5},false);
@@ -156,35 +167,70 @@ void autonSkills() {
     chassis.turnToHeading(90,500,{},false);
     wallDistance(true,false);
     chassis.setPose(18,chassis.getPose().y, chassis.getPose().theta);
+
+    //align with 2nd long goal
     chassis.moveToPose(48,48,135,1500,{.lead=-0.6,.minSpeed=70});
     chassis.turnToHeading(0,500,{},false);
     wallDistance(true,true);
     chassis.moveToPoint(48,24,3000,{.forwards=false,.maxSpeed=60});
+    pros::delay(700);
+
+    //score 1st time in 2nd long goal   
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     loaderMech.set_value(true);
-    pros::delay(300);
+    pros::delay(900);
+    scoringGate.set_value(true);
+
+    //move to collect from 3rd loader
     chassis.turnToHeading(0,500,{},false);
     wallDistance(true,true);
-    scoringGate.set_value(true);
     chassis.moveToPoint(46,70,3000,{.maxSpeed=60});
     pros::delay(500);
+
+    //prep to score 2nd time in 2nd long goal
     wingMech.set_value(true);
-    chassis.turnToPoint(57,32,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=5});
-    chassis.moveToPoint(57,32,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=2});
-    loaderMech.set_value(false);
-    chassis.turnToHeading(0,1500,{},false);
+    chassis.moveToPoint(48,24,3000,{.forwards=false,.minSpeed=60});
+    pros::delay(700);
+
+    //score 2nd time in 2nd long goal   
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
+    scoringGate.set_value(false);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(1500);
     wallDistance(true,true);
-    chassis.moveToPoint(61,-32,3000,{.forwards=false,.minSpeed=60,.earlyExitRange=8});
-    chassis.turnToPoint(45,-45,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=3});
-    chassis.moveToPoint(45,-45,2000,{.forwards=false,.maxSpeed=60});
+
+
+    //prep to score 3rd time in 2nd long goal
+    loaderMech.set_value(false);
+    scoringGate.set_value(true);
+    chassis.moveToPoint(48,45,1500,{.minSpeed=60,.earlyExitRange=5});
+    chassis.turnToPoint(57,36,1500,{.minSpeed=60,.earlyExitRange=5});
+    chassis.moveToPoint(57,36,1500,{.minSpeed=60,.earlyExitRange=2});
+    chassis.turnToHeading(180,500,{},false);
+    wallDistance(true,false);
+    chassis.moveToPoint(61,-32,3000,{.minSpeed=60,.earlyExitRange=8});
+    chassis.turnToHeading(180,750,{},false);
+    loaderMech.set_value(true);
+    wallDistance(true,false);
+
+    //intake last loader
+    loaderMech.set_value(true);
+    chassis.moveToPose(48,-60,185,3000,{.minSpeed=60,.earlyExitRange=8});
     chassis.turnToHeading(180,750,{},false);
     wallDistance(true,false);
-    loaderMech.set_value(true);
-    chassis.moveToPoint(48,-22,2500,{.forwards=false,.minSpeed=80});
-    pros::delay(1000);
+
+    //move to score 3rd time in 2nd long goal
+    chassis.moveToPoint(48,-22,500,{.forwards=false,.minSpeed=80,.earlyExitRange=4},false);
+
+    //score 3rd time in 2nd long goal
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -193,24 +239,13 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     scoringGate.set_value(false);
-    loaderMech.set_value(true);
-    pros::delay(2000);
-    chassis.moveToPoint(48,-70,2500,{.maxSpeed=60});
-    scoringGate.set_value(true);
-    pros::delay(1000);
-    chassis.moveToPoint(48,-22,2500,{.forwards=false,.maxSpeed=80});
-    pros::delay(1000);
-    scoringGate.set_value(false);
-    frontIntake.move(-127);
-    middleRollers.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(200);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
     loaderMech.set_value(false);
     pros::delay(2000);
-    chassis.moveToPose(18,-63,-90,3000,{.lead=0.5,.minSpeed=80,.earlyExitRange=4},false);
+
+    //line up to park
+    chassis.moveToPose(18,-63,-90,2000,{.lead=0.5,.minSpeed=80,.earlyExitRange=4},false);
+
+    //park
     right_dt.move(127);
     left_dt.move(127);
     pros::delay(600);
@@ -351,3 +386,57 @@ void autonSkills() {
     left_dt.move(-25);
     right_dt.move(-25);
 */
+
+
+/*
+//prep to score 2nd time in 2nd long goal
+    wingMech.set_value(true);
+    chassis.turnToPoint(57,32,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=5});
+    chassis.moveToPoint(57,32,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=2});
+    loaderMech.set_value(false);
+    chassis.turnToHeading(0,500,{},false);
+    wallDistance(true,true);
+    chassis.moveToPoint(61,-32,3000,{.forwards=false,.minSpeed=60,.earlyExitRange=8});
+    chassis.turnToHeading(180,750,{},false);
+    wallDistance(true,false);
+    loaderMech.set_value(true);
+
+    //move to score 2nd time in 2nd long goal
+    chassis.turnToPoint(48,-22,500,{.forwards=false,.minSpeed=80,.earlyExitRange=4});
+    chassis.moveToPoint(48,-22,2500,{.forwards=false,.minSpeed=80,.earlyExitRange=4});
+    chassis.turnToHeading(180,700,{.minSpeed=80,.earlyExitRange=4},false);
+    wallDistance(true,false);
+
+    //score 2nd time in 2nd long goal
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    scoringGate.set_value(false);
+    loaderMech.set_value(true);
+    pros::delay(2000);
+
+    //intake last loader
+    chassis.moveToPoint(48,-70,2500,{.maxSpeed=60});
+    scoringGate.set_value(true);
+    pros::delay(1000);
+
+    //line up to score last time in 2nd long goal
+    chassis.moveToPoint(48,-22,2500,{.forwards=false,.maxSpeed=80});
+    pros::delay(1000);
+
+    //score last time in 2nd long goal
+    scoringGate.set_value(false);
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    loaderMech.set_value(false);
+    pros::delay(2000);
+    */
