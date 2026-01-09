@@ -81,8 +81,8 @@ void colorSort() {
         oppMax = RED_MAX;
     }
     // checks if colorsort is allowed to run
-    if (proximity>240&&proximity<260){
     if (colorsortOn == true){
+    if (proximity>240&&proximity<260){
         
         // gets hue from sensor
         double colorValue = topOptical.get_hue();
