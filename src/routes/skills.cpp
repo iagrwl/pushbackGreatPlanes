@@ -95,6 +95,7 @@ void autonSkills() {
 
     //move to other side to score
     chassis.moveToPoint(-48,-53,1000,{.forwards=false,.minSpeed=60,.earlyExitRange=5});
+    frontIntake.move(0);
     chassis.turnToPoint(-60,-37,1500,{.minSpeed=60,.earlyExitRange=5});
     loaderMech.set_value(false);
     chassis.moveToPoint(-60,-37,1500,{.minSpeed=60,.earlyExitRange=5});
@@ -103,6 +104,7 @@ void autonSkills() {
 
     //line up to score
     chassis.turnToPoint(-50,18,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=3});
+    frontIntake.move(127);
     chassis.moveToPose(-49.5,20,0,1500,{.forwards=false,.lead=0.2,.maxSpeed=60,.earlyExitRange=5});
     chassis.turnToHeading(0,700,{.minSpeed=80,.earlyExitRange=4});
     loaderMech.set_value(true);
@@ -111,7 +113,7 @@ void autonSkills() {
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);
-    pros::delay(200);
+    pros::delay(250);
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
@@ -128,7 +130,7 @@ void autonSkills() {
     //line up to score 2nd time in 1st long goal
     scoringGate.set_value(true);
     chassis.moveToPoint(-48,23,2500,{.forwards=false,.maxSpeed=80});
-    pros::delay(1000);
+    pros::delay(800);
 
     //score 2nd time in 1st long goal
     frontIntake.move(-127);
@@ -153,8 +155,8 @@ void autonSkills() {
     right_dt.move(100);
     left_dt.move(97);
     pros::delay(950);
-    right_dt.move(120);
-    left_dt.move(120);
+    right_dt.move(90);
+    left_dt.move(90);
     pros::delay(300);
     left_dt.move(0);
     right_dt.move(0);
@@ -175,7 +177,11 @@ void autonSkills() {
     chassis.moveToPoint(48,24,3000,{.forwards=false,.maxSpeed=60});
     pros::delay(700);
 
-    //score 1st time in 2nd long goal   
+    //score 1st time in 2nd long goal  
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);

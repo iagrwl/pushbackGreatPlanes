@@ -35,8 +35,9 @@ void solo_awp(){
    
     chassis.moveToPoint(23,-20,800);
     chassis.turnToHeading(-94,400);
-    chassis.moveToPoint(-25.5,-22.5,1100,{.minSpeed=45});
+    chassis.moveToPoint(-25.5,-22.5,1100,{.minSpeed=45},false);
     colorsortOn=false;
+    scoringRoller.move(127);
     //mid goal movement
     chassis.moveToPose(-2,-2,225,1200,{.forwards=false,.minSpeed=60},false);
     //mid goal scoring 

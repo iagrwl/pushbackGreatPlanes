@@ -81,8 +81,8 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
     colorsortOn=false;
     frontIntake.move(100);
-    middleRollers.move(100);
-    scoringRoller.move(-70); 
+    middleRollers.move(50);
+    scoringRoller.move(-28); 
   
     return; // return bc its a hold
   }
