@@ -106,7 +106,8 @@ void autonSkills() {
     chassis.turnToPoint(-50,18,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=3});
     frontIntake.move(127);
     chassis.moveToPose(-49.5,20,0,1500,{.forwards=false,.lead=0.2,.maxSpeed=60,.earlyExitRange=5});
-    chassis.turnToHeading(0,700,{.minSpeed=80,.earlyExitRange=4});
+    chassis.moveToPose(-49.5,20,0,500,{.forwards=false,.lead=0.2,.maxSpeed=60,.earlyExitRange=5});
+    //chassis.turnToHeading(0,700,{.minSpeed=80,.earlyExitRange=4});
     loaderMech.set_value(true);
 
     //score first time in 1st long goal
@@ -152,8 +153,8 @@ void autonSkills() {
     loaderMech.set_value(true);
     chassis.turnToHeading(83,500,{.minSpeed=50,.earlyExitRange=3},false);
     scoringGate.set_value(true);
-    right_dt.move(100);
-    left_dt.move(97);
+    right_dt.move(110);
+    left_dt.move(107);
     pros::delay(950);
     right_dt.move(90);
     left_dt.move(90);
