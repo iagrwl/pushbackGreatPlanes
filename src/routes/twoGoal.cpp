@@ -31,19 +31,19 @@ void two_goal_LEFT() {
     //loaderMech.set_value(true);
     
     //chassis.turnToPoint(-40, -10, 700);
-    chassis.moveToPose(-45,-10, -85, 2500, {.lead = 0.3, .minSpeed = 60});
+    chassis.moveToPose(-40,-10, -90, 2500, {.lead = 0.3, .minSpeed = 60});
     //pros::delay(200);
     loaderMech.set_value(false);
-    pros::delay(750);
+    pros::delay(850);
     loaderMech.set_value(true);
     pros::delay(200);
-    chassis.moveToPoint(-33, -30, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
-    chassis.swingToHeading(150, lemlib::DriveSide::LEFT, 750);
-    chassis.moveToPose(-48, -22, 180, 2000, {.forwards = false, .lead = 0.1, .minSpeed = 100});
-    chassis.swingToHeading(-180, lemlib::DriveSide::LEFT, 750, {.minSpeed = 60, .earlyExitRange = 20});
+    chassis.moveToPoint(-30, -28, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
+    chassis.swingToHeading(140, lemlib::DriveSide::LEFT, 750);
+    chassis.moveToPose(-48, -22, 180, 1500, {.forwards = false, .lead = 0.1, .minSpeed = 100});
+    chassis.swingToHeading(-180, lemlib::DriveSide::LEFT, 750, {.minSpeed = 100, .earlyExitRange = 20});
     chassis.moveToPoint(-48, -18, 1500, {.forwards = false, .minSpeed = 100});
     scoringGate.set_value(false);
-    pros::delay(550);
+    pros::delay(600);
     scoringGate.set_value(true);
     chassis.moveToPoint(-46, -68, 1800, {.maxSpeed = 60});
     //pros::delay(500);
@@ -65,9 +65,9 @@ void two_goal_LEFT() {
     pros::delay(1300);
     middleRollers.move(127);
     scoringRoller.move(127);
-    // chassis.moveToPoint(-30, -32, 1500, {});
-    // chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40});
-    // chassis.moveToPose(-36, -12, 180, 3000, {.forwards = false, .lead = 0.3, .minSpeed = 30});
-    // wingMech.set_value(false);
-    // colorsortOn=true;
-} 
+    chassis.moveToPoint(-27, -32, 1500, {});
+    chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40}, false);
+
+    chassis.moveToPose(-37.5, -10, 180, 3000, {.forwards = false, .lead = 0.3, .minSpeed = 30});
+    wingMech.set_value(false);
+}

@@ -8,6 +8,7 @@
 #include "skills.hpp"
 #include "testRoute.hpp"
 #include "twoGoal.hpp"
+#include "dummy.hpp"
 #include "colorSort.hpp"
 #include "op_control.hpp"
 #include "pros/abstract_motor.hpp"
@@ -93,6 +94,7 @@ rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
+  {"dummy", &dummy},
   {"skilly", &autonSkills}
 });
 

@@ -19,7 +19,7 @@ void solo_awp(){
     
     chassis.setPose(16,-48,90);
     chassis.moveToPoint(40,-48,800,{.minSpeed=50,.earlyExitRange=2});
-    chassis.moveToPose(45.5,-80,180,1450,{.minSpeed=75},false);
+    chassis.moveToPose(45.5,-80,180,1400,{.minSpeed=75},false);
 
     chassis.moveToPoint(45.5,-22,1200,{.forwards=false},false);
     
@@ -66,7 +66,7 @@ void solo_awp(){
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-    chassis.moveToPose(-45,-95,180,1000,{.minSpeed=70},false);
+    chassis.moveToPose(-46,-95,180,1000,{.minSpeed=70},false);
 
     wallDistance(false, true);
 

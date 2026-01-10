@@ -72,7 +72,7 @@ void one_goal_right() {
     chassis.moveToPoint(48, -50, 1500, {.minSpeed = 40, .earlyExitRange = 5});
     //chassis.swingToHeading(215, lemlib::DriveSide::LEFT, 750, {.minSpeed = 40});
     wingMech.set_value(false);
-    chassis.moveToPose(59, -8, 180, 2000, {.forwards = false, .lead = 0.67}, false);
+    chassis.moveToPose(59.5, -8, 180, 2000, {.forwards = false, .lead = 0.67}, false);
     while(true){
         if(chassis.getPose().y < -13) {
             chassis.moveToPose(59, -8, 180, 1000, {.forwards = false, .maxSpeed = 60});
