@@ -201,7 +201,7 @@ void autonomous() {
 
 void opcontrol() {
 //chassis.setPose(15,-48,90);
-  wingMech.set_value(true); // wings up at init
+  //wingMech.set_value(true); // wings up at init
 
 
   while (true) {
