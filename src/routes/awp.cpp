@@ -22,7 +22,13 @@ void solo_awp(){
     chassis.moveToPose(45.5,-80,180,1400,{.minSpeed=75},false);
 
     chassis.moveToPoint(45.5,-22,1200,{.forwards=false},false);
-    
+    middleRollers.move(-127);
+    frontIntake.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
+    middleRollers.move(127);
+    frontIntake.move(127);
+    scoringRoller.move(127);
     scoringGate.set_value(false);
     pros::delay(1300);
     loaderMech.set_value(false);
@@ -50,8 +56,8 @@ void solo_awp(){
 
     // direct into mid goal
     frontIntake.move(100);
-    middleRollers.move(80);
-    scoringRoller.move(-35);
+    middleRollers.move(100);
+    scoringRoller.move(-70);
 
     chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
     colorsortOn=true;
@@ -73,6 +79,16 @@ void solo_awp(){
     
     chassis.moveToPoint(-48,-25,1100,{.forwards=false},false);
     chassis.moveToPoint(-48, -15, 5000, {.forwards = false, .minSpeed = 80});
+    loaderMech.set_value(false);
+
+    middleRollers.move(-127);
+    frontIntake.move(-127);
+    scoringRoller.move(-127);
+    pros::delay(200);
+    middleRollers.move(127);
+    frontIntake.move(127);
+    scoringRoller.move(127);
+
     scoringGate.set_value(false);
     colorsortOn=true;
 }
