@@ -9,16 +9,16 @@ void scoreMidGoal(){
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127); 
-    pros::delay(130);
+    pros::delay(150);
     frontIntake.move(100);
-    middleRollers.move(50);
-    const int totalSteps = 250;   // 2.5 seconds
+    middleRollers.move(40);
+    const int totalSteps = 125;   // 2.5 seconds
     const int stepDelay = 10;     // ms
 
     for (int i = 0; i <= totalSteps; i++) {
         double t = (double)i / totalSteps;  
 
-        double speed = 24 - 4*t + 24*t*(1 - t);
+        double speed = 30 - 2*t + 2*t*(1 - t);
 
         scoringRoller.move(-(int)speed);
         pros::delay(stepDelay);

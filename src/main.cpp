@@ -16,7 +16,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
 std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
@@ -154,6 +154,7 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 void disabled() {
     scoringGate.set_value(false);
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
+    //controller.set_text(0, 6, isBlocked ? ()"DISABLED");
   }
 
 /*
