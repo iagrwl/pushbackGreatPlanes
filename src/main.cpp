@@ -195,13 +195,17 @@ void autonomous() {
   // runs auton from selected
   selector.run_auton();
   }
+  loaderMech.set_value(false);
+  isLoaderExtended=false;
+  wingMech.set_value(false);
+  isWingsOut=false;
   
  }
 
 
 void opcontrol() {
 //chassis.setPose(15,-48,90);
-  wingMech.set_value(true); // wings up at init
+
 
 
   while (true) {
