@@ -94,6 +94,7 @@ rd::Selector selector({
   {"two goal LEFT",&two_goal_LEFT },
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
+  {"1G LEFT RUSH", &L_1G_R},
   {"dummy", &dummy},
   {"skilly", &autonSkills}
 });
