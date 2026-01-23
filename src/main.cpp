@@ -92,6 +92,7 @@ void telemetryFunc(void* param) {
 rd::Selector selector({
   {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
+  {"two goal RUSH", &two_goal_RUSH},
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
   {"1G LEFT RUSH", &L_1G_R},
@@ -209,8 +210,6 @@ void opcontrol() {
 
 
   while (true) {
-
-     
       
         //drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
