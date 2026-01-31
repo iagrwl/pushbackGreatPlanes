@@ -90,7 +90,6 @@ void handleIOCommands() {
   // base intake toggle only applies when r1 and r2 are not being held
   if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      colorsortOn=true;
       if (isIntakeOn) {
         frontIntake.move(127);
         middleRollers.move(127);

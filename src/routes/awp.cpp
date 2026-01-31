@@ -18,10 +18,11 @@ void solo_awp(){
     loaderMech.set_value(true);
     
     chassis.setPose(16,-48,90);
+    chassis.moveToPoint(13,-48,500);
     chassis.moveToPoint(40,-48,800,{.minSpeed=50,.earlyExitRange=2});
     chassis.moveToPose(45.5,-80,180,1400,{.minSpeed=75},false);
 
-    chassis.moveToPoint(45.5,-22,1200,{.forwards=false},false);
+    chassis.moveToPoint(45.5,-22,1100,{.forwards=false},false);
     middleRollers.move(-127);
     frontIntake.move(-127);
     scoringRoller.move(-127);
@@ -33,10 +34,10 @@ void solo_awp(){
     pros::delay(1300);
     loaderMech.set_value(false);
     chassis.setPose(48,-24,180);
-    chassis.moveToPoint(48,-37,900);
+    chassis.moveToPoint(48,-37,800);
     
     
-    chassis.turnToHeading(333,600);
+    chassis.turnToHeading(333,500);
     scoringGate.set_value(true);
    
     chassis.moveToPoint(23,-20,800);
@@ -46,6 +47,7 @@ void solo_awp(){
     scoringRoller.move(127);
     //mid goal movement
     chassis.moveToPose(-2,-2,225,1200,{.forwards=false,.minSpeed=60},false);
+    loaderMech.set_value(true);
     //mid goal scoring 
     // reverse to unclog for 200ms
     frontIntake.move(-100);
@@ -56,8 +58,9 @@ void solo_awp(){
 
     // direct into mid goal
     frontIntake.move(100);
-    middleRollers.move(100);
-    scoringRoller.move(-70);
+    middleRollers.move(80);
+    scoringRoller.move(-55);
+
 
     chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
     colorsortOn=true;
@@ -78,13 +81,13 @@ void solo_awp(){
 
     
     chassis.moveToPoint(-48,-25,1100,{.forwards=false},false);
-    chassis.moveToPoint(-48, -15, 5000, {.forwards = false, .minSpeed = 80});
+    chassis.moveToPoint(-48, -15, 4500, {.forwards = false, .minSpeed = 80});
     loaderMech.set_value(false);
 
     middleRollers.move(-127);
     frontIntake.move(-127);
     scoringRoller.move(-127);
-    pros::delay(200);
+    pros::delay(100);
     middleRollers.move(127);
     frontIntake.move(127);
     scoringRoller.move(127);

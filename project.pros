@@ -323,8 +323,8 @@
       }
     },
     "upload_options": {
-      "slot": 2,
-      "description": "colortest",
+      "slot": 1,
+      "description": "parth",
       "icon": "pros"
     },
     "use_early_access": false

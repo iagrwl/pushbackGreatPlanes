@@ -17,8 +17,8 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
-std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+bool tuneMode = true; // set true for green screen set false for competition
+std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -52,8 +52,7 @@ void positionTracker() {
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
     if (testRoute != "S") {
-        pros::lcd::print(5, "colorval: %.2f", topOptical.get_proximity());
-        pros::lcd::print(6, "alliance: %s", isRed ? "RED SELECTED" : "BLUE SELECTED");
+        pros::lcd::print(6, "alliance: %s", colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
     };
     pros::delay(10);
     }
@@ -157,6 +156,13 @@ Occurs when bot is in disable phase - when the autonomous and driving period are
 
 void disabled() {
     scoringGate.set_value(false);
+
+
+    loaderMech.set_value(false);
+    isLoaderExtended=false;
+    wingMech.set_value(false);
+    isWingsOut=false;
+    
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
   }
 
@@ -197,10 +203,7 @@ void autonomous() {
   // runs auton from selected
   selector.run_auton();
   }
-  loaderMech.set_value(false);
-  isLoaderExtended=false;
-  wingMech.set_value(false);
-  isWingsOut=false;
+  
   
  }
 
@@ -287,8 +290,8 @@ void opcontrol() {
     handleLoaderMechCommands();
     handleWingMechCommands();
     updatePSI();
-    toggleCS();
-    switchCS();           
+    switchCS();   
+    toggleCS();        
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
