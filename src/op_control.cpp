@@ -55,7 +55,7 @@ void handleIOCommands() {
   }
 
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
-    frontIntake.move(-90);
+    frontIntake.move(-110);
     middleRollers.move(-127);
     scoringRoller.move(-127);
     return; // return bc its a hold
