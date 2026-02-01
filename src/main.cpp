@@ -18,7 +18,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -111,6 +111,7 @@ void initialize() {
     selector.focus();
     scoringGate.set_value(false);
     if (tuneMode == true){
+        chassis.setPose(-6.75, -47, 0);
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);
     }
