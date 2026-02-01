@@ -313,49 +313,102 @@ void keepScoringMid() {
 // }
 
 void autonSkills() {
+    // set pose relative to center of field
     chassis.setPose(-6.75, -47, 0);
+
+    // set wing up and scoring gate to keep blocks
     scoringGate.set_value(true);
     wingMech.set_value(true);
 
+    // start intake
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);   
 
+    // collect first red from cluster
     chassis.moveToPoint(-17.5, -34, 1200, {}, false);
     pros::delay(500);
     frontIntake.move(10);
     
+    // collect rest of cluster
     chassis.moveToPoint(-25, -25, 1000);
-    chassis.turnToPoint(-12, -13, 750, {.forwards = false});  
-    chassis.moveToPoint(-12, -13, 1500, {.forwards = false});
+
+    // allign to middle goal
+    chassis.turnToPoint(-11, -13, 750, {.forwards = false});  
+    chassis.moveToPoint(-11, -13, 1500, {.forwards = false});
+
+    // score in mid goal
     frontIntake.move(127);
     pros::delay(700);
     scoringRoller.move(-50);
     frontIntake.move(-40);
-    pros::delay(700);
+    pros::delay(600);
     frontIntake.move(127);
-    scoringRoller.move(127);
+
+    // allign to first loader
     chassis.moveToPoint(-46, -48, 1500);
     loaderMech.set_value(true);
+    pros::delay(800);
+    scoringRoller.move(127);
     chassis.turnToHeading(-180, 750, {}, false);
+    
     wallDistance(false, true);
+
+    // get first loader
     chassis.moveToPoint(-46, -72, 1500, {.maxSpeed = 70}, false);
     left_dt.move(-40);
     right_dt.move(-40);
     pros::delay(200);
     left_dt.move(90);
     right_dt.move(90);
-    pros::delay(500);
+    pros::delay(800);
+
+    // go through alley
     chassis.moveToPoint(-46, -48, 1200, {.forwards = false});
-    //chassis.turnToPoint(-60, -30, 750);
-    chassis.moveToPose(-60, -36, 0, 2500, {.lead = 0.4});
-    chassis.moveToPoint(-60, 40, 2000);
     loaderMech.set_value(false);
-    chassis.turnToHeading(-90, 750);
+    //chassis.turnToPoint(-60, -30, 750);
+    chassis.moveToPoint(-61, -36, 1500, {.minSpeed = 40, .earlyExitRange = 5});
+    frontIntake.move(0);
+    //chassis.turnToPoint(-60, 40, 750);
+    chassis.moveToPoint(-60, 40, 2000);
+    
+    // allign to goal
+    //chassis.turnToHeading(-90, 750);
     chassis.moveToPoint(-48, 40, 1000, {.forwards = false});
-    chassis.turnToHeading(0, 750);
+    //chassis.turnToHeading(0, 750);
     chassis.moveToPoint(-48, 20, 2000, {.forwards = false});
-    pros::delay(400);
+
+    // score 1st time
+    pros::delay(600);
+    frontIntake.move(-80);
+    middleRollers.move(-80);
+    scoringRoller.move(-80);
+    pros::delay(200);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    scoringGate.set_value(false);
+    pros::delay(1000);
+
+    // reset pose (x)
+    wallDistance(false, false);
+
+    // get loader
+    loaderMech.set_value(true);
+    chassis.moveToPoint(-48, 72, 2000, {.maxSpeed = 70});
+    pros::delay(500);
+    scoringGate.set_value(true);
+    pros::delay(1500);
+    left_dt.move(-40);
+    right_dt.move(-40);
+    pros::delay(200);
+    left_dt.move(90);
+    right_dt.move(90);
+    pros::delay(700);
+
+    // score 2nd time
+    chassis.moveToPoint(-48, 20, 2500, {.forwards = false});
+    pros::delay(800);
     frontIntake.move(-80);
     middleRollers.move(-80);
     scoringRoller.move(-80);
@@ -364,27 +417,16 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);  
     scoringGate.set_value(false);
-    pros::delay(1000);
-    wallDistance(false, false);
-    loaderMech.set_value(true);
-    chassis.moveToPoint(-48, 72, 1500, {.maxSpeed = 70}, false);
-    left_dt.move(-40);
-    right_dt.move(-40);
-    pros::delay(200);
-    left_dt.move(90);
-    right_dt.move(90);
-    pros::delay(500);
-    chassis.moveToPoint(-48, 20, 2500, {.forwards = false});
-    pros::delay(1100);
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);  
-    scoringGate.set_value(false);
-    pros::delay(1000);
-    
-    
-    
+    pros::delay(1200);
 
-    
+    // reset pose
+    wallDistance(true,false);
+    chassis.setPose(chassis.getPose().x,28, chassis.getPose().theta);
+
+    // push for control zone
+    chassis.moveToPoint(-48,34,2500,{.minSpeed=127});
+    pros::delay(300);
+    scoringGate.set_value(true);
+    chassis.moveToPoint(-48,20,750,{.forwards=false,.maxSpeed=40});
     
 }
