@@ -6,25 +6,51 @@
 #include "midGoalScoring.hpp"
 
 void scoreMidGoal(){
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(40); 
+    scoringGate.set_value(false);
+    pros::delay(150);
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127); 
-    pros::delay(130);
-    frontIntake.move(100);
-    middleRollers.move(50);
-    const int totalSteps = 250;   // 2.5 seconds
-    const int stepDelay = 10;     // ms
+    pros::delay(200);
+    frontIntake.move(127);
+    middleRollers.move(80);
+    const int totalSteps = 20;   
+    const int stepDelay = 10;     
 
     for (int i = 0; i <= totalSteps; i++) {
         double t = (double)i / totalSteps;  
 
-        double speed = 24 - 4*t + 24*t*(1 - t);
+        double speed = 55 - 32* t * t;
 
         scoringRoller.move(-(int)speed);
         pros::delay(stepDelay);
     }
 }
 
+/*
+void scoreMidGoal(){
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127); 
+    pros::delay(200);
+    frontIntake.move(100);
+    middleRollers.move(70);
+    const int totalSteps = 20;   
+    const int stepDelay = 10;     
+
+    for (int i = 0; i <= totalSteps; i++) {
+        double t = (double)i / totalSteps;  
+
+        double speed = 55 - 30* t * t;
+
+        scoringRoller.move(-(int)speed);
+        pros::delay(stepDelay);
+    }
+}
+*/
 
     /*
     frontIntake.move(-127);
