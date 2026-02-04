@@ -85,15 +85,12 @@ void autonSkills() {
     // MID GOAL SCORE
     // =========================
     chassis.moveToPoint(0, -28, 1400, {.forwards = false});
+
     chassis.turnToPoint(-22, -24, 500, {.earlyExitRange = 5});
-    chassis.moveToPose(-20, -22, -90, 1500,
-        {.minSpeed = 60, .earlyExitRange = 7}, false);
+    chassis.moveToPose(-20, -22, -90, 1500, {.minSpeed = 60, .earlyExitRange = 7}, false);
 
-    chassis.turnToPoint(0, 0, 700,
-        {.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
-
-    chassis.moveToPoint(-10, -10, 3000,
-        {.forwards = false, .maxSpeed = 50});
+    chassis.turnToPoint(0, 0, 700,{.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
+    chassis.moveToPoint(-10, -10, 3000,{.forwards = false, .maxSpeed = 50});
 
     pros::delay(1000);
     scoreMidGoal();
@@ -125,14 +122,13 @@ void autonSkills() {
     // go through alley
     chassis.moveToPoint(-46, -48, 1200, {.forwards = false});
     loaderMech.set_value(false);
-    //chassis.turnToPoint(-60, -30, 750);
     chassis.moveToPoint(-61, -36, 1500, {.minSpeed = 40, .earlyExitRange = 5});
     frontIntake.move(0);
 
-    chassis.moveToPoint(-61, 35, 2000,
+    chassis.moveToPoint(-61, 36, 2000,
         {.minSpeed = 60, .earlyExitRange = 8});
 
-    chassis.turnToPoint(-50, 24, 1500,
+    chassis.turnToPoint(-51, 24, 1500,
         {.forwards = false, .minSpeed = 60, .earlyExitRange = 3});
 
     chassis.moveToPose(-51, 18, 0, 2000,
@@ -249,12 +245,11 @@ void autonSkills() {
     wingMech.set_value(true);
 
 
-    chassis.moveToPoint(48,-22,2200,{.forwards=false,.minSpeed=80,.earlyExitRange=4});
+    chassis.moveToPoint(48,-22,2200,{.forwards=false,.minSpeed=80,.earlyExitRange=4},false);
     left_dt.move(-40);
     right_dt.move(-40);
 
     //score 3rd time in 2nd long goal
-    pros::delay(900);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
@@ -267,7 +262,6 @@ void autonSkills() {
 
     chassis.moveToPoint(48,-34,2500,{.minSpeed=127});
     pros::delay(300);
-    scoringGate.set_value(true);
     chassis.moveToPoint(48,-20,750,{.forwards=false,.maxSpeed=40});
     //line up to park
     //was 18
