@@ -25,7 +25,7 @@ void handleIOCommands();
 void handleScoringBarCommands();
 void handleLoaderMechCommands();
 void handleWingMechCommands();
-void handleParkCommands();
+void handleDoublePark();
 void switchCS();
 void toggleCS();
 void rumble();

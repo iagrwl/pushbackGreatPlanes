@@ -290,6 +290,7 @@ void opcontrol() {
     handleIOCommands();
     handleLoaderMechCommands();
     handleWingMechCommands();
+    handleDoublePark();
     updatePSI();
     switchCS();   
     toggleCS();        
