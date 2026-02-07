@@ -89,7 +89,7 @@ void autonSkills() {
     chassis.moveToPose(-20, -22, -90, 1500, {.minSpeed = 60, .earlyExitRange = 7}, false);
 
     chassis.turnToPoint(0, 0, 700,{.forwards = false, .minSpeed = 60, .earlyExitRange = 4});
-    chassis.moveToPoint(-9.5, -9.5, 3000,{.forwards = false, .maxSpeed = 50});
+    chassis.moveToPoint(-9.75, -9.75, 3000,{.forwards = false, .maxSpeed = 50});
 
     pros::delay(1000);
     scoreMidGoal();
@@ -146,12 +146,13 @@ void autonSkills() {
     wallDistance(true, false);
     chassis.setPose(chassis.getPose().x, 28, chassis.getPose().theta);
     pros::delay(1000);
-    scoringGate.set_value(true);
     // =========================
     // SECOND LOADER + SCORE
     // =========================
-    chassis.moveToPoint(-48, 70, 1800,
-        {.maxSpeed = 75}, false);
+    chassis.moveToPoint(-48.5, 70, 1800, {.maxSpeed = 75} );
+    pros::delay(700);
+    scoringGate.set_value(true);
+    pros::delay(900);
     
 
     left_dt.move(-40);
@@ -163,8 +164,8 @@ void autonSkills() {
     pros::delay(800);
     pros::delay(500);
 
-    chassis.moveToPoint(-48.5, 23, 2500,
-        {.forwards = false, .minSpeed = 80});
+    chassis.moveToPose(-48.5, 23, 0, 2500,
+        {.forwards = false, .minSpeed = 60});
 
     loaderMech.set_value(false);
     pros::delay(900);
