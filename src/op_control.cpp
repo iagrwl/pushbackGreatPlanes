@@ -14,6 +14,7 @@
 bool openGate = true;
 bool isLoaderExtended = false;
 bool isWingsOut = true;
+bool DPDescoreToggle = false;
 //core func
 bool isIntakeOn = false;
 bool shouldSC = false;
@@ -21,10 +22,12 @@ bool shouldSC = false;
 int LE = 0; // loader
 int DE = 0; // descore mech
 int WE = 0; // wing mech
+int PE = 0;  // park mech
 //amount of PSI used for each system
 int LP = 2; // loader
 int DP = 2; // descore mech
 int WP = 2; // wing mech
+int DD = 2; // double park & descore
 
 int usedPSI = 0; // the amount of psi used by the robot
 int PSI = 100; // the amount of psi left over for the double park mechanism to use
@@ -156,9 +159,19 @@ void switchCS() { // switche color
   }
 }
 
+void handleDoublePark() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { //if the controller recognizes a new press from the B button
+    DPDescoreToggle = !DPDescoreToggle; //flips the condition of the current state of the wings
+    parkMech.set_value(DPDescoreToggle); //sets the physical state to the bool condition of the wings
+    if (DPDescoreToggle == false){
+      PE++;
+    }
+  }
+}
+
 
 void updatePSI(){
-  usedPSI = (LE*LP)+(DE*DP)+(WE*WP);
+  usedPSI = (LE*LP)+(DE*DP)+(WE*WP)+(PE*DD);
   PSI = 100-usedPSI;
 }
 
