@@ -15,7 +15,7 @@ void scoreMidGoal(){
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127); 
-    pros::delay(200);
+    pros::delay(300);
     frontIntake.move(127);
     middleRollers.move(60);
     const int totalSteps = 10;   
