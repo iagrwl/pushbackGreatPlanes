@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Ishaan's Skills",
+    "project_name": "Match ",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,7 +323,7 @@
       }
     },
     "upload_options": {
-      "slot": 4,
+      "slot": 1,
       "description": "ishaan's skills route",
       "icon": "pros"
     },
