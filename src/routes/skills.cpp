@@ -201,6 +201,8 @@ void autonSkills() {
     // collect rest of cluster
     chassis.moveToPoint(25, 25, 1000);
 
+    loaderMech.set_value(true);
+
     // allign to middle goal
     chassis.turnToPoint(11, 11, 750, {.forwards = false});  
     chassis.moveToPoint(11, 11, 1500, {.forwards = false});
