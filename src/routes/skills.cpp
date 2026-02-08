@@ -65,7 +65,7 @@ void autonSkills() {
 
     // allign to first loader
     chassis.moveToPoint(-46, -48, 1500);
-    chassis.turnToHeading(-180, 500, {}, false);
+    chassis.turnToHeading(-180, 400, {}, false);
 
     wallDistance(false, true);
 
@@ -128,7 +128,7 @@ void autonSkills() {
 
     // score 2nd time
     chassis.moveToPoint(-48, 20, 2500, {.forwards = false});
-    pros::delay(800);
+    pros::delay(850);
     frontIntake.move(-80);
     pros::delay(50);
     middleRollers.move(-80);
@@ -153,7 +153,7 @@ void autonSkills() {
 
     // allign to park zone
     chassis.moveToPoint(-48, 52, 2000, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.moveToPoint(-20, 64, 2000);
+    chassis.moveToPoint(-20, 64, 2000, {.minSpeed = 40, .earlyExitRange = 5});
     chassis.turnToHeading(90, 300, {}, false);
 
     // extend loader before entering park zone
@@ -237,7 +237,7 @@ void autonSkills() {
 
     // allign to loader
     chassis.moveToPoint(46, 48, 1500);
-    chassis.turnToHeading(0, 500, {}, false);
+    chassis.turnToHeading(0, 400, {}, false);
 
     wallDistance(false, true);
     scoringRoller.move(127);
@@ -298,7 +298,7 @@ void autonSkills() {
 
     // score 2nd time
     chassis.moveToPoint(48, -20, 2500, {.forwards = false});
-    pros::delay(800);
+    pros::delay(850);
     frontIntake.move(-80);
     pros::delay(50);
     middleRollers.move(-80);
@@ -322,7 +322,7 @@ void autonSkills() {
 
     // allign to park zone
     chassis.moveToPoint(48, -52, 2000, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.moveToPoint(20, -64, 2000);
+    chassis.moveToPoint(20, -64, 2000, {.minSpeed = 40, .earlyExitRange = 5});
     chassis.turnToHeading(-90, 300, {}, false);
 
     // extend loader before entering park zone
