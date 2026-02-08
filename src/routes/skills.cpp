@@ -33,7 +33,7 @@ void autonSkills() {
 
     // collect first red from cluster
     chassis.moveToPoint(-17.5, -32, 1200, {}, false);
-    pros::delay(500);
+    pros::delay(300);
     frontIntake.move(10);
     
     // collect rest of cluster
@@ -46,7 +46,7 @@ void autonSkills() {
     // score in mid goal
     frontIntake.move(127);
     pros::delay(700);
-    scoringRoller.move(-40);
+    scoringRoller.move(-50);
     frontIntake.move(-40);
     pros::delay(600);
     frontIntake.move(127);
@@ -54,9 +54,10 @@ void autonSkills() {
     // allign to first loader
     chassis.moveToPoint(-46, -48, 1500);
     loaderMech.set_value(true);
+    scoringRoller.move(-127);
     pros::delay(800);
     scoringRoller.move(127);
-    chassis.turnToHeading(-180, 500, {}, false);
+    chassis.turnToHeading(-180, 400, {}, false);
     
     wallDistance(false, true);
 
@@ -81,7 +82,7 @@ void autonSkills() {
     chassis.moveToPoint(-48, 20, 2000, {.forwards = false});
 
     // score 1st time
-    pros::delay(600);
+    pros::delay(650);
     frontIntake.move(-80);
     middleRollers.move(-80);
     scoringRoller.move(-80);
@@ -90,7 +91,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     scoringGate.set_value(false);
-    pros::delay(1200);
+    pros::delay(1400);
 
     // reset pose (x)
     wallDistance(false, false);
@@ -110,7 +111,7 @@ void autonSkills() {
 
     // score 2nd time
     chassis.moveToPoint(-48, 20, 2500, {.forwards = false});
-    pros::delay(800);
+    pros::delay(850);
     frontIntake.move(-80);
     middleRollers.move(-80);
     scoringRoller.move(-80);
@@ -119,7 +120,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);  
     scoringGate.set_value(false);
-    pros::delay(1200);
+    pros::delay(1400);
     loaderMech.set_value(false);
 
     // reset pose at the goal after scoring
@@ -134,7 +135,7 @@ void autonSkills() {
 
     // allign to park zone
     chassis.moveToPoint(-48, 52, 2000, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.moveToPoint(-20, 64, 2000);
+    chassis.moveToPoint(-20, 64, 2000, {.minSpeed = 40, .earlyExitRange = 5});
     chassis.turnToHeading(90, 300, {}, false);
 
     // extend loader before entering park zone
@@ -176,7 +177,7 @@ void autonSkills() {
     chassis.moveToPoint(12, 36, 1500);
     chassis.turnToPoint(24,24,750);
     chassis.moveToPoint(18.5, 29, 1200, {}, false);
-    pros::delay(500);
+    pros::delay(300);
     frontIntake.move(10);
     
     // collect rest of cluster
@@ -217,7 +218,7 @@ void autonSkills() {
     scoringRoller.move(127);
     middleRollers.move(127);
     frontIntake.move(127);
-    chassis.turnToHeading(0, 500, {}, false);
+    chassis.turnToHeading(0, 400, {}, false);
     
     // reset pose to ensure we hit loader centered
     wallDistance(false, true);
@@ -246,7 +247,7 @@ void autonSkills() {
     chassis.moveToPoint(48, -20, 2000, {.forwards = false});
 
     // score 1st time
-    pros::delay(600);
+    pros::delay(650);
     frontIntake.move(-80);
     middleRollers.move(-80);
     scoringRoller.move(-80);
@@ -255,7 +256,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     scoringGate.set_value(false);
-    pros::delay(1200);
+    pros::delay(1400);
 
     // reset pose (x)
     wallDistance(false, false);
@@ -275,7 +276,7 @@ void autonSkills() {
 
     // score 2nd time
     chassis.moveToPoint(48, -20, 2500, {.forwards = false});
-    pros::delay(800);
+    pros::delay(850);
     frontIntake.move(-80);
     middleRollers.move(-80);
     scoringRoller.move(-80);
@@ -284,7 +285,7 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);  
     scoringGate.set_value(false);
-    pros::delay(1200);
+    pros::delay(1400);
     loaderMech.set_value(false);
 
     frontIntake.move(127);
@@ -302,7 +303,7 @@ void autonSkills() {
     
     // allign to park zone
     chassis.moveToPoint(48, -52, 2000, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.moveToPoint(20, -64, 2000);
+    chassis.moveToPoint(20, -64, 2000, {.minSpeed = 40, .earlyExitRange = 5});
     chassis.turnToHeading(-90, 300, {}, false);
 
     // park
