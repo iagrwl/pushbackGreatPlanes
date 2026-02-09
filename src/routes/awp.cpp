@@ -15,11 +15,13 @@ void solo_awp(){
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    loaderMech.set_value(true);
+    
     
     chassis.setPose(16,-48,-90);
     chassis.moveToPoint(13,-48,500,{.minSpeed=50});
+    
     chassis.moveToPoint(40,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
+    loaderMech.set_value(true);
     chassis.moveToPose(45.5,-80,180,1400,{.minSpeed=75},false);
 
     chassis.moveToPoint(45.5,-22,1100,{.forwards=false},false);
@@ -43,8 +45,8 @@ void solo_awp(){
     scoringGate.set_value(true);
    
     chassis.moveToPoint(23,-20,800);
-    chassis.turnToHeading(-94,400);
-    chassis.moveToPoint(-25.5,-22.5,1100,{.minSpeed=45},false);
+    chassis.turnToHeading(-95,400);
+    chassis.moveToPoint(-25.5,-23,1100,{.minSpeed=45},false);
     colorsortOn=false;
     scoringRoller.move(127);
     //mid goal movement
@@ -59,8 +61,8 @@ void solo_awp(){
 
     // direct into mid goal
     frontIntake.move(100);
-    middleRollers.move(80);
-    scoringRoller.move(-55);
+    middleRollers.move(75);
+    scoringRoller.move(-50);
 
 
     chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
@@ -81,7 +83,7 @@ void solo_awp(){
     wallDistance(false, true);
 
     
-    chassis.moveToPoint(-48,-25,1100,{.forwards=false},false);
+    chassis.moveToPoint(-48,-25,1250,{.forwards=false},false);
     chassis.moveToPoint(-48, -15, 4500, {.forwards = false, .minSpeed = 80});
     loaderMech.set_value(false);
     /*
