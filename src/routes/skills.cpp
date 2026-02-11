@@ -29,6 +29,9 @@ void autonSkills() {
     middleRollers.move(127);
     scoringRoller.move(127);
     chassis.setPose(0, 0, 180);
+    right_dt.get_temperature();
+    left_dt.get_temperature();
+
     // =========================
     // CLEAR STARTING ZONE
     // =========================
@@ -130,8 +133,8 @@ void autonSkills() {
 
     chassis.moveToPose(-51.5, 18, 0, 2000,
         {.forwards = false, .lead = 0.5, .minSpeed = 60, .earlyExitRange = 5}, false);
-    left_dt.move(-40);
-    right_dt.move(-40);
+    left_dt.move(-50);
+    right_dt.move(-60);
     loaderMech.set_value(true);
 
     pros::delay(250);
@@ -149,20 +152,17 @@ void autonSkills() {
     // =========================
     // SECOND LOADER + SCORE
     // =========================
-    chassis.moveToPoint(-48.5, 70, 1800, {.maxSpeed = 75} );
-    pros::delay(700);
+    chassis.moveToPoint(-48, 72, 2000, {.maxSpeed = 70});
+    pros::delay(500);
     scoringGate.set_value(true);
-    pros::delay(900);
-    
-
+    pros::delay(1500);
     left_dt.move(-40);
     right_dt.move(-40);
     pros::delay(200);
-
     left_dt.move(90);
     right_dt.move(90);
-    pros::delay(800);
-    pros::delay(500);
+    pros::delay(700);
+
 
     chassis.moveToPose(-48.5, 23, 0, 2500,
         {.forwards = false, .minSpeed = 60});
@@ -211,8 +211,8 @@ void autonSkills() {
     chassis.turnToPoint(51.5,-24,1500,{.forwards=false,.minSpeed=60,.earlyExitRange=3});
     frontIntake.move(127);
     chassis.moveToPose(51.5,-18,180,2000,{.forwards=false,.lead=0.6,.minSpeed=60,.earlyExitRange=5},false);
-    left_dt.move(-40);
-    right_dt.move(-40);
+    left_dt.move(-50);
+    right_dt.move(-60);
     loaderMech.set_value(true);
     //move to collect from 3rd loader
     //pros::delay(1000);
@@ -228,9 +228,11 @@ void autonSkills() {
     right_dt.move(0);
 
     //chassis.setPose(chassis.getPose().x,28, chassis.getPose().theta);
-    scoringGate.set_value(true);
     //chassis.moveToPoint(45.75,70,3000,{.maxSpeed=70});
-    chassis.moveToPoint(48.5,-70,1500,{.maxSpeed=70},false);
+    chassis.moveToPoint(48.5,-70,2000,{.maxSpeed=70});
+    pros::delay(500);
+    scoringGate.set_value(true);
+    pros::delay(1500);
     left_dt.move(-40);
     right_dt.move(-40);
     pros::delay(200);
@@ -244,8 +246,8 @@ void autonSkills() {
 
 
     chassis.moveToPoint(48,-22,2200,{.forwards=false,.minSpeed=80,.earlyExitRange=4},false);
-    left_dt.move(-40);
-    right_dt.move(-40);
+    left_dt.move(-50);
+    right_dt.move(-60);
 
     //score 3rd time in 2nd long goal
     frontIntake.move(127);
@@ -263,9 +265,9 @@ void autonSkills() {
     //chassis.moveToPoint(48,-20,1000,{.forwards=false,.maxSpeed=40});
     //line up to park
     //was 18
-    chassis.moveToPose(-8,-67,-90,2500,{.lead=0.5,.minSpeed=127,.earlyExitRange=4},false);
-    left_dt.move(-20);
-    right_dt.move(-20);
+    chassis.moveToPose(-8,-67,-90,2700,{.lead=0.5,.minSpeed=127,.earlyExitRange=4},false);
+    left_dt.move(-30);
+    right_dt.move(-30);
 
 
     //park
