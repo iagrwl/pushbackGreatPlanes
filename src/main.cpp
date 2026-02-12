@@ -251,12 +251,11 @@ void opcontrol() {
                         right_dt.move(0);
 
                         while (shouldLift==false){
-                            frontIntake.move(-60);
+                            frontIntake.move(-55);
                             middleRollers.move(-100);
                             scoringRoller.move(-127);
                             controller.set_text(0, 0, "lifting bot");
                             if (bottomDistance.get_distance() >= 50 && bottomDistance.get_distance() <=80){
-                                pros::delay(80);
                                 frontIntake.move(0);
                                 parkMech.set_value(true);
                                 isParkDown = true;
