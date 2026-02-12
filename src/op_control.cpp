@@ -52,12 +52,14 @@ void handleTank() {
 
 
 // the return; cmd exits the loop 
-void handleIOCommands() { 
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // if L1 is clicked then system is toggled on or off
+void handleIOCommands() {
+  // if L1 is clicked then system is toggled on or off 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
     isIntakeOn = !isIntakeOn;
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+  // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
     frontIntake.move(-110);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -70,7 +72,9 @@ void handleIOCommands() {
   }
 
   // hold behavior while R1 is held
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
+  // when R1 is held the system runs forward with scoring bar deployed when let 
+  // go returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
@@ -81,7 +85,9 @@ void handleIOCommands() {
   }
   bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
+  // when R2 is held the system runs forward with scoring roller reversed 
+  // for mid scoring and when let go returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     colorsortOn=false;
     frontIntake.move(100);
     middleRollers.move(100);
