@@ -96,7 +96,7 @@ void autonSkills() {
 
     pros::delay(1000);
     scoreMidGoal();
-    pros::delay(2700);
+    pros::delay(2000);
 
     // =========================
     // FIRST LOADER COLLECTION
@@ -164,7 +164,7 @@ void autonSkills() {
     pros::delay(700);
 
 
-    chassis.moveToPose(-48.5, 23, 0, 2500,
+    chassis.moveToPose(-48, 23, 0, 2500,
         {.forwards = false, .minSpeed = 60});
 
     loaderMech.set_value(false);
@@ -271,5 +271,4 @@ void autonSkills() {
 
 
     //park
-
 }
