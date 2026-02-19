@@ -108,6 +108,7 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
+  
     selector.focus();
     scoringGate.set_value(false);
     if (tuneMode == true){
@@ -128,7 +129,7 @@ void initialize() {
     //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
-    
+    chassis.setPose(16,-48,-90);
     // sets idle mode on drivetrain
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -182,8 +183,6 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
-  chassis.moveToPoint(0, 100, 5000,{.maxSpeed=80}); // slight move to reset tracking and ensure odometry is working correctly
-  /*
   colorsortOn=false;
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
@@ -207,7 +206,7 @@ void autonomous() {
   selector.run_auton();
   }
   
-  */
+  
  }
 
 

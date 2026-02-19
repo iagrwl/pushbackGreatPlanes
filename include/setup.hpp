@@ -107,10 +107,10 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 //negative means regular direction is flipped
 //intake groups
-inline pros::Motor frontIntake(5, pros::MotorGearset::blue);
-inline pros::Motor middleRollers(-10);
-inline pros::Motor colorSortRoller(4);
-inline pros::Motor scoringRoller(-11);
+inline pros::Motor frontIntake(16, pros::MotorGearset::blue);
+inline pros::Motor middleRollers(12);
+inline pros::Motor colorSortRoller(15);
+inline pros::Motor scoringRoller(15);
 
 //extensions
 // false means open and true means close
@@ -120,7 +120,7 @@ inline pros::adi::DigitalOut wingMech('C');
 inline pros::adi::DigitalOut parkMech('D');
 
 // clog sensors
-inline pros::Optical topOptical(4);
-inline pros::Distance bottomDistance(18);
-inline pros::Distance leftDistance(17);
-inline pros::Distance rightDistance(13);
+inline pros::Optical topOptical(15);
+inline pros::Distance bottomDistance(15);
+inline pros::Distance leftDistance(15);
+inline pros::Distance rightDistance(15);
