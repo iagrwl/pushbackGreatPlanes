@@ -94,7 +94,7 @@ void two_goal_LEFT() {
     // }
     frontIntake.move(127);
     middleRollers.move(60);
-    scoringRoller.move(-60);
+    scoringRoller.move(-70);
     pros::delay(1200);
     middleRollers.move(127);
     scoringRoller.move(127);

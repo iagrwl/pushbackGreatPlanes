@@ -11,8 +11,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
-inline pros::MotorGroup right_dt({7,-8 , 9}, pros::MotorGearset::blue);    // right side
-inline pros::MotorGroup left_dt({-14,-16,15}, pros::MotorGearset::blue);  // left side
+inline pros::MotorGroup right_dt({-5,6,7}, pros::MotorGearset::blue);    // right side
+inline pros::MotorGroup left_dt({10,-9,-2}, pros::MotorGearset::blue);  // left side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -24,13 +24,13 @@ inline lemlib::Drivetrain drivetrain(&left_dt,
 							  2
 );
 
-inline pros::Imu imu(1);
+inline pros::Imu imu(3);
 // declare sensors needed for odom setup
 /*inline pros::Rotation horizontalEnc(17);
 inline pros::Rotation verticalEnc(18);
 */
 
-inline pros::Rotation verticalEnc(-6);
+inline pros::Rotation verticalEnc(-4);
 //configure tracking wheels
 //inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
 inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
@@ -44,7 +44,7 @@ inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
 );
 
 // lateral pid
-inline lemlib::ControllerSettings lateral_controller(6.25, //proportional gain (kP) //5.5
+inline lemlib::ControllerSettings lateral_controller(7, //proportional gain (kP) //5.5
                                             0, // integral gain (kI) //0.5
                                         25, // derivative gain (kD) //18
                                          1,//windup

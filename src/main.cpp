@@ -17,7 +17,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = false; // set true for green screen set false for competition
+bool tuneMode = true; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
@@ -111,7 +111,7 @@ void initialize() {
     selector.focus();
     scoringGate.set_value(false);
     if (tuneMode == true){
-        chassis.setPose(-6.75, -47, 0);
+        chassis.setPose(0, 0, 0);
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);
     }
@@ -182,6 +182,8 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
+  chassis.moveToPoint(0, 100, 5000,{.maxSpeed=80}); // slight move to reset tracking and ensure odometry is working correctly
+  /*
   colorsortOn=false;
   int hue = topOptical.get_hue();
   if (hue >= BLUE_MIN && hue <= BLUE_MAX){
@@ -205,7 +207,7 @@ void autonomous() {
   selector.run_auton();
   }
   
-  
+  */
  }
 
 
