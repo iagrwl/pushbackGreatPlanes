@@ -58,7 +58,7 @@ void two_goal_LEFT() {
     frontIntake.move(-20);
     middleRollers.move(-20);
     scoringRoller.move(-20);
-    chassis.moveToPoint(-48, -68, 1650, {.maxSpeed = 55});
+    chassis.moveToPoint(-48, -72, 1650, {.maxSpeed = 55});
     pros::delay(500);
     scoringGate.set_value(true);
     frontIntake.move(127);
@@ -67,12 +67,14 @@ void two_goal_LEFT() {
     //pros::delay(500);
     chassis.moveToPoint(-48, -57, 1000, {.forwards = false, .minSpeed = 127, .earlyExitRange = 6});
     chassis.moveToPose(-10, -13, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
-    frontIntake.move(-100);
+    frontIntake.move(-127);
     middleRollers.move(-127);
-    scoringRoller.move(-127);
+    scoringRoller.move(0);
+    pros::delay(400);
 
-    pros::delay(100);
-
+    frontIntake.move(127);
+    middleRollers.move(60);
+    scoringRoller.move(-70);
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
     colorsortOn=false;
     //scoreMidGoal();
@@ -92,9 +94,7 @@ void two_goal_LEFT() {
     //     isOff = !isOff;
 
     // }
-    frontIntake.move(127);
-    middleRollers.move(60);
-    scoringRoller.move(-60);
+    
     pros::delay(1200);
     middleRollers.move(127);
     scoringRoller.move(127);
