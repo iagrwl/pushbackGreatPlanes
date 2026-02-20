@@ -129,7 +129,7 @@ void initialize() {
     //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
-    chassis.setPose(16,-48,-90);
+    
     // sets idle mode on drivetrain
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
@@ -293,7 +293,8 @@ void opcontrol() {
     handleDoublePark();
     updatePSI();
     switchCS();   
-    toggleCS();        
+    toggleCS();    
+    handleQuickWing();    
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain

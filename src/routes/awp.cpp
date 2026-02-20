@@ -8,24 +8,22 @@
 
 
 void solo_awp(){
-    scoringGate.set_value(true);
-    wingMech.set_value(true);
-    scoringGate.set_value(true);
-    //turn on intake
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(127);
+    // scoringGate.set_value(true);
+    // wingMech.set_value(true);
+    // scoringGate.set_value(true);
+    // //turn on intake
+    // frontIntake.move(127);
+    // middleRollers.move(127);
+    // scoringRoller.move(127);
     
-    
-    chassis.setPose(16,-48,-90);
+    //WORKING
+    // chassis.setPose(16,-48,-90);
+    // // chassis.moveToPoint(13,-48,500,{.minSpeed=50});
+    // chassis.moveToPoint(38,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
+    // loaderMech.set_value(true);
+    // chassis.moveToPose(42,-80,180,1400,{.minSpeed=75},false);
 
-    // chassis.moveToPoint(13,-48,500,{.minSpeed=50});
-    
-    chassis.moveToPoint(38,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
-    loaderMech.set_value(true);
-    chassis.moveToPose(42,-80,180,1400,{.minSpeed=75},false);
-
-    chassis.moveToPoint(46.5,-22,1100,{.forwards=false},false);
+    // chassis.moveToPoint(46.5,-22,1100,{.forwards=false},false);
     // /*
     // middleRollers.move(-127);
     // frontIntake.move(-127);
@@ -41,14 +39,18 @@ void solo_awp(){
 
 
     chassis.setPose(48,-24,180);
+
+
+    
     chassis.moveToPose(48,-37,0,800);
-    
-    
-    chassis.turnToHeading(-33,500);
-    // scoringGate.set_value(true);
-   
+    chassis.turnToHeading(-33,400,{.maxSpeed=50});
+    scoringGate.set_value(true);
     chassis.moveToPoint(23,-20,800);
     chassis.turnToHeading(-95,400);
+
+
+
+
     // chassis.moveToPoint(-25.5,-23,1100,{.minSpeed=45},false);
     // colorsortOn=false;
     // scoringRoller.move(127);

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "New Bot",
+    "project_name": "state bot",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,9 +323,9 @@
       }
     },
     "upload_options": {
-      "slot": 2,
-      "description": "ishaan's skills route",
-      "icon": "pros"
+      "slot": 1,
+      "description": "ayo sus ",
+      "icon": "ufo"
     },
     "use_early_access": false
   }

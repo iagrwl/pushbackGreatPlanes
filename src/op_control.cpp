@@ -176,6 +176,34 @@ void handleDoublePark() {
 }
 
 
+void handleQuickWing() {
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    left_dt.move(100);
+    right_dt.move(100);
+    pros::delay(170);
+    left_dt.brake();
+    right_dt.brake();
+    left_dt.move(0);
+    right_dt.move(0);
+    pros::delay(100);
+    chassis.turnToHeading(chassis.getPose().theta+ 38,200);
+    pros::delay(200);
+    left_dt.brake();
+    right_dt.brake();
+    pros::delay(200);
+    left_dt.move(-100);
+    right_dt.move(-100);
+    pros::delay(200);
+    left_dt.brake();
+    right_dt.brake();
+    left_dt.move(0);
+    right_dt.move(0);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+
+  }
+}
+
 void updatePSI(){
   usedPSI = (LE*LP)+(DE*DP)+(WE*WP)+(PE*DD);
   PSI = 100-usedPSI;
