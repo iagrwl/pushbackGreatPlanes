@@ -35,9 +35,10 @@ void autonSkills() {
     chassis.turnToHeading(90, 300, {}, false);
 
     // extend loader before entering park zone
-    //loaderMech.set_value(true);
+    loaderMech.set_value(true);
     // wait for loader to come down
-    pros::delay(200);
+    pros::delay(250);
+    loaderMech.set_value(false);
 
     // enter park zone at full speed
     left_dt.move(70);
@@ -51,11 +52,16 @@ void autonSkills() {
 
     // exit park zone slower to intake more blocks 
     // and to avoid climbing on top of blocks
-    left_dt.move(40);
-    right_dt.move(40);
+    left_dt.move(50);
+    right_dt.move(50);
+
+    pros::delay(200);
+    loaderMech.set_value(true);
+    pros::delay(800);
+    loaderMech.set_value(false);
 
     // wait until halfway between loader and park zone
-    pros::delay(1700);
+    pros::delay(700);
     left_dt.move(0);
     right_dt.move(0);
 

@@ -118,6 +118,7 @@ inline pros::adi::DigitalOut scoringGate('A');
 inline pros::adi::DigitalOut loaderMech('B');
 inline pros::adi::DigitalOut wingMech('C');
 inline pros::adi::DigitalOut parkMech('D');
+inline pros::adi::DigitalOut pistake('E');
 
 // clog sensors
 inline pros::Optical topOptical(15);
