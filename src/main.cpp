@@ -18,7 +18,7 @@
 #include "setup.hpp"
 
 bool tuneMode = false; // set true for green screen set false for competition
-std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -85,7 +85,12 @@ void telemetryFunc(void* param) {
   }
 }
 
-
+void stopIntakeFunc(void* param) {
+  while (true) {
+    intakeAutoStopping();
+    pros::delay(13);
+  }
+}
 
 //2D array for RD auton selector
 rd::Selector selector({
@@ -108,10 +113,11 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
+  
     selector.focus();
     scoringGate.set_value(false);
     if (tuneMode == true){
-        chassis.setPose(-6.75, -47, 0);
+        chassis.setPose(0, 0, 0);
         pros::lcd::initialize();
         pros::Task pos(&positionTracker);
     }
@@ -125,6 +131,7 @@ void initialize() {
     // task callerss
     //pros::Task telemetryTask(telemetry);
     pros::Task colorSortTask(CSTaskFunc);
+    pros::Task stopIntakeTask(stopIntakeFunc);
     //pros::Task wall(wallTask);
     // calibrates drivetrain
     chassis.calibrate();
@@ -292,7 +299,8 @@ void opcontrol() {
     handleDoublePark();
     updatePSI();
     switchCS();   
-    toggleCS();        
+    toggleCS();    
+    handleQuickWing();    
     controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
