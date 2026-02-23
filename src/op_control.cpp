@@ -50,14 +50,86 @@ void handleTank() {
   chassis.tank(leftY, rightY); // move the robot
 }
 
+/*
+void handleIOCommands() {
+    int midDraw = middleRollers.get_current_draw();
+    int scoreDraw = scoringRoller.get_current_draw();
+    bool isScoring = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
-// the return; cmd exits the loop 
-void handleIOCommands() { 
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // if L1 is clicked then system is toggled on or off
+    static bool midStopped = false;
+    static bool scoreStopped = false;
+
+    if (midDraw > 2500) {
+        if (!midStopped) controller.rumble("-");
+        midStopped = true;
+    }
+    
+    if (scoreDraw > 2500) {
+        if (!scoreStopped) controller.rumble("-");
+        scoreStopped = true;
+    }
+
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+        isIntakeOn = !isIntakeOn;
+    }
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        frontIntake.move(-110);
+        middleRollers.move(-127);
+        scoringRoller.move(-127);
+        
+        midStopped = false;
+        scoreStopped = false;
+        return;
+    }
+
+    if (isScoring) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+            DE++;
+        }
+        scoringGate.set_value(false);
+        frontIntake.move(127);
+        middleRollers.move(127);
+        scoringRoller.move(127);
+        
+        midStopped = false;
+        scoreStopped = false;
+        return;
+    } else {
+        scoringGate.set_value(true);
+    }
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        colorsortOn = false;
+        frontIntake.move(100);
+        middleRollers.move(100);
+        scoringRoller.move(-70);
+        return;
+    }
+
+    if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
+        !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        if (isIntakeOn) {
+            frontIntake.move(127);
+            middleRollers.move(50);
+            scoringRoller.move(50);
+        } else {
+            frontIntake.move(0);
+            middleRollers.move(0);
+            scoringRoller.move(0);
+        }
+    }
+}
+*/
+
+void handleIOCommands() {
+  // if L1 is clicked then system is toggled on or off 
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
     isIntakeOn = !isIntakeOn;
   }
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+  // when L2 is held the system reverses when let go it returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
     frontIntake.move(-110);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -70,7 +142,9 @@ void handleIOCommands() {
   }
 
   // hold behavior while R1 is held
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // when R1 is held the system runs forward with scoring bar deployed when let go returns to the state of L1 toggle
+  // when R1 is held the system runs forward with scoring bar deployed when let 
+  // go returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
@@ -81,7 +155,9 @@ void handleIOCommands() {
   }
   bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // when R2 is held the system runs forward with scoring roller reversed for mid scoring and when let go returns to the state of L1 toggle
+  // when R2 is held the system runs forward with scoring roller reversed 
+  // for mid scoring and when let go returns to the state of L1 toggle
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     colorsortOn=false;
     frontIntake.move(100);
     middleRollers.move(100);
@@ -96,7 +172,7 @@ void handleIOCommands() {
       if (isIntakeOn) {
         frontIntake.move(127);
         middleRollers.move(127);
-        scoringRoller.move(90);
+        scoringRoller.move(127);
       } else {
         frontIntake.move(0);
         middleRollers.move(0);
@@ -202,6 +278,9 @@ void handleQuickWing() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
   }
+}
+
+void intakeAutoStopping() {
 }
 
 void updatePSI(){
