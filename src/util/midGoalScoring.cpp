@@ -21,7 +21,7 @@ void scoreMidGoal(){
     for (int i = 0; i <= totalSteps; i++) {
         double t = (double)i / totalSteps;  
 
-        double speed = 70 - 35 * t * t;
+        double speed = 70 - 30 * t * t;
 
         scoringRoller.move(-(int)speed);
         pros::delay(stepDelay);

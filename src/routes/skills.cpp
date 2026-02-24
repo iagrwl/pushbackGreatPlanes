@@ -17,62 +17,84 @@ void keepScoringMid() {
     middleRollers.move(127);
 }
 
-
 void autonSkills() {
+    // =========================
+    // INITIAL SETUP
+    // =========================
     scoringGate.set_value(true);
     wingMech.set_value(true);
 
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
-    chassis.setPose(-48, 28, 0);
+    chassis.setPose(0, 0, 180);
     right_dt.get_temperature();
     left_dt.get_temperature();
 
-    // allign to park zone
-    chassis.moveToPoint(-48, 52, 2000, {.maxSpeed = 80, .earlyExitRange = 5});
-    chassis.moveToPoint(-20, 64, 2000, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.turnToHeading(90, 300, {}, false);
-
-    // extend loader before entering park zone
-    //loaderMech.set_value(true);
-    // wait for loader to come down
+    // =========================
+    // CLEAR STARTING ZONE
+    // =========================
+    left_dt.move(50);
+    right_dt.move(50);
     pros::delay(200);
 
-    // enter park zone at full speed
+    left_dt.move(-20);
+    right_dt.move(-20);
+    pros::delay(1400);
+
     left_dt.move(70);
     right_dt.move(70);
     pros::delay(500);
 
-    // retract loader partway through the motion for better intaking
-    loaderMech.set_value(false);
-    // keep going forward at full speed for a little longer
-    pros::delay(250);
-
-    // exit park zone slower to intake more blocks 
-    // and to avoid climbing on top of blocks
-    left_dt.move(40);
-    right_dt.move(40);
-
-    // wait until halfway between loader and park zone
-    pros::delay(1700);
     left_dt.move(0);
     right_dt.move(0);
-
-    // reset pose against the wall
-    chassis.turnToHeading(-180, 750, {.minSpeed = 60, .earlyExitRange = 40}, false);
-    left_dt.move(-127);
-    right_dt.move(-127);
     pros::delay(500);
+
+    // Back out slightly
+    left_dt.move(-40);
+    right_dt.move(-40);
+    pros::delay(400);
+
+    // Re-enter to finish intake
+    left_dt.move(70);
+    right_dt.move(70);
+    pros::delay(600);
+
+    left_dt.move(-20);
+    right_dt.move(-20);
+    pros::delay(600);
+
+    // Exit starting area
+    left_dt.move(-80);
+    right_dt.move(-80);
+    pros::delay(700);
+
+    // Slow forward alignment
+    left_dt.move(30);
+    right_dt.move(30);
+    pros::delay(800);
+
     left_dt.move(0);
     right_dt.move(0);
-    // chassis.setPose(30, 62, 180);
-    wallDistance(false, false);
+    pros::delay(800);
 
-    scoringGate.set_value(true);
-    pros::delay(500);
+
+    wallDistance(true, true);
+    chassis.setPose(chassis.getPose().x, -47, 180);
+
+    chassis.moveToPoint(0, -40, 1400, {.forwards = false});
+
+    chassis.turnToPoint(24, -24, 500, {.earlyExitRange = 5});
+    chassis.moveToPoint(24, -24, 1400, {.maxSpeed = 80});
+
+    chassis.turnToPoint(0, 0, 700,{.maxSpeed = 60,});
+    chassis.moveToPoint(0, 0, 3000,{.forwards = false, .maxSpeed = 50});
     
-    /*
+}
+
+/*
+void autonSkills() {
+    
     // =========================
     // INITIAL SETUP
     // =========================
@@ -325,5 +347,6 @@ void autonSkills() {
 
 
     //park
-    */
+    
 }
+*/
