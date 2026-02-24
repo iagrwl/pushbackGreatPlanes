@@ -46,6 +46,23 @@ void autonSkills() {
     right_dt.move(70);
     pros::delay(500);
 
+    // retract loader partway through the motion for better intaking
+    loaderMech.set_value(false);
+    // keep going forward at full speed for a little longer
+    pros::delay(250);
+
+    // exit park zone slower to intake more blocks 
+    // and to avoid climbing on top of blocks
+    left_dt.move(50);
+    right_dt.move(50);
+
+    pros::delay(200);
+    loaderMech.set_value(true);
+    pros::delay(800);
+    loaderMech.set_value(false);
+
+    // wait until halfway between loader and park zone
+    pros::delay(700);
     left_dt.move(0);
     right_dt.move(0);
     pros::delay(500);

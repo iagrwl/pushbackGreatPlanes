@@ -62,9 +62,9 @@ void one_goal_right() {
     loaderMech.set_value(true);
 
     chassis.turnToHeading(135, 750, {.minSpeed = 30, .earlyExitRange = 60});
-    chassis.moveToPose(44, -75, 180, 2100, {.minSpeed = 60});
+    chassis.moveToPose(46, -75, 180, 2100, {.minSpeed = 60});
     //pros::delay(200);
-    chassis.moveToPoint(45, -28, 2000, {.forwards = false});
+    chassis.moveToPoint(47, -28, 2000, {.forwards = false});
     pros::delay(600);
     middleRollers.move(-127);
     frontIntake.move(-127);
