@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "State Bot",
+    "project_name": "Eternity State",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,7 +324,7 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "ayo sus ",
+      "description": "tune/sawp",
       "icon": "ufo"
     },
     "use_early_access": false
