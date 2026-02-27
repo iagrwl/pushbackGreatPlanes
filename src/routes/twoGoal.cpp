@@ -31,18 +31,13 @@ void two_goal_LEFT() {
     //loaderMech.set_value(true);
     
     //chassis.turnToPoint(-40, -10, 700);
-    chassis.moveToPose(-48,-9, -90, 1300, {.lead = 0.55, .minSpeed = 60});
+    chassis.moveToPose(-47,-11, -90, 1300, {.lead = 0.55, .minSpeed = 60});
     //pros::delay(200);
-    loaderMech.set_value(false);
-    pros::delay(870);
+    pros::delay(820);
     loaderMech.set_value(true);
     pros::delay(200);
     chassis.turnToHeading(-90, 700, {.minSpeed = 100});
     chassis.moveToPoint(-24, -36, 1500, {.forwards = false, .minSpeed = 40, .earlyExitRange = 3});
-    // chassis.swingToHeading(140, lemlib::DriveSide::LEFT, 750);
-    // chassis.moveToPose(-48, -22, 180, 1500, {.forwards = false, .lead = 0.1, .minSpeed = 100});
-    // chassis.swingToHeading(-180, lemlib::DriveSide::LEFT, 750, {.minSpeed = 100, .earlyExitRange = 20});
-    // chassis.moveToPoint(-48, -18, 1500, {.forwards = false, .minSpeed = 100});
     chassis.moveToPoint(-45, -48, 1500, {.minSpeed = 40, .earlyExitRange = 4});
     loaderMech.set_value(false);
     chassis.turnToHeading(180, 500, {}, false);
@@ -54,7 +49,7 @@ void two_goal_LEFT() {
     middleRollers.move(127);
     scoringRoller.move(127);
     scoringGate.set_value(false);
-    pros::delay(650);
+    pros::delay(450);
     frontIntake.move(-20);
     middleRollers.move(-20);
     scoringRoller.move(-20);
@@ -73,8 +68,8 @@ void two_goal_LEFT() {
     pros::delay(400);
 
     frontIntake.move(127);
-    middleRollers.move(60);
-    scoringRoller.move(-70);
+    middleRollers.move(50);
+    scoringRoller.move(-50);
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
     colorsortOn=false;
     //scoreMidGoal();
@@ -95,7 +90,7 @@ void two_goal_LEFT() {
 
     // }
     
-    pros::delay(1200);
+    pros::delay(1400);
     middleRollers.move(127);
     scoringRoller.move(127);
     chassis.moveToPoint(-37, -37, 1500, {});
