@@ -22,37 +22,39 @@ void solo_awp(){
   
     chassis.setPose(16,-48,-90);
     chassis.moveToPoint(13,-48,500,{.minSpeed=50});
-    chassis.moveToPoint(38,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
+    chassis.moveToPoint(39,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
     loaderMech.set_value(true);
-    chassis.moveToPose(42,-80,180,1200,{.minSpeed=75},false);
+    chassis.moveToPose(43.5,-80,180,1200,{.minSpeed=75},false);
 
-    chassis.moveToPoint(46.5,-22,1100,{.forwards=false},false);
-    
-    middleRollers.move(127);
-    frontIntake.move(127);
-    scoringRoller.move(127);
+    chassis.moveToPose(46,-20,180,1100,{.forwards=false,.minSpeed=55},false);
+    left_dt.move(-30);
+    right_dt.move(-30);
     scoringGate.set_value(false);
     pros::delay(1100);
     loaderMech.set_value(false);
+    left_dt.move(0);
+    right_dt.move(0);
 
 
     chassis.setPose(48,-24,180);
+
     chassis.moveToPose(48,-37,0,600);
-    chassis.turnToHeading(-33,400,{.maxSpeed=50});
+    chassis.turnToHeading(-35,400,{.maxSpeed=50});
     scoringGate.set_value(true);
-    chassis.moveToPoint(23,-20,800);
-    chassis.turnToHeading(-94,400);
+    
+    chassis.moveToPoint(23,-19.5,800,{.maxSpeed=85});
+    chassis.turnToHeading(-90,700);
+    
 
 
-
-    chassis.moveToPoint(-25.5,-21,1100,{},false);
+    chassis.moveToPose(-25.5,-19.5,-90,1500,{.minSpeed=60},false);
     colorsortOn=false;
     scoringRoller.move(127);
-    /*
-    //mid goal movement
-    chassis.moveToPoint(-2,-2,1200,{.forwards=false,.minSpeed=60},false);
-    loaderMech.set_value(true);
     
+    //mid goal movement
+    chassis.turnToPoint(0,0,500,{.forwards=false});
+    chassis.moveToPoint(-11,-11,1200,{.forwards=false,.minSpeed=40},false);
+    loaderMech.set_value(true);
     //mid goal scoring 
     
     //reverse to unclog for 200ms
@@ -90,19 +92,6 @@ void solo_awp(){
     chassis.moveToPoint(-48,-25,1250,{.forwards=false},false);
     chassis.moveToPoint(-48, -15, 4500, {.forwards = false, .minSpeed = 80});
     loaderMech.set_value(false);
-    
-    /*
-    middleRollers.move(-127);
-    frontIntake.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(100);
-    */
-    /*
-    middleRollers.move(127);
-    frontIntake.move(127);
-    scoringRoller.move(127);
-
     scoringGate.set_value(false);
-    colorsortOn=true;
-    */
+    
 }
