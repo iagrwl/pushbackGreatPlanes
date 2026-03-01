@@ -30,7 +30,6 @@ void autonSkills() {
     chassis.setPose(0, 0, 180);
     right_dt.get_temperature();
     left_dt.get_temperature();
-
     // =========================
     // CLEAR STARTING ZONE
     // =========================
@@ -40,7 +39,7 @@ void autonSkills() {
 
     left_dt.move(-20);
     right_dt.move(-20);
-    pros::delay(1400);
+    pros::delay(1200);
 
     left_dt.move(70);
     right_dt.move(70);
@@ -48,8 +47,8 @@ void autonSkills() {
 
     left_dt.move(0);
     right_dt.move(0);
-    pros::delay(500);
-
+    pros::delay(1000);
+    /*
     // Back out slightly
     left_dt.move(-40);
     right_dt.move(-40);
@@ -59,24 +58,24 @@ void autonSkills() {
     left_dt.move(70);
     right_dt.move(70);
     pros::delay(600);
-
+    
     left_dt.move(-20);
     right_dt.move(-20);
     pros::delay(600);
-
+    */
     // Exit starting area
     left_dt.move(-80);
     right_dt.move(-80);
     pros::delay(700);
 
     // Slow forward alignment
-    left_dt.move(30);
-    right_dt.move(30);
-    pros::delay(800);
+    left_dt.move(40);
+    right_dt.move(40);
+    pros::delay(600);
 
     left_dt.move(0);
     right_dt.move(0);
-    pros::delay(800);
+    pros::delay(200);
 
     // Wall reset
     wallDistance(true, true);
@@ -85,22 +84,186 @@ void autonSkills() {
     chassis.moveToPoint(0, -40, 1400, {.forwards = false});
 
     chassis.turnToPoint(24, -24, 500, {.earlyExitRange = 5});
-    chassis.moveToPoint(24, -24, 1400, {.maxSpeed = 80});
-    pros::delay(700);
+    chassis.moveToPoint(24, -24, 1000, {.maxSpeed = 80},false);
+    frontIntake.move(-60);
+    pros::delay(200);
     frontIntake.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(127);
+    pistake.set_value(true);
 
     chassis.turnToPoint(0, 0, 800,{.maxSpeed = 60,});
-    chassis.moveToPoint(0, 0, 2000,{.maxSpeed = 50});
-    pistake.set_value(true);
+    chassis.moveToPoint(0, 0, 900,{.maxSpeed = 50},false);
+    left_dt.move(-20);
+    right_dt.move(-20);
+    pros::delay(170);
+    left_dt.move(0);    
+    right_dt.move(0);
 
     pros::delay(800);
     frontIntake.move(-100);
     middleRollers.move(-127);
-    scoringRoller.move(-127);
-    pros::delay(1200);
-    frontIntake.move(-40);
+    scoringRoller.move(127);
+    pros::delay(500);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(200);
+    frontIntake.move(-100);
     middleRollers.move(-127);
     scoringRoller.move(-127);
+    pros::delay(1800);
+    left_dt.move(30);
+    right_dt.move(30);
+    pros::delay(200);
+    left_dt.move(0);    
+    right_dt.move(0);
+
+    chassis.moveToPoint(24, -24, 1400, {.forwards = false});
+    frontIntake.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(0);
+
+    chassis.turnToPoint(-47.5, -48, 800,{.minSpeed = 60,.earlyExitRange = 5});
+    chassis.moveToPoint(-47.5, -48, 2400, {.maxSpeed = 80});
+    chassis.turnToHeading(180, 500, {.maxSpeed = 80},false);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pistake.set_value(false);
+    
+    loaderMech.set_value(true);
+    scoringGate.set_value(true);
+
+    wallDistance(true, true);
+    chassis.moveToPoint(-48, -72, 1500, {.maxSpeed = 70}, false);
+    // shake to prevent jams
+    left_dt.move(-40);
+    right_dt.move(-40);
+    pros::delay(200);
+    left_dt.move(90);
+    right_dt.move(90);
+    pros::delay(800);
+
+    // go through alley
+    chassis.moveToPoint(-48, -48, 1200, {.forwards = false});
+
+    chassis.moveToPoint(-59, -36, 1500, {.minSpeed = 40, .earlyExitRange = 5});
+    loaderMech.set_value(false);
+    frontIntake.move(0);
+
+    chassis.moveToPoint(-59, 42, 2000);
+
+    // allign to goal
+    chassis.moveToPoint(-50, 42, 1000, {.forwards = false});
+    chassis.moveToPoint(-50, 20, 2000, {.forwards = false});
+
+    // score 1st time
+    // start scoring after 600ms while still moving towards the point
+    pros::delay(600);
+    loaderMech.set_value(true);
+    frontIntake.move(-80);
+    pros::delay(50);
+    middleRollers.move(-80);
+    scoringRoller.move(-80);
+    pros::delay(150);
+    scoringGate.set_value(false);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(1200);
+
+    // reset pose (x)
+    wallDistance(false, false);
+
+    // get loader
+    chassis.moveToPoint(-47.5, 72, 2000, {.maxSpeed = 70});
+    pros::delay(500);
+    scoringGate.set_value(true);
+    pros::delay(1500);
+    left_dt.move(-40);
+    right_dt.move(-40);
+    pros::delay(200);
+    left_dt.move(90);
+    right_dt.move(90);
+    pros::delay(800);
+
+    // score 2nd time
+    chassis.moveToPoint(-48, 20, 2500, {.forwards = false});
+    pros::delay(850);
+    frontIntake.move(-80);
+    pros::delay(50);
+    middleRollers.move(-80);
+    scoringRoller.move(-80);
+    pros::delay(150);
+    scoringGate.set_value(false);
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(127);
+    pros::delay(1200);
+    loaderMech.set_value(false);
+    wallDistance(true, false);
+    chassis.setPose(chassis.getPose().x, 28, chassis.getPose().theta);
+    
+    // reset pose at the goal after scoring
+    // push for control zone
+    chassis.moveToPoint(-48, 32, 500, {.minSpeed=127});
+    pros::delay(300);
+    scoringGate.set_value(true);
+    chassis.moveToPoint(-48, 20, 750, { .forwards=false, .maxSpeed=40 }); 
+
+    chassis.moveToPoint(-48, 38, 3000, { .minSpeed=40, .earlyExitRange=5});
+    chassis.turnToPoint(2,38, 500, {.minSpeed=60, .earlyExitRange=5});
+    chassis.moveToPoint(2, 38, 1500, {.maxSpeed=80});
+    chassis.turnToHeading(0, 700, {}, false);
+
+    left_dt.move(90);
+    right_dt.move(90);
+    pros::delay(800);
+
+    left_dt.move(-20);
+    right_dt.move(-20);
+    pros::delay(1200);
+
+    left_dt.move(70);
+    right_dt.move(70);
+    pros::delay(500);
+
+    left_dt.move(0);
+    right_dt.move(0);
+    pros::delay(1000);
+    /*
+    // Back out slightly
+    left_dt.move(-40);
+    right_dt.move(-40);
+    pros::delay(400);
+
+    // Re-enter to finish intake
+    left_dt.move(70);
+    right_dt.move(70);
+    pros::delay(600);
+    
+    left_dt.move(-20);
+    right_dt.move(-20);
+    pros::delay(600);
+    */
+    // Exit starting area
+    left_dt.move(-80);
+    right_dt.move(-80);
+    pros::delay(700);
+
+    // Slow forward alignment
+    left_dt.move(40);
+    right_dt.move(40);
+    pros::delay(600);
+
+    left_dt.move(0);
+    right_dt.move(0);
+    pros::delay(200);
+
+    // Wall reset
+    wallDistance(true, true);
+    chassis.setPose(chassis.getPose().x, -47, 180);
 }
 
 /*
