@@ -71,7 +71,7 @@ void two_goal_LEFT() {
     middleRollers.move(50);
     scoringRoller.move(-50);
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
-    colorsortOn=false;
+
     //scoreMidGoal();
     // bool isOff = false;
     // for(int i = 0; i < 12; i++) {
@@ -163,7 +163,7 @@ void two_goal_RUSH() {
     pros::delay(100);
 
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
-    colorsortOn=false;
+
     //scoreMidGoal();
     // bool isOff = false;
     // for(int i = 0; i < 12; i++) {

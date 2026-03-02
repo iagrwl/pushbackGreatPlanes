@@ -4,7 +4,7 @@
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 #include "awp.hpp"
-#include "colorSort.hpp"
+
 
 
 void solo_awp(){
@@ -48,7 +48,6 @@ void solo_awp(){
 
 
     chassis.moveToPose(-25.5,-19.5,-90,1500,{.minSpeed=60},false);
-    colorsortOn=false;
     scoringRoller.move(127);
     
     //mid goal movement
@@ -70,7 +69,6 @@ void solo_awp(){
 
 
     chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
-    colorsortOn=true;
     
     pros::delay(750);
     

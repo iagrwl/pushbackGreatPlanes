@@ -4,7 +4,7 @@
 #include "pros/llemu.hpp"
 #include "setup.hpp"
 #include "awp.hpp"
-#include "colorSort.hpp"
+
 
 
 void dummy() {
