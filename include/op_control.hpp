@@ -30,4 +30,5 @@ void switchCS();
 void toggleCS();
 void rumble();
 void handleQuickWing();
+void handleDescoreMechCommands();
 void intakeAutoStopping();

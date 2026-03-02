@@ -119,10 +119,13 @@ inline pros::adi::DigitalOut loaderMech('B');
 inline pros::adi::DigitalOut wingMech('C');
 inline pros::adi::DigitalOut parkMech('D');
 inline pros::adi::DigitalOut pistake('E');
+inline pros::adi::DigitalOut descoreMech('F');
+
 
 
 // vision sensors
-inline pros::Optical topOptical(15);
+//inline pros::Vision vision(14);
+inline pros::Optical topOptical(14);
 inline pros::Distance bottomDistance(15);
 inline pros::Distance leftDistance(20);
 inline pros::Distance rightDistance(1);

@@ -9,7 +9,6 @@
 #include "testRoute.hpp"
 #include "twoGoal.hpp"
 #include "dummy.hpp"
-#include "colorSort.hpp"
 #include "op_control.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
@@ -18,7 +17,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -31,8 +30,6 @@ int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
 
-
-
 float DPDcurveMultiplier = 0.63; // changes the amount of curve the delay has
 int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
@@ -40,7 +37,26 @@ float DPdelay = 0;
 
 
 
+void colorSort(){
 
+if (topOptical.get_hue()>5 && topOptical.get_hue()<20&&!isRed){
+        colorPriority=true;
+        pros::lcd::print(5, "keeping blue");
+        scoringRoller.move(0);
+        frontIntake.move(0);
+        middleRollers.move(0);
+
+    }
+    else if (topOptical.get_hue()>200 && topOptical.get_hue()<210&&isRed){
+        colorPriority=true;
+        pros::lcd::print(5, "keeping red");
+        scoringRoller.move(0);
+        frontIntake.move(0);
+        middleRollers.move(0);
+
+    }
+    colorPriority=false;
+  }
 
 /*
 Tuning screen - screen that displays x,y theta + additional debug info. 
@@ -51,9 +67,6 @@ void positionTracker() {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
     pros::lcd::print(4, "est. psi: %d", PSI);
-    if (testRoute != "S") {
-        pros::lcd::print(6, "alliance: %s", colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
-    };
     pros::delay(10);
     }
 }
@@ -74,7 +87,7 @@ void wallTask(void* param) {
 void CSTaskFunc(void* param) {
   while (true) {
     colorSort();
-    pros::delay(11);
+    pros::delay(4);
   }
 }
 
@@ -113,7 +126,7 @@ Occurs when bot goes into init phase.
 5. Robodash code - dont mess w it prolly
 */
 void initialize() {
-  
+    
     selector.focus();
     scoringGate.set_value(false);
     if (tuneMode == true){
@@ -122,10 +135,7 @@ void initialize() {
         pros::Task pos(&positionTracker);
     }
     
-    // init color sensor
-    topOptical.set_led_pwm(100);
-    topOptical.disable_gesture();
-    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
+  
 
 
     // task callerss
@@ -171,7 +181,7 @@ void disabled() {
     wingMech.set_value(false);
     isWingsOut=false;
     
-    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
+    
   }
 
 /*
@@ -189,16 +199,6 @@ Occurs when the 15s auton period is happening
 NOTE: Color sort task is already running from initialize()
 */
 void autonomous() {
-  colorsortOn=false;
-  int hue = topOptical.get_hue();
-  if (hue >= BLUE_MIN && hue <= BLUE_MAX){
-    isRed = false;
-  }
-  else if (hue >= RED_MIN && hue <= RED_MAX){
-    isRed = true;
-  }
-  colorsortOn=true;
-  controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
   if (tuneMode){
    if (testRoute == "S") autonSkills();
     else if (testRoute == "1GR") one_goal_right();
@@ -298,10 +298,8 @@ void opcontrol() {
     handleWingMechCommands();
     handleDoublePark();
     updatePSI();
-    switchCS();   
-    toggleCS();    
-    handleQuickWing();    
-    controller.set_text(0, 6, colorsortOn ? (isRed ? "RED KEEP" : "BLUE KEEP") : "CS    OFF");
+    handleDescoreMechCommands();
+    //handleQuickWing();    
     //handleParkCommands();
     // 20 ms delay to avoid strain on the brain
 	pros::delay(20);

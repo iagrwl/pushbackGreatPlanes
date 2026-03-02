@@ -6,7 +6,6 @@
 #include "op_control.hpp"
 #include <fstream>
 #include <string>
-#include "colorSort.hpp"
 
 
 //STATES
@@ -14,6 +13,7 @@
 bool openGate = true;
 bool isLoaderExtended = false;
 bool isWingsOut = true;
+bool isDescoreOut = false;
 bool DPDescoreToggle = false;
 //core func
 bool isIntakeOn = false;
@@ -49,78 +49,6 @@ void handleTank() {
   int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
   chassis.tank(leftY, rightY); // move the robot
 }
-
-/*
-void handleIOCommands() {
-    int midDraw = middleRollers.get_current_draw();
-    int scoreDraw = scoringRoller.get_current_draw();
-    bool isScoring = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
-
-    static bool midStopped = false;
-    static bool scoreStopped = false;
-
-    if (midDraw > 2500) {
-        if (!midStopped) controller.rumble("-");
-        midStopped = true;
-    }
-    
-    if (scoreDraw > 2500) {
-        if (!scoreStopped) controller.rumble("-");
-        scoreStopped = true;
-    }
-
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        isIntakeOn = !isIntakeOn;
-    }
-
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-        frontIntake.move(-110);
-        middleRollers.move(-127);
-        scoringRoller.move(-127);
-        
-        midStopped = false;
-        scoreStopped = false;
-        return;
-    }
-
-    if (isScoring) {
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-            DE++;
-        }
-        scoringGate.set_value(false);
-        frontIntake.move(127);
-        middleRollers.move(127);
-        scoringRoller.move(127);
-        
-        midStopped = false;
-        scoreStopped = false;
-        return;
-    } else {
-        scoringGate.set_value(true);
-    }
-
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-        colorsortOn = false;
-        frontIntake.move(100);
-        middleRollers.move(100);
-        scoringRoller.move(-70);
-        return;
-    }
-
-    if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
-        !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-        if (isIntakeOn) {
-            frontIntake.move(127);
-            middleRollers.move(50);
-            scoringRoller.move(50);
-        } else {
-            frontIntake.move(0);
-            middleRollers.move(0);
-            scoringRoller.move(0);
-        }
-    }
-}
-*/
 
 void handleIOCommands() {
   // if L1 is clicked then system is toggled on or off 
@@ -161,7 +89,7 @@ void handleIOCommands() {
   // when R2 is held the system runs forward with scoring roller reversed 
   // for mid scoring and when let go returns to the state of L1 toggle
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
-    colorsortOn=false;
+    
     frontIntake.move(100);
     middleRollers.move(100);
     scoringRoller.move(-70); 
@@ -169,7 +97,7 @@ void handleIOCommands() {
     return; // return bc its a hold
   }
 
-  // base intake toggle only applies when r1 and r2 are not being held
+  
   if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       if (isIntakeOn) {
@@ -230,58 +158,51 @@ void handleWingMechCommands() { //toggle button wing mech
   }
 }
 
-void toggleCS() { // toggle on off
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { //if the controller recognizes a new press from the B button
-    colorsortOn = !colorsortOn; //flips the condition of the current state of the wings
 
-  }
-}
-
-void switchCS() { // switche color
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { //if the controller recognizes a new press from the B button
-    isRed = !isRed; //flips the condition of the current state of the wings
-
-  }
-}
 
 void handleDoublePark() {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { //if the controller recognizes a new press from the B button
     DPDescoreToggle = !DPDescoreToggle; //flips the condition of the current state of the wings
     parkMech.set_value(DPDescoreToggle); //sets the physical state to the bool condition of the wings
-    if (DPDescoreToggle == false){
-      PE++;
-    }
+  }
+}
+
+void handleDescoreMechCommands() { //toggle button wing mech
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { 
+    isDescoreOut = !isDescoreOut; 
+
+    descoreMech.set_value(isDescoreOut); 
   }
 }
 
 
-void handleQuickWing() {
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    left_dt.move(100);
-    right_dt.move(100);
-    pros::delay(170);
-    left_dt.brake();
-    right_dt.brake();
-    left_dt.move(0);
-    right_dt.move(0);
-    pros::delay(100);
-    chassis.turnToHeading(chassis.getPose().theta+ 38,200);
-    pros::delay(200);
-    left_dt.brake();
-    right_dt.brake();
-    pros::delay(200);
-    left_dt.move(-100);
-    right_dt.move(-100);
-    pros::delay(200);
-    left_dt.brake();
-    right_dt.brake();
-    left_dt.move(0);
-    right_dt.move(0);
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+// void handleQuickWing() {
+//   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+//     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+//     left_dt.move(100);
+//     right_dt.move(100);
+//     pros::delay(170);
+//     left_dt.brake();
+//     right_dt.brake();
+//     left_dt.move(0);
+//     right_dt.move(0);
+//     pros::delay(100);
+//     chassis.turnToHeading(chassis.getPose().theta+ 38,200);
+//     pros::delay(200);
+//     left_dt.brake();
+//     right_dt.brake();
+//     pros::delay(200);
+//     left_dt.move(-100);
+//     right_dt.move(-100);
+//     pros::delay(200);
+//     left_dt.brake();
+//     right_dt.brake();
+//     left_dt.move(0);
+//     right_dt.move(0);
+//     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
-  }
-}
+//   }
+// }
 
 void intakeAutoStopping() {
 }
