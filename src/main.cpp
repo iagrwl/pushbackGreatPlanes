@@ -17,7 +17,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
+std::string testRoute = "HS"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -206,6 +206,7 @@ void autonomous() {
     else if (testRoute == "AWP") solo_awp();
     else if (testRoute == "2GL") two_goal_LEFT();
     else if (testRoute == "2GR") two_goal_RIGHT();
+    else if (testRoute == "HS") HARDSkills();
     }
   else{
   // runs auton from selected
