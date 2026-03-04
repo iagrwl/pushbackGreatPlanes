@@ -15,6 +15,7 @@
 #include "pros/motors.h"
 #include "robodash/api.h"
 #include "setup.hpp"
+#include "colorSort.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR
@@ -37,26 +38,7 @@ float DPdelay = 0;
 
 
 
-void colorSort(){
 
-if (topOptical.get_hue()>5 && topOptical.get_hue()<20&&!isRed){
-        colorPriority=true;
-        pros::lcd::print(5, "keeping blue");
-        scoringRoller.move(0);
-        frontIntake.move(0);
-        middleRollers.move(0);
-
-    }
-    else if (topOptical.get_hue()>200 && topOptical.get_hue()<210&&isRed){
-        colorPriority=true;
-        pros::lcd::print(5, "keeping red");
-        scoringRoller.move(0);
-        frontIntake.move(0);
-        middleRollers.move(0);
-
-    }
-    colorPriority=false;
-  }
 
 /*
 Tuning screen - screen that displays x,y theta + additional debug info. 
@@ -65,12 +47,12 @@ Only runs when tunemode is set to true
 void positionTracker() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
-    pros::lcd::print(3, "applied DP delay %.2f", DPdelay);
-    pros::lcd::print(4, "est. psi: %d", PSI);
+    pros::lcd::print(2, "applied DP delay %.2f", DPdelay);
+    pros::lcd::print(3, "est. psi: %d", PSI);
+    
     pros::delay(10);
     }
 }
-
 
 
 
@@ -136,8 +118,8 @@ void initialize() {
     }
     
   
-
-
+    topOptical.set_integration_time(3);
+    topOptical.set_led_pwm(100);
     // task callerss
     //pros::Task telemetryTask(telemetry);
     pros::Task colorSortTask(CSTaskFunc);
