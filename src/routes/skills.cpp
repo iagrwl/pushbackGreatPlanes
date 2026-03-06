@@ -105,7 +105,9 @@ void autonSkills() {
     chassis.moveToPoint(24, -24, 1400, {.maxSpeed = 80});
 
     chassis.turnToPoint(0, 0, 700,{.maxSpeed = 60,});
-    chassis.moveToPoint(0, 0, 3000,{.forwards = false, .maxSpeed = 50});
+    chassis.moveToPoint(0, 0, 3000,{.maxSpeed = 50});
+
+    
     
 }
 
