@@ -4,6 +4,7 @@
 #include "pros/misc.h"
 #include "setup.hpp"
 #include "op_control.hpp"
+#include "colorSort.hpp"
 #include <fstream>
 #include <string>
 
@@ -51,6 +52,12 @@ void handleTank() {
 }
 
 void handleIOCommands() {
+  // Color-sort takes control of intake/scoring motors while ejecting.
+  if (isColorPriority) {
+    pistake.set_value(false);
+    return;
+  }
+
   // if L1 is clicked then system is toggled on or off 
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
     isIntakeOn = !isIntakeOn;
@@ -211,6 +218,5 @@ void updatePSI(){
   usedPSI = (LE*LP)+(DE*DP)+(WE*WP)+(PE*DD);
   PSI = 100-usedPSI;
 }
-
 
 
