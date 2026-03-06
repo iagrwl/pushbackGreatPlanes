@@ -6,8 +6,8 @@
 #include "distanceSensor.hpp"
 
 float wallDistance(bool shouldPrint = false, bool useRightSensor = true) { 
-    float rightOffsetX = 2.5, rightOffsetY = -1.0; 
-    float leftOffsetX  = 2.5, leftOffsetY  = 0.0; 
+    float rightOffsetX = 2.5, rightOffsetY = 0.5; 
+    float leftOffsetX  = 3.0, leftOffsetY  = -1.0; 
  
     float offsetX = useRightSensor ? rightOffsetX : leftOffsetX; 
     float offsetY = useRightSensor ? rightOffsetY : leftOffsetY; 

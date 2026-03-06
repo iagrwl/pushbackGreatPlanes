@@ -11,8 +11,8 @@
 inline pros::Controller controller(pros::E_CONTROLLER_MASTER); //controller
 
 // drivetrain
-inline pros::MotorGroup right_dt({7,-8 , 9}, pros::MotorGearset::blue);    // right side
-inline pros::MotorGroup left_dt({-14,-16,15}, pros::MotorGearset::blue);  // left side
+inline pros::MotorGroup right_dt({-5,6,7}, pros::MotorGearset::blue);    // right side
+inline pros::MotorGroup left_dt({10,-9,-2}, pros::MotorGearset::blue);  // left side
 
 // drivetrain config for movement functions
 // (wheel size, width, rpm, etc.)
@@ -24,13 +24,13 @@ inline lemlib::Drivetrain drivetrain(&left_dt,
 							  2
 );
 
-inline pros::Imu imu(1);
+inline pros::Imu imu(3);
 // declare sensors needed for odom setup
 /*inline pros::Rotation horizontalEnc(17);
 inline pros::Rotation verticalEnc(18);
 */
 
-inline pros::Rotation verticalEnc(-6);
+inline pros::Rotation verticalEnc(-4);
 //configure tracking wheels
 //inline lemlib::TrackingWheel horizontalTrackingWheel(&horizontalEnc, lemlib::Omniwheel::NEW_2 * 24/25.2, -5);
 inline lemlib::TrackingWheel verticalTrackingWheel(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
@@ -44,7 +44,7 @@ inline lemlib::OdomSensors sensors(&verticalTrackingWheel,
 );
 
 // lateral pid
-inline lemlib::ControllerSettings lateral_controller(6.25, //proportional gain (kP) //5.5
+inline lemlib::ControllerSettings lateral_controller(7, //proportional gain (kP) //5.5
                                             0, // integral gain (kI) //0.5
                                         25, // derivative gain (kD) //18
                                          1,//windup
@@ -80,7 +80,7 @@ inline lemlib::ControllerSettings angular_controller(5, // proportional gain (kP
 inline lemlib::ExpoDriveCurve throttle_curve(
     3,    // deadband
     0,    // min output
-    1.0  
+    1.01  
 );
 // input curve for steer input during driver control
 // inline lemlib::ExpoDriveCurve
@@ -91,7 +91,7 @@ inline lemlib::ExpoDriveCurve throttle_curve(
 inline lemlib::ExpoDriveCurve steer_curve(
     3,    // deadband 
     0,    // min output
-    1.0   // LINEAR
+    1.01   // LINEAR
 );
 
 
@@ -106,21 +106,26 @@ inline lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // declare additional motors, sensors, and pnuematics here
 
 //negative means regular direction is flipped
-//intake groups
-inline pros::Motor frontIntake(5, pros::MotorGearset::blue);
-inline pros::Motor middleRollers(-10);
-inline pros::Motor colorSortRoller(4);
-inline pros::Motor scoringRoller(-11);
+// intake groups
+inline pros::Motor frontIntake(16, pros::MotorGearset::blue);
+inline pros::Motor middleRollers(-12);
+inline pros::Motor colorSortRoller(15);
+inline pros::Motor scoringRoller(-15);
 
-//extensions
-// false means open and true means close
+// extensions
+// false means open and true means close - only for scoring
 inline pros::adi::DigitalOut scoringGate('A');
 inline pros::adi::DigitalOut loaderMech('B');
 inline pros::adi::DigitalOut wingMech('C');
 inline pros::adi::DigitalOut parkMech('D');
+inline pros::adi::DigitalOut pistake('E');
+inline pros::adi::DigitalOut descoreMech('F');
 
-// clog sensors
-inline pros::Optical topOptical(4);
-inline pros::Distance bottomDistance(18);
-inline pros::Distance leftDistance(17);
-inline pros::Distance rightDistance(13);
+
+
+// vision sensors
+//inline pros::Vision vision(14);
+inline pros::Optical topOptical(14);
+inline pros::Distance bottomDistance(15);
+inline pros::Distance leftDistance(20);
+inline pros::Distance rightDistance(1);

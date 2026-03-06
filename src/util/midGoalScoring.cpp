@@ -6,23 +6,52 @@
 #include "midGoalScoring.hpp"
 
 void scoreMidGoal(){
-    frontIntake.move(-127);
-    middleRollers.move(-127);
-    scoringRoller.move(-127); 
-    pros::delay(130);
-    frontIntake.move(100);
+    // reverse intake but keep scoring roller at 0 so first block just drops
+    frontIntake.move(-90);
+    middleRollers.move(-90);
+    scoringRoller.move(0);
+    pros::delay(350);
+    frontIntake.move(127);
     middleRollers.move(50);
-    const int totalSteps = 250;   // 2.5 seconds
-    const int stepDelay = 10;     // ms
+
+    // bhargav's curve
+    const int totalSteps = 50;   
+    const int stepDelay = 20;     
 
     for (int i = 0; i <= totalSteps; i++) {
         double t = (double)i / totalSteps;  
 
-        double speed = 24 - 4*t + 24*t*(1 - t);
+        double speed = 70 - 30 * t * t;
 
         scoringRoller.move(-(int)speed);
         pros::delay(stepDelay);
     }
+
+    /*
+    frontIntake.move(127);
+    middleRollers.move(80);
+    scoringRoller.move(40); 
+    scoringGate.set_value(false);
+    pros::delay(250);
+    scoringGate.set_value(true);
+    frontIntake.move(-127);
+    middleRollers.move(-127);
+    scoringRoller.move(-127); 
+    pros::delay(200);
+    frontIntake.move(127);
+    middleRollers.move(53);
+    const int totalSteps = 8;   
+    const int stepDelay = 170;     
+
+    for (int i = 0; i <= totalSteps; i++) {
+        double t = (double)i / totalSteps;  
+
+        double speed = 45 - 24 * t * t;
+
+        scoringRoller.move(-(int)speed);
+        pros::delay(stepDelay);
+    }
+    */
 }
 
 

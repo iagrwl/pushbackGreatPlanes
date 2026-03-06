@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Match ",
+    "project_name": "Eternity State",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,8 +324,8 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "ishaan's skills route",
-      "icon": "pros"
+      "description": "feature/colorsort",
+      "icon": "ufo"
     },
     "use_early_access": false
   }
