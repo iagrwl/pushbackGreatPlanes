@@ -2,3 +2,5 @@
 
 
 void autonSkills();
+
+void HARDSkills();
