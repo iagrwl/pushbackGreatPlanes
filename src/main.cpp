@@ -20,31 +20,21 @@
 bool tuneMode = false; // set true for green screen set false for competition
 std::string testRoute = "2GL"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
-/*
-Sets variables - some are settings for the primary driver, some are holding times for controls.
-*/
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
-
 int DHoldTime = 0; // counter for the seconds button is held for drive mode switch
 int ParkHoldTime = 0; // counter for the seconds button is held for park macro
 int POHoldTime = 0;// counter for the park override button
 bool isParkDown = false; // marks if the park bar is down
-
 float DPDcurveMultiplier = 0.63; // changes the amount of curve the delay has
 int FDPV = 120; // enter at 100 psi what the delay is
 int LDPV = 40; // enter the lowest functioning psi is
 float DPdelay = 0;
 
+//tasks
 
-
-
-
-/*
-Tuning screen - screen that displays x,y theta + additional debug info. 
-Only runs when tunemode is set to true
-*/
-void positionTracker() {
+// only runs when tuneMode true
+void positionTrackerTask() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
     pros::lcd::print(2, "applied DP delay %.2f", DPdelay);
@@ -54,17 +44,12 @@ void positionTracker() {
     }
 }
 
-
-
-
 void wallTask(void* param) {
   while (true) {
     wallDistance(true, true);
     pros::delay(10);
   }
 }
-
-
 
 void CSTaskFunc(void* param) {
   while (true) {
@@ -87,7 +72,6 @@ void stopIntakeFunc(void* param) {
   }
 }
 
-//2D array for RD auton selector
 rd::Selector selector({
   {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
@@ -100,41 +84,33 @@ rd::Selector selector({
   {"skilly", &autonSkills}
 });
 
-/*
-Occurs when bot goes into init phase.
-1. Checks if user wants tune screen and runs lines for it
-2. Calls tasks to be run in parallel
-3. Calibrates the drivetrain
-4. Sets the braking mode(idle mode) to coast
-5. Robodash code - dont mess w it prolly
-*/
 void initialize() {
-    
     selector.focus();
-    scoringGate.set_value(false);
+
+
+    // define + run tasks here
     if (tuneMode == true){
         chassis.setPose(0, 0, 0);
         pros::lcd::initialize();
-        pros::Task pos(&positionTracker);
+        pros::Task pos(&positionTrackerTask);
     }
-    
-  
+
+    //pros::Task telemetryTask(telemetry);
+    //pros::Task colorSortTask(CSTaskFunc);
+    //pros::Task stopIntakeTask(stopIntakeFunc);
+    //pros::Task wall(wallTask);
+
+    // set default values here
+    scoringGate.set_value(false);
     topOptical.set_integration_time(3);
     topOptical.set_led_pwm(100);
-    // task callerss
-    //pros::Task telemetryTask(telemetry);
-    // pros::Task colorSortTask(CSTaskFunc);
-    pros::Task stopIntakeTask(stopIntakeFunc);
-    //pros::Task wall(wallTask);
-    // calibrates drivetrain
+
+    // drivetrain calibration
     chassis.calibrate();
-    
-    // sets idle mode on drivetrain
     left_dt.set_brake_mode(pros::MotorBrake::coast);
     right_dt.set_brake_mode(pros::MotorBrake::coast);
 
 
-    // robodash - dont mess w
     selector.on_select([](std::optional<rd::Selector::routine_t> routine) {
         if (routine == std::nullopt) {
             std::cout << "No routine selected" << std::endl;
@@ -149,38 +125,19 @@ void initialize() {
     
 } 
 
-
-/*
-Occurs when bot is in disable phase - when the autonomous and driving period are over.
-1. Sets the scoring hood to lift to let blocks pass using inertia even when auton period is over.
-*/
-
 void disabled() {
     scoringGate.set_value(false);
-
 
     loaderMech.set_value(false);
     isLoaderExtended=false;
     wingMech.set_value(false);
     isWingsOut=false;
-    
-    
-  }
+}
 
-/*
-Occurs when the bot is running the program
-1. Shows the auton selector on the screen.
-*/
-//NOTE: the selected program is stored on the brains SD card for future runs
 void competition_initialize() {
   selector.focus();
 }
 
-/*
-Occurs when the 15s auton period is happening
-1. Runs the auton selected by the selector.
-NOTE: Color sort task is already running from initialize()
-*/
 void autonomous() {
   if (tuneMode){
    if (testRoute == "S") autonSkills();
@@ -192,48 +149,42 @@ void autonomous() {
     else if (testRoute == "HS") HARDSkills();
     }
   else{
-  // runs auton from selected
-  selector.run_auton();
+    selector.run_auton();
   }
-  
-  
  }
 
 
 void opcontrol() {
-
-
   while (true) {
-      
-        //drivemode switcher
+        // drivemode switcher
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-            DHoldTime += 20; // loop delay is 20ms
-            if (DHoldTime >= 2000) { // must hold for 2000 ms for statement to pass
-                defaultDrive = !defaultDrive; // toggle mode
-                controller.rumble(".."); // give feedback
-                DHoldTime = 0; // reset so it doesn't keep toggling
+            DHoldTime += 10; 
+            if (DHoldTime >= 2000) { // how long the button has to be held to activate
+                defaultDrive = !defaultDrive;
+                controller.rumble(".."); 
+                DHoldTime = 0; 
             }
         } else {
-            DHoldTime = 0; // reset if released early
+            DHoldTime = 0; 
         }
-
+        // manual park 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            POHoldTime += 10; // loop delay is 20ms
-            if (POHoldTime >= 300) { // must hold for 2000 ms for statement to pass
-                isParkDown = !isParkDown; // toggle mode
-                controller.rumble("--"); // give feedback
-                POHoldTime = 0; // reset so it doesn't keep toggling
+            POHoldTime += 10;
+            if (POHoldTime >= 300) {
+                isParkDown = !isParkDown; 
+                controller.rumble("--"); 
+                POHoldTime = 0; 
                 parkMech.set_value(isParkDown);
             }
         } else {
-            POHoldTime = 0; // reset if released early
+            POHoldTime = 0; 
         }
-        //double park macro
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-                    ParkHoldTime += 10; // loop increments in 10ms
 
-                    if (ParkHoldTime >= 30) { // must hold for 30+ ms
-                        controller.rumble(".."); // give feedback to signal DP in progress
+        // double park macro
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+                    ParkHoldTime += 10;
+                    if (ParkHoldTime >= 30) { 
+                        controller.rumble(".."); 
                         left_dt.move(-127);
                         right_dt.move(-127);
                         pros::delay(80);
@@ -263,15 +214,12 @@ void opcontrol() {
                                 scoringRoller.move(0);
                                 shouldLift = true;
                             }
-
                         }
-
-                        ParkHoldTime = 0; // reset so it doesn't keep toggling
+                        ParkHoldTime = 0; 
                     }
-
                 }
-                else {
-                    ParkHoldTime = 0; // reset if released early
+                else{
+                    ParkHoldTime = 0; 
                 }
     
     // driver control functions go here
