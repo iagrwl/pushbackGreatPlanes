@@ -100,9 +100,12 @@ void handleIOCommands() {
     frontIntake.move(100);
     middleRollers.move(100);
     scoringRoller.move(-70); 
+    descoreMech.set_value(false);
   
     return; // return bc its a hold
   }
+
+  descoreMech.set_value(true);
 
   
   if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&

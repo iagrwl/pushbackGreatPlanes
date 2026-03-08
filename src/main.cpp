@@ -17,8 +17,8 @@
 #include "setup.hpp"
 #include "colorSort.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "HS"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
+bool tuneMode = false; // set true for green screen set false for competition
+std::string testRoute = "2GL"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
@@ -92,6 +92,7 @@ rd::Selector selector({
   {"solo AWP", &solo_awp},
   {"two goal LEFT",&two_goal_LEFT },
   {"two goal RUSH", &two_goal_RUSH},
+  {"two goal RIGHT", &two_goal_RIGHT},
   {"one goal LEFT", &one_goal_left},
   {"one goal RIGHT", &one_goal_right},
   {"1G LEFT RUSH", &L_1G_R},
@@ -122,7 +123,7 @@ void initialize() {
     topOptical.set_led_pwm(100);
     // task callerss
     //pros::Task telemetryTask(telemetry);
-    pros::Task colorSortTask(CSTaskFunc);
+    // pros::Task colorSortTask(CSTaskFunc);
     pros::Task stopIntakeTask(stopIntakeFunc);
     //pros::Task wall(wallTask);
     // calibrates drivetrain
@@ -200,7 +201,6 @@ void autonomous() {
 
 
 void opcontrol() {
-//chassis.setPose(15,-48,90);
 
 
   while (true) {
