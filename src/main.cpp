@@ -37,9 +37,9 @@ float DPdelay = 0;
 void positionTrackerTask() {
     while (true) {
     pros::lcd::print(1, "X: %.2f, Y: %.2f, Theta: %.2f", chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta);
-    pros::lcd::print(2, "applied DP delay %.2f", DPdelay);
-    pros::lcd::print(3, "est. psi: %d", PSI);
-    
+    pros::lcd::print(2, "est. psi: %d", PSI);
+    // line 3 taken by double park delay estimation
+    // line 4-7 taken by colorsort debug
     pros::delay(10);
     }
 }
