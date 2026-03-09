@@ -98,8 +98,8 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     
     frontIntake.move(100);
-    middleRollers.move(100);
-    scoringRoller.move(-70); 
+    middleRollers.move(80);
+    scoringRoller.move(-55); 
     descoreMech.set_value(false);
   
     return; // return bc its a hold
@@ -178,7 +178,7 @@ void handleDoublePark() {
 }
 
 void handleDescoreMechCommands() { //toggle button wing mech
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { 
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { 
     isDescoreOut = !isDescoreOut; 
 
     descoreMech.set_value(isDescoreOut); 
