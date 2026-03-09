@@ -22,37 +22,34 @@ void solo_awp(){
   
     chassis.setPose(16,-48,-90);
     chassis.moveToPoint(13,-48,500,{.minSpeed=50});
-    chassis.moveToPoint(39,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
+    chassis.moveToPoint(40,-48,1000,{.forwards = false,.minSpeed=50,.earlyExitRange=2});
     loaderMech.set_value(true);
     chassis.moveToPose(43.5,-80,180,1200,{.minSpeed=75},false);
 
-    chassis.moveToPose(46,-20,180,1100,{.forwards=false,.minSpeed=55},false);
+    chassis.moveToPose(45,-20,180,1100,{.forwards=false,.minSpeed=55},false);
+    scoringGate.set_value(false);
     left_dt.move(-30);
     right_dt.move(-30);
-    scoringGate.set_value(false);
     pros::delay(1100);
     loaderMech.set_value(false);
     left_dt.move(0);
     right_dt.move(0);
-
-
     chassis.setPose(48,-24,180);
-
+    wallDistance(false,false);
     chassis.moveToPose(48,-37,0,600);
-    chassis.turnToHeading(-35,400,{.maxSpeed=50});
+    chassis.turnToHeading(325,400,{.direction=AngularDirection::CW_CLOCKWISE,.maxSpeed=70});
     scoringGate.set_value(true);
     
-    chassis.moveToPoint(23,-19.5,800,{.maxSpeed=85});
+    chassis.moveToPoint(23,-18,900,{.maxSpeed=75});
     chassis.turnToHeading(-90,700);
     
 
 
-    chassis.moveToPose(-25.5,-19.5,-90,1500,{.minSpeed=60},false);
+    chassis.moveToPose(-25.5,-20,-90,1500,{.minSpeed=60},false);
     scoringRoller.move(127);
     
     //mid goal movement
-    chassis.turnToPoint(0,0,500,{.forwards=false});
-    chassis.moveToPoint(-11,-11,1200,{.forwards=false,.minSpeed=40},false);
+    chassis.moveToPose(-2,-2,225,1200,{.forwards=false,.minSpeed=60},false);
     loaderMech.set_value(true);
     //mid goal scoring 
     
@@ -68,7 +65,7 @@ void solo_awp(){
     scoringRoller.move(-50);
 
 
-    chassis.moveToPoint(0,0,500,{.forwards=false,.maxSpeed=20},false);
+    chassis.moveToPoint(0,0,100,{.forwards=false,.maxSpeed=20},false);
     
     pros::delay(750);
     
@@ -82,7 +79,7 @@ void solo_awp(){
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-    chassis.moveToPose(-46,-95,180,1000,{.minSpeed=70},false);
+    chassis.moveToPose(-41.5,-95,180,1000,{.minSpeed=70},false);
 
     wallDistance(false, true);
 

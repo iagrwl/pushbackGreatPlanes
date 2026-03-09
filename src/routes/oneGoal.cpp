@@ -48,26 +48,47 @@ chassis.setPose(-6.75, -47, 0);
 } 
 
 void one_goal_right() {
-    // chassis.setPose(6.75, -47, 0);
+    chassis.setPose(6.75, -47, 0);
 
-    // scoringGate.set_value(true);
-    // // starts intake system
+    scoringGate.set_value(true);
+    // starts intake system
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(100);
+    
+    // keeps the wing down
+    wingMech.set_value(true);
+
+    // moves to 3 cluster and loader down after 600 ms
+    chassis.moveToPoint(24, -24, 1500);
+    pros::delay(600);
+    loaderMech.set_value(true);
+    chassis.turnToHeading(135, 750);
+    chassis.moveToPoint(48, -48, 1200);
+    chassis.turnToHeading(180, 750);
+    wallDistance(false, false);
+    chassis.moveToPoint(48, -60, 800);
+    chassis.moveToPoint(48, -20, 1500, {.forwards = false});
+    pros::delay(700);
+    loaderMech.set_value(false);
+    scoringGate.set_value(false);
+    pros::delay(1200);
+    scoringGate.set_value(true);
+    wingMech.set_value(false);
+    chassis.moveToPoint(58, -40, 1500);
+    chassis.moveToPoint(58, -10, 1500, {.forwards = false});
+
+
+    // chassis.setPose(-47, -6.75, 90);
     // frontIntake.move(127);
     // middleRollers.move(127);
     // scoringRoller.move(100);
-    
-    // // keeps the wing down
-    // wingMech.set_value(true);
+    // // scoringGate.set_value(true);
 
-    // // moves to 3 cluster and loader down after 600 ms
-    // chassis.moveToPoint(24, -24, 2000);
-    // pros::delay(500);
+    // chassis.follow(decoder["Cluster"], 15, 4000, true,false);
     // loaderMech.set_value(true);
-    // chassis.turnToHeading(135, 750);
 
-    chassis.setPose(-47, -6.75, 0);
-
-    chassis.follow(decoder["Cluster_Loader"], 15, 2000);
+    // chassis.follow(decoder["Loader"], 20, 4000, true);
    
     
 }

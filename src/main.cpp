@@ -18,7 +18,7 @@
 #include "colorSort.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "1GR"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
+std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
 bool defaultDrive = true; //default toggler, true for arcade default and false for tank
