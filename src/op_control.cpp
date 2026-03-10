@@ -98,8 +98,8 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     
     frontIntake.move(100);
-    middleRollers.move(80);
-    scoringRoller.move(-55); 
+    middleRollers.move(75);
+    scoringRoller.move(-45); 
     descoreMech.set_value(false);
   
     return; // return bc its a hold
