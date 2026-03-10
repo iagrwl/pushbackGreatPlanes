@@ -39,24 +39,24 @@ void autonSkills() {
 
     left_dt.move(-20);
     right_dt.move(-20);
-    pros::delay(1200);
+    pros::delay(1300);
 
-    left_dt.move(70);
-    right_dt.move(70);
-    pros::delay(500);
+    left_dt.move(50);
+    right_dt.move(50);
+    pros::delay(300);
 
-    left_dt.move(0);
-    right_dt.move(0);
+    left_dt.move(-10);
+    right_dt.move(-10);
     pros::delay(1000);
 
     // Exit starting area
     left_dt.move(-90);
     right_dt.move(-90);
-    pros::delay(550);
+    pros::delay(600);
 
     // Slow forward alignment
-    left_dt.move(20);
-    right_dt.move(20);
+    left_dt.move(25);
+    right_dt.move(25);
     pros::delay(800);
 
     left_dt.move(0);
@@ -69,8 +69,8 @@ void autonSkills() {
 
     chassis.moveToPoint(0, -40, 1400, {.forwards = false});
 
-    chassis.turnToPoint(24, -24, 500, {.earlyExitRange = 5});
-    chassis.moveToPoint(24, -24, 1500,{.maxSpeed = 75},false);
+    chassis.turnToPoint(22, -26, 500, {.earlyExitRange = 5});
+    chassis.moveToPoint(22, -26, 1500,{.maxSpeed = 75},false);
     frontIntake.move(-60);
     pros::delay(100);
     frontIntake.move(0);
@@ -80,27 +80,22 @@ void autonSkills() {
 
     chassis.turnToPoint(0, 0, 800,{.maxSpeed = 60,});
     chassis.moveToPoint(0, 0, 900,{.maxSpeed = 50},false);
-
-    pros::delay(800);
-    frontIntake.move(-100);
+    chassis.moveToPoint(12, -12, 500,{.forwards =false,.maxSpeed = 40},false);
+    frontIntake.move(-70);
     middleRollers.move(-127);
     scoringRoller.move(127);
-    pros::delay(500);
+    pros::delay(1200);
     frontIntake.move(127);
     middleRollers.move(127);
     scoringRoller.move(127);
     pros::delay(200);
-    frontIntake.move(-100);
+    frontIntake.move(-70);
     middleRollers.move(-127);
     scoringRoller.move(-127);
-    pros::delay(1800);
-    frontIntake.move(-127);
-    pros::delay(250);
-    left_dt.move(0);    
-    right_dt.move(0);
+    pros::delay(1300);
 
-    chassis.moveToPoint(24, -24, 1000, {.forwards = false});
-
+    chassis.moveToPoint(24, -24, 1000, {.forwards = false,.maxSpeed = 60});
+    
     chassis.turnToPoint(-47.5, -48, 800,{.minSpeed = 60,.earlyExitRange = 5});
     chassis.moveToPoint(-47.5, -48, 2400, {.maxSpeed = 80});
     chassis.turnToHeading(180, 500, {.maxSpeed = 80},false);
@@ -181,8 +176,8 @@ void autonSkills() {
 
 
     chassis.moveToPoint(-48, 48, 3000, { .minSpeed=40, .earlyExitRange=5});
-    scoringGate.set_value(true);
     chassis.turnToHeading(45, 500, { .minSpeed=60, .earlyExitRange=5 });
+    scoringGate.set_value(true);
     chassis.moveToPose(-12, 66, 85, 2000, { .lead=0.2,.maxSpeed=80 });
     chassis.moveToPoint(-2, 66, 2000, { .maxSpeed=80 });
     chassis.moveToPoint(24, 66, 3000, { .maxSpeed=70 });

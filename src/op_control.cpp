@@ -58,7 +58,7 @@ void handleIOCommands() {
 
   // when L2 is held the system reverses when let go it returns to the state of L1 toggle
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
-    frontIntake.move(-90);
+    frontIntake.move(-70);
     middleRollers.move(-100);
     scoringRoller.move(-100);
     pistake.set_value(true);
@@ -91,8 +91,8 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     
     frontIntake.move(100);
-    middleRollers.move(100);
-    scoringRoller.move(-70); 
+    middleRollers.move(70);
+    scoringRoller.move(-40); 
   
     return; // return bc its a hold
   }

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Eternity State",
+    "project_name": "Skills :)",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -324,7 +324,7 @@
     },
     "upload_options": {
       "slot": 1,
-      "description": "tune/sawp",
+      "description": "99",
       "icon": "ufo"
     },
     "use_early_access": false
