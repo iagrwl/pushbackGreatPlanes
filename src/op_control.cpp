@@ -52,11 +52,7 @@ void handleTank() {
 }
 
 void handleIOCommands() {
-  // Color-sort takes control of intake/scoring motors while ejecting.
-  if (isColorPriority) {
-    pistake.set_value(false);
-    return;
-  }
+  const bool colorPriority = isColorPriority;
 
   // if L1 is clicked then system is toggled on or off 
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
@@ -65,9 +61,9 @@ void handleIOCommands() {
 
   // when L2 is held the system reverses when let go it returns to the state of L1 toggle
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
-    frontIntake.move(-90);
-    middleRollers.move(-100);
-    scoringRoller.move(-100);
+    frontIntake.move(-100);
+    middleRollers.move(-127);
+    scoringRoller.move(-127);
     pistake.set_value(true);
     return; // return bc its a hold
   }
@@ -97,9 +93,9 @@ void handleIOCommands() {
   // for mid scoring and when let go returns to the state of L1 toggle
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
     
-    frontIntake.move(100);
-    middleRollers.move(75);
-    scoringRoller.move(-45); 
+    frontIntake.move(127);
+    middleRollers.move(127);
+    scoringRoller.move(-127); 
     descoreMech.set_value(false);
   
     return; // return bc its a hold
@@ -112,13 +108,24 @@ void handleIOCommands() {
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       if (isIntakeOn) {
         frontIntake.move(127);
-        middleRollers.move(127);
+        middleRollers.move(115);
         scoringRoller.move(127);
       } else {
         frontIntake.move(0);
         middleRollers.move(0);
         scoringRoller.move(0);
       }
+  }
+
+  // Color-sort takes control of scoring roller while ejecting,
+  // but still allow L1/R1/R2 state updates above.
+  if (colorPriority &&
+      !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
+      !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    pistake.set_value(false);
+    frontIntake.move(0);
+    middleRollers.move(0);
+    scoringRoller.move(-127);
   }
 }
 
@@ -221,5 +228,3 @@ void updatePSI(){
   usedPSI = (LE*LP)+(DE*DP)+(WE*WP)+(PE*DD);
   PSI = 100-usedPSI;
 }
-
-

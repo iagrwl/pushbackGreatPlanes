@@ -17,7 +17,7 @@
 #include "setup.hpp"
 #include "colorSort.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 std::string testRoute = "AWP"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 bool shouldLift = false; // internal bool for program to verify if ball in prime position
@@ -96,7 +96,7 @@ void initialize() {
     }
 
     //pros::Task telemetryTask(telemetry);
-    //pros::Task colorSortTask(CSTaskFunc);
+    pros::Task colorSortTask(CSTaskFunc);
     //pros::Task stopIntakeTask(stopIntakeFunc);
     //pros::Task wall(wallTask);
 
