@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Skills :)",
+    "project_name": "Skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -323,8 +323,8 @@
       }
     },
     "upload_options": {
-      "slot": 1,
-      "description": "99",
+      "slot": 2,
+      "description": "99(67)",
       "icon": "ufo"
     },
     "use_early_access": false
