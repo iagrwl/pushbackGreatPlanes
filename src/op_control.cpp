@@ -66,7 +66,7 @@ void handleIOCommands() {
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
     // L2 overrides R2; clear R2 hold state so a fresh hold retriggers the timer.
     r2WasHeld = false;
-    frontIntake.move(-100);
+    frontIntake.move(-50);
     middleRollers.move(-127);
     scoringRoller.move(-127);
     pistake.set_value(true);
@@ -98,22 +98,22 @@ void handleIOCommands() {
   const bool r2Held = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
   if (r2Held && !r2WasHeld) {
     // start window
-    r2ReverseUntilMs = pros::millis() + 750;
+    r2ReverseUntilMs = pros::millis() + 500;
   }
   r2WasHeld = r2Held;
 
   if (r2Held) { 
     const bool reverseWindow = pros::millis() < r2ReverseUntilMs;
     if (reverseWindow) {
-      // first burst for 750ms
-      frontIntake.move(-127);
+      // first burst for 100ms
+      frontIntake.move(-50);
       middleRollers.move(-127);
       scoringRoller.move(-127);
     } else {
       // post burst after above
       frontIntake.move(127);
       middleRollers.move(55);
-      scoringRoller.move(-30);
+      scoringRoller.move(-35);
     }
     descoreMech.set_value(false);
     return; // return bc its a hold
