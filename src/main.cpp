@@ -17,7 +17,7 @@
 #include "setup.hpp"
 
 bool tuneMode = true; // set true for green screen set false for competition
-std::string testRoute = "S"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
+std::string testRoute = "HS"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 /*
 Sets variables - some are settings for the primary driver, some are holding times for controls.
