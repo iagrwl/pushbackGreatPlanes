@@ -60,14 +60,14 @@ void one_goal_right() {
     wingMech.set_value(true);
 
     // moves to 3 cluster and loader down after 600 ms
-    chassis.moveToPoint(24, -24, 1500);
+    chassis.moveToPoint(23, -25, 1500, {.minSpeed = 30, .earlyExitRange = 10});
     pros::delay(600);
     loaderMech.set_value(true);
-    chassis.turnToHeading(135, 750);
-    chassis.moveToPoint(48, -48, 1200);
-    chassis.turnToHeading(180, 750);
+    chassis.turnToHeading(135, 750, {.earlyExitRange = 10});
+    chassis.moveToPoint(44, -48, 1200, {.minSpeed = 30, .earlyExitRange = 10});
+    chassis.turnToHeading(180, 750, {}, false);
     wallDistance(false, false);
-    chassis.moveToPoint(48, -60, 800);
+    chassis.moveToPoint(48, -70, 1200);
     chassis.moveToPoint(48, -20, 1500, {.forwards = false});
     pros::delay(700);
     loaderMech.set_value(false);
@@ -75,8 +75,20 @@ void one_goal_right() {
     pros::delay(1200);
     scoringGate.set_value(true);
     wingMech.set_value(false);
-    chassis.moveToPoint(58, -40, 1500);
-    chassis.moveToPoint(58, -10, 1500, {.forwards = false});
+    chassis.moveToPoint(58, -50, 1500, {.minSpeed = 40, .earlyExitRange = 5});
+    chassis.moveToPoint(56, -13, 1500, {.forwards = false, .maxSpeed = 80});
+    pros::delay(400);
+    wallDistance(false, false);
+    chassis.turnToHeading(180, 750);
+    
+    while(true){
+        if(chassis.getPose().y < -13) {
+            chassis.moveToPose(56, -8, 180, 1000, {.forwards = false, .maxSpeed = 60});
+        } else {
+            left_dt.move(0);
+            right_dt.move(0);
+        }
+    }
 
 
     // chassis.setPose(-47, -6.75, 90);
