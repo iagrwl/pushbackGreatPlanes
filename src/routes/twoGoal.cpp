@@ -193,13 +193,14 @@ void two_goal_RUSH() {
     middleRollers.move(127);
     scoringRoller.move(127);
     //pros::delay(500);
-    chassis.moveToPoint(-48, -57, 1000, {.forwards = false, .minSpeed = 127, .earlyExitRange = 6});
-    chassis.moveToPose(-10, -13, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
+    chassis.moveToPoint(-44, -57, 1000, {.forwards = false, .minSpeed = 127, .earlyExitRange = 6});
+    wallDistance(true, false);
+    chassis.moveToPose(-9, -13, -135, 2500, {.forwards = false, .minSpeed = 40}, false);
     frontIntake.move(-100);
     middleRollers.move(-127);
-    scoringRoller.move(-127);
+    scoringRoller.move(0);
 
-    pros::delay(100);
+    pros::delay(200);
 
     chassis.moveToPoint(0,0,1000,{.forwards=false,.maxSpeed=20});
 
@@ -221,14 +222,14 @@ void two_goal_RUSH() {
 
     // }
     frontIntake.move(127);
-    middleRollers.move(60);
-    scoringRoller.move(-60);
+    middleRollers.move(50);
+    scoringRoller.move(-50);
     pros::delay(1200);
-    middleRollers.move(127);
-    scoringRoller.move(127);
-    chassis.moveToPoint(-37, -37, 1500, {});
-    chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40}, false);
+    // middleRollers.move(127);
+    // scoringRoller.move(127);
+    // chassis.moveToPoint(-37, -37, 1500, {});
+    // chassis.turnToHeading(180, 750, {.minSpeed = 20, .earlyExitRange = 40}, false);
 
-    chassis.moveToPose(-37, -10, 180, 3000, {.forwards = false, .lead = 0.3});
-    wingMech.set_value(false); 
+    // chassis.moveToPose(-37, -10, 180, 3000, {.forwards = false, .lead = 0.3});
+    // wingMech.set_value(false); 
 }
