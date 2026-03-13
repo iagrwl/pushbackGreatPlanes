@@ -53,6 +53,9 @@ void handleTank() {
 
 void handleIOCommands() {
   const bool colorPriority = isColorPriority;
+  // Non-blocking mid-goal reverse timing for R2 (keeps opcontrol responsive).
+  static bool r2WasHeld = false;
+  static int32_t r2ReverseUntilMs = 0;
 
   // if L1 is clicked then system is toggled on or off 
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
@@ -61,6 +64,8 @@ void handleIOCommands() {
 
   // when L2 is held the system reverses when let go it returns to the state of L1 toggle
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { 
+    // L2 overrides R2; clear R2 hold state so a fresh hold retriggers the timer.
+    r2WasHeld = false;
     frontIntake.move(-100);
     middleRollers.move(-127);
     scoringRoller.move(-127);
@@ -91,13 +96,27 @@ void handleIOCommands() {
 
   // when R2 is held the system runs forward with scoring roller reversed 
   // for mid scoring and when let go returns to the state of L1 toggle
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
-    
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(-127); 
+  const bool r2Held = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+  if (r2Held && !r2WasHeld) {
+    // Start the max-reverse window once per hold (no blocking delay).
+    r2ReverseUntilMs = pros::millis() + 750;
+  }
+  r2WasHeld = r2Held;
+
+  if (r2Held) { 
+    const bool reverseWindow = pros::millis() < r2ReverseUntilMs;
+    if (reverseWindow) {
+      // first burst for 750ms
+      frontIntake.move(-127);
+      middleRollers.move(-127);
+      scoringRoller.move(-127);
+    } else {
+      // post burst after above
+      frontIntake.move(127);
+      middleRollers.move(55);
+      scoringRoller.move(-30);
+    }
     descoreMech.set_value(false);
-  
     return; // return bc its a hold
   }
 
