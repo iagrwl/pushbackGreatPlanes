@@ -87,7 +87,7 @@ void handleIOCommands() {
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(127);
+    scoringRoller.move(85);
   } else { // what happens when the R1 is let go off
     scoringGate.set_value(true);
     
@@ -112,8 +112,8 @@ void handleIOCommands() {
     } else {
       // post burst after above
       frontIntake.move(127);
-      middleRollers.move(55);
-      scoringRoller.move(-35);
+      middleRollers.move(65);
+      scoringRoller.move(-30);
     }
     descoreMech.set_value(false);
     return; // return bc its a hold
@@ -126,7 +126,7 @@ void handleIOCommands() {
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       if (isIntakeOn) {
         frontIntake.move(127);
-        middleRollers.move(115);
+        middleRollers.move(127);
         scoringRoller.move(127);
       } else {
         frontIntake.move(0);

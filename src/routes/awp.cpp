@@ -49,7 +49,7 @@ void solo_awp(){
     chassis.moveToPoint(26.95, -27.80,400,{.maxSpeed=75});
 
     chassis.turnToHeading(-90,400);
-    chassis.moveToPose(-21,-27,-90,1500);
+    chassis.moveToPose(-22,-27,-90,1500);
     
     //mid goal movement
     chassis.moveToPose(-6,-14.5,-130,1200,{.forwards=false,.minSpeed=60},false);
@@ -64,8 +64,8 @@ void solo_awp(){
 
     //direct into mid goal
     frontIntake.move(100);
-    middleRollers.move(75);
-    scoringRoller.move(-55);
+    middleRollers.move(72);
+    scoringRoller.move(-50);
 
 
     chassis.moveToPoint(-7,-14.5,150,{.forwards=false,.maxSpeed=20},false);
@@ -86,7 +86,7 @@ void solo_awp(){
     scoringRoller.move(127);
     frontIntake.move(127);
     middleRollers.move(127);
-    chassis.moveToPose(-40,-95,180,1350,{.minSpeed=60},false);
+    chassis.moveToPose(-40,-95,180,1450,{.minSpeed=60},false);
 
     wallDistance(true, true);
 
