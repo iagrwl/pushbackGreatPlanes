@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "SKILLS",
+    "project_name": "MATCHES",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -341,8 +341,8 @@
     },
     "upload_options": {
       "description": "eternity states",
-      "icon": "pros",
-      "slot": 2
+      "icon": "pizza",
+      "slot": 1
     },
     "use_early_access": false
   }
