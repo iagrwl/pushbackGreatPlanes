@@ -53,6 +53,9 @@ void handleTank() {
 
 void handleIOCommands() {
   const bool colorPriority = isColorPriority;
+  // Non-blocking mid-goal reverse timing for R2 (keeps opcontrol responsive).
+  static bool r2WasHeld = false;
+  static int32_t r2ReverseUntilMs = 0;
 
   // if L1 is clicked then system is toggled on or off 
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { 
@@ -82,22 +85,35 @@ void handleIOCommands() {
     scoringGate.set_value(false);
     frontIntake.move(127);
     middleRollers.move(127);
-    scoringRoller.move(127);
+    scoringRoller.move(85);
   } else { // what happens when the R1 is let go off
     scoringGate.set_value(true);
     
   }
   bool r1_active = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 
-  // when R2 is held the system runs forward with scoring roller reversed 
-  // for mid scoring and when let go returns to the state of L1 toggle
-  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { 
-    
-    frontIntake.move(127);
-    middleRollers.move(127);
-    scoringRoller.move(-127); 
+
+  const bool r2Held = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+  if (r2Held && !r2WasHeld) {
+    // start window
+    r2ReverseUntilMs = pros::millis() + 500;
+  }
+  r2WasHeld = r2Held;
+
+  if (r2Held) { 
+    const bool reverseWindow = pros::millis() < r2ReverseUntilMs;
+    if (reverseWindow) {
+      // first burst for 100ms
+      frontIntake.move(-50);
+      middleRollers.move(-127);
+      scoringRoller.move(-127);
+    } else {
+      // post burst after above
+      frontIntake.move(127);
+      middleRollers.move(65);
+      scoringRoller.move(-30);
+    }
     descoreMech.set_value(false);
-  
     return; // return bc its a hold
   }
 
@@ -108,7 +124,7 @@ void handleIOCommands() {
       !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       if (isIntakeOn) {
         frontIntake.move(127);
-        middleRollers.move(115);
+        middleRollers.move(127);
         scoringRoller.move(127);
       } else {
         frontIntake.move(0);
