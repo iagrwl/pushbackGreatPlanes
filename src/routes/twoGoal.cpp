@@ -47,7 +47,7 @@ void two_goal_RIGHT(){
     chassis.turnToHeading(-45,400);
     middleRollers.move(0);
 
-    chassis.moveToPoint(12, -12, 1200, {.maxSpeed = 40}, false);
+    chassis.moveToPoint(10, -12, 1200, {.maxSpeed = 40}, false);
     frontIntake.move(-127);
     middleRollers.move(-127);
     scoringRoller.move(-127);

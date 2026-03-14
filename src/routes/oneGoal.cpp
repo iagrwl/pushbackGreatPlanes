@@ -60,7 +60,7 @@ void one_goal_right() {
     wingMech.set_value(true);
 
     // moves to 3 cluster and loader down after 600 ms
-    chassis.moveToPoint(23, -25, 1500, {.minSpeed = 30, .earlyExitRange = 10});
+    chassis.moveToPoint(23, -24, 1500, {.minSpeed = 30, .earlyExitRange = 10});
     pros::delay(600);
     loaderMech.set_value(true);
     chassis.turnToHeading(135, 750, {.earlyExitRange = 10});
