@@ -16,7 +16,7 @@
 #include "robodash/api.h"
 #include "setup.hpp"
 
-bool tuneMode = true; // set true for green screen set false for competition
+bool tuneMode = false; // set true for green screen set false for competition
 std::string testRoute = "HS"; // select from S, 1GR, 1GL, AWP, 2GL, 2GR, HS
 
 /*
@@ -107,14 +107,9 @@ void stopIntakeFunc(void* param) {
 
 //2D array for RD auton selector
 rd::Selector selector({
-  {"solo AWP", &solo_awp},
-  {"two goal LEFT",&two_goal_LEFT },
-  {"two goal RUSH", &two_goal_RUSH},
-  {"one goal LEFT", &one_goal_left},
-  {"one goal RIGHT", &one_goal_right},
-  {"1G LEFT RUSH", &L_1G_R},
   {"dummy", &dummy},
-  {"skilly", &autonSkills}
+  {"113SKILLS", &HARDSkills},
+  {"99SKILLS", &autonSkills}
 });
 
 /*
